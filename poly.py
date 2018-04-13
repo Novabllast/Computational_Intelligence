@@ -44,13 +44,13 @@ def design_matrix(x, degree):
     #
     # TIP: use the power function from numpy
 
-    X = [[np.power(x.item(j), i) for i in range(0, degree + 1)] for j in range(0, degree + 1)]  # TODO: change me
+    generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, degree + 1)] for j in range(0, degree + 1)]  # TODO: change me
 
     #
     # END TODO
     ######################
 
-    return X
+    return generated_design_matrix
 
 
 def train(x, y, degree):
@@ -79,6 +79,13 @@ def train(x, y, degree):
     #  - To compute the pseudo inverse (A*A.T)^-1 * A.T with a more stable algorithm numpy provides the function pinv
     #   pinv is accessible in the sub-library numpy.linalg
     #
+
+    design = design_matrix(x, degree)
+    transposed = design.T
+    dot_product = np.dot(transposed, x)
+    inverted = np.linalg.inv(dot_product)
+    dot_product_2 = np.dot(inverted, transposed)
+    theta = np.dot(dot_product_2, y)
 
     theta_opt = np.zeros(degree + 1)  # TODO: Change me
 
