@@ -27,7 +27,7 @@ def design_matrix(x, degree):
     EX: for the data x = [0,1,2] and degree 2
     the function should return: [[1, 0, 0],
 								 [1, 1, 1],
-								 [1, 2, 4]] 
+								 [1, 2, 4]]
 
     :param x: numpy array of shape (N,1)
     :param degree: Higher degree of the polynomial
@@ -44,13 +44,18 @@ def design_matrix(x, degree):
     #
     # TIP: use the power function from numpy
 
-    generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, degree + 1)] for j in range(0, degree + 1)]  # TODO: change me
-
-    #
     # END TODO
     ######################
+    generated_design_matrix = np.zeros((x.size, degree + 1))
 
-    return np.array(generated_design_matrix)
+    for i in range(0, x.size):
+        for j in range(0, degree):
+            generated_design_matrix[i][j] = np.power(x[i], j)
+
+    # generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, x.size)] for j in
+    #                            range(0, degree + 1)]  # TODO: change me
+
+    return generated_design_matrix
 
 
 def train(x, y, degree):
@@ -83,7 +88,7 @@ def train(x, y, degree):
     design = design_matrix(x, degree)
     transposed = design.T
     dot_product = np.dot(transposed, design)
-    inverted = np.linalg.inv(dot_product)
+    inverted = np.linalg.pinv(dot_product)
     dot_product_2 = np.dot(inverted, transposed)
 
     theta_opt = np.dot(dot_product_2, y)  # TODO: Change me
@@ -119,8 +124,12 @@ def compute_error(theta, degree, x, y):
     #               Then * becomes a matrix multiplication
     #
     #  - One can use the numpy function mean
+    # ||  X * theta - y ||**2
 
-    err = -1  # TODO: Change me
+    design = design_matrix(x, degree)
+    predict = np.dot(design, theta)
+    power_2 = pow(predict - y, 2)
+    err = np.mean(power_2)  # TODO: Change me
 
     #
     # END TODO
