@@ -50,7 +50,7 @@ def design_matrix(x, degree):
     # END TODO
     ######################
 
-    return generated_design_matrix
+    return np.array(generated_design_matrix)
 
 
 def train(x, y, degree):
@@ -82,12 +82,11 @@ def train(x, y, degree):
 
     design = design_matrix(x, degree)
     transposed = design.T
-    dot_product = np.dot(transposed, x)
+    dot_product = np.dot(transposed, design)
     inverted = np.linalg.inv(dot_product)
     dot_product_2 = np.dot(inverted, transposed)
-    theta = np.dot(dot_product_2, y)
 
-    theta_opt = np.zeros(degree + 1)  # TODO: Change me
+    theta_opt = np.dot(dot_product_2, y)  # TODO: Change me
 
     # END TODO
     ######################
