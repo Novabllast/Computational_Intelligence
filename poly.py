@@ -44,7 +44,7 @@ def design_matrix(x, degree):
     #
     # TIP: use the power function from numpy
 
-    X = x  # TODO: change me
+    X = [[np.power(x.item(j), i) for i in range(0, degree + 1)] for j in range(0, degree + 1)]  # TODO: change me
 
     #
     # END TODO
