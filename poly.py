@@ -52,8 +52,7 @@ def design_matrix(x, degree):
         for j in range(0, degree):
             generated_design_matrix[i][j] = np.power(x[i], j)
 
-    # generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, x.size)] for j in
-    #                            range(0, degree + 1)]  # TODO: change me
+    # generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, x.size)] for j in range(0, degree + 1)]  # TODO: change me
 
     return generated_design_matrix
 

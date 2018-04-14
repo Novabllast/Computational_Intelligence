@@ -36,9 +36,10 @@ def get_centers_and_sigma(n_centers):
     #   - ATTENTION: You might want to write the division a / b, with a and b integers but in python 2 this will perform
     #       an euclidian division. The solution is to convert one of the two integers to float.
     #
+    # The width of the basis functions should be set to σ = 2/l, i.e. with a higher l,
 
-    centers = np.zeros(n_centers)  # TODO: Change me
-    sigma = 1.  # TODO: Change me
+    centers = np.linspace(-1, 1, n_centers)  # TODO: Change me
+    sigma = 2.0 / n_centers  # TODO: Change me
 
     # END TODO
     ######################
@@ -76,7 +77,20 @@ def design_matrix(x, centers, sigma):
     # TIP: don't forget that the first row has only ones
     #
 
-    res = x  # TODO: Change me
+    generated_design_matrix = np.zeros((x.size, centers.size + 1))
+
+    for i in range(0, x.size):
+        for j in range(0, centers.size):
+            if i > 0:
+                divisor = 2 * np.power(sigma, 2)
+                dividend = -(np.power(x[i] - centers[j - 1], 2))
+                new_value = np.exp(dividend / divisor)
+            else:
+                new_value = 1
+
+            generated_design_matrix[i][j] = new_value
+
+    res = generated_design_matrix  # TODO: Change me
 
     # END TODO
     ######################
