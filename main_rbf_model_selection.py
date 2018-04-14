@@ -54,7 +54,7 @@ def main():
     n_centers = np.arange(K) + 1
 
     # Compute the MSE values
-    i_best = 0
+    i_best = np.argmin(mse_val)
 
     #
     # TODO END
