@@ -80,7 +80,7 @@ def design_matrix(x, centers, sigma):
     generated_design_matrix = np.zeros((x.size, centers.size + 1))
 
     for i in range(0, x.size):
-        for j in range(0, centers.size):
+        for j in range(0, centers.size + 1):
             if i > 0:
                 divisor = 2 * np.power(sigma, 2)
                 dividend = -(np.power(x[i] - centers[j - 1], 2))
@@ -120,8 +120,14 @@ def train(x, y, n_centers):
     #   - Don't forget to first expand the data
     #   - This should not be very different from the solution you provided in poly.py
     #
+    centers, sigma = get_centers_and_sigma(n_centers)
+    design = design_matrix(x, centers, sigma)
+    transposed = design.T
+    dot_product = np.dot(transposed, design)
+    inverted = np.linalg.pinv(dot_product)
+    dot_product_2 = np.dot(inverted, transposed)
 
-    theta_opt = np.zeros(n_centers + 1)  # TODO: Change me
+    theta_opt = np.dot(dot_product_2, y)  # TODO: Change me
 
     # END TODO
     ######################
@@ -152,7 +158,11 @@ def compute_error(theta, n_centers, x, y):
     #   - This should not be very different from the solution you provided in poly.py
     #
 
-    err = -1  # TODO: Change me
+    centers, sigma = get_centers_and_sigma(n_centers)
+    design = design_matrix(x, centers, sigma)
+    predict = np.dot(design, theta)
+    power_2 = pow(predict - y, 2)
+    err = np.mean(power_2)  # TODO: Change me
 
     # END TODO
     ######################
