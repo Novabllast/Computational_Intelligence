@@ -22,8 +22,6 @@ def cost(theta, x, y):
     :param y: target(s)
     :return: cost
     """
-    N, n = x.shape
-
     ##############
     #
     # TODO
@@ -33,9 +31,20 @@ def cost(theta, x, y):
     #   - use the logistic function sig imported from the file toolbox
     #   - sums of logs of numbers close to zero might lead to numerical errors, try splitting the cost into the sum
     # over positive and negative samples to overcome the problem. If the problem remains note that low errors is not
-    # necessarily a problem for gradient descent because only the gradient of the cost is used for the parameter updates.
+    # necessarily a problem for gradient descent because only the gradient of the cost is used for the parameter updates
 
-    c = 0
+    # m  --> number of training examples
+    m, n = x.shape
+
+    dot_product = np.dot(x, theta)
+    mean_error = dot_product - y
+    mean_squared_error = np.power(mean_error, 2)
+
+    hypo = sig(dot_product)  # logistic regression hypothesis
+    positiv_samples = y[y > 0]
+    negative_samples = y[y < 0]
+
+    c = (-y) * np.log(p_1) - (1 - y) * np.log(1 - p_1)  # log-likelihood vector
 
     # END TODO
     ###########
@@ -53,7 +62,6 @@ def grad(theta, x, y):
     :param y: target(s)
     :return: gradient
     """
-    N, n = x.shape
 
     ##############
     #
@@ -62,7 +70,15 @@ def grad(theta, x, y):
 
     g = np.zeros(theta.shape)
 
+    m, n = x.shape
+
+    dot_product = np.dot(x, theta)
+    mean_error = dot_product - y
+    hypo = sig(dot_product)
+
+    grad = (1 / m) * mean_error.dot(x)
+
     # END TODO
     ###########
 
-    return g
+    return grad
