@@ -44,7 +44,7 @@ def cost(theta, x, y):
     positiv_samples = y[y > 0]
     negative_samples = y[y < 0]
 
-    c = (-y) * np.log(p_1) - (1 - y) * np.log(1 - p_1)  # log-likelihood vector
+    c = (-y) #* np.log(hypo) - (1 - y) * np.log(1 - hypo)  # log-likelihood vector
 
     # END TODO
     ###########
