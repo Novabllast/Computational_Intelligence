@@ -41,10 +41,24 @@ def cost(theta, x, y):
     mean_squared_error = np.power(mean_error, 2)
 
     hypo = sig(dot_product)  # logistic regression hypothesis
-    positiv_samples = y[y > 0]
-    negative_samples = y[y < 0]
+    positive_samples = []
+    negative_samples = []
 
-    c = (-y) # * np.log(hypo) - (1 - y) * np.log(1 - hypo)  # log-likelihood vector
+    for i in range(0, m):
+        if y[i]:
+            #positive_samples.append(x[i])
+            positive_samples.append(np.log(hypo[i]))
+        else:
+            #negative_samples.append(x[i])
+            negative_samples.append(np.log(1 - hypo[i]))
+
+    positive_samples = np.array(positive_samples)
+    negative_samples = np.array(negative_samples)
+    sum_pos = np.sum(positive_samples)
+    sum_neg = np.sum(negative_samples)
+
+    #positive_log = np.sum(y * np.log(hypo) + (1 - y) * np.log(1 - hypo))
+    c = (-1) * (1 / m) * (sum_pos + sum_neg)
 
     # END TODO
     ###########
