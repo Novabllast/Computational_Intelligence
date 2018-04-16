@@ -46,18 +46,16 @@ def cost(theta, x, y):
 
     for i in range(0, m):
         if y[i]:
-            #positive_samples.append(x[i])
+            # positive_samples.append(x[i])
             positive_samples.append(np.log(hypo[i]))
         else:
-            #negative_samples.append(x[i])
+            # negative_samples.append(x[i])
             negative_samples.append(np.log(1 - hypo[i]))
 
-    positive_samples = np.array(positive_samples)
-    negative_samples = np.array(negative_samples)
     sum_pos = np.sum(positive_samples)
     sum_neg = np.sum(negative_samples)
 
-    #positive_log = np.sum(y * np.log(hypo) + (1 - y) * np.log(1 - hypo))
+    # positive_log = np.sum(y * np.log(hypo) + (1 - y) * np.log(1 - hypo))
     c = (-1) * (1 / m) * (sum_pos + sum_neg)
 
     # END TODO
@@ -82,17 +80,18 @@ def grad(theta, x, y):
     # TODO
     #
 
-    g = np.zeros(theta.shape)
-
     m, n = x.shape
 
     dot_product = np.dot(x, theta)
-    mean_error = dot_product - y
     hypo = sig(dot_product)
+    mean_error = hypo - y
 
-    grad = (1 / m) * mean_error.dot(x)
+    gradient = 0.0
+    for i in range(0, m):
+        for j in range(0, n):
+            gradient += mean_error[i] * x[i][j]
 
     # END TODO
     ###########
 
-    return grad
+    return (1 / m) * gradient
