@@ -46,10 +46,11 @@ def design_matrix(x, degree):
 
     # END TODO
     ######################
+
     generated_design_matrix = np.zeros((x.size, degree + 1))
 
     for i in range(0, x.size):
-        for j in range(0, degree):
+        for j in range(0, degree + 1):
             generated_design_matrix[i][j] = np.power(x[i], j)
 
     # generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, x.size)] for j in range(0, degree + 1)]  # TODO: change me
@@ -127,7 +128,9 @@ def compute_error(theta, degree, x, y):
 
     design = design_matrix(x, degree)
     predict = np.dot(design, theta)
-    power_2 = pow(predict - y, 2)
+    mean_error = predict - y
+
+    power_2 = np.power(mean_error, 2)
     err = np.mean(power_2)  # TODO: Change me
 
     #
