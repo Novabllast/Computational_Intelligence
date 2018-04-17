@@ -21,7 +21,7 @@ This is the main file that loads the data, compute the solution and plot the res
 
 def main():
     # Set parameters
-    degree = 5
+    degree = 1
     eta = 1.
     max_iter = 20
 

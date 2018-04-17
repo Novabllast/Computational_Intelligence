@@ -1,0 +1,10 @@
+poly 01: Training error 1.3959312636409864 	 Validation error 1.2853187955436896 	 Testing error 1.312483329847821 
+poly 02: Training error 0.9926451464359597 	 Validation error 0.9150906890560074 	 Testing error 1.1278299254334274 
+poly 05: Training error 0.6110839972970437 	 Validation error 0.7539760904419329 	 Testing error 0.7804853185462193 
+poly 20: Training error 0.13512870261342827 	 Validation error 0.5196442385190495 	 Testing error 1.0801865480270945 
+
+rbf  01: Training error 1.420375462918048 	 Validation error 1.2716780942747143 	 Testing error 1.3239375372291953 
+rbf  02: Training error 1.174469463632379 	 Validation error 1.0803145558748106 	 Testing error 1.2246905380357107 
+rbf  05: Training error 0.6205095084575466 	 Validation error 0.7741441314697823 	 Testing error 0.7823533115008087 
+rbf  20: Training error 0.13289990828400586 	 Validation error 0.44967905610961467 	 Testing error 0.4293626572914165 
+
