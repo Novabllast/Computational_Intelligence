@@ -81,7 +81,7 @@ def design_matrix(x, centers, sigma):
 
     for i in range(0, x.size):
         for j in range(0, centers.size + 1):
-            if i > 0:
+            if j > 0:
                 divisor = 2 * np.power(sigma, 2)
                 dividend = -(np.power(x[i] - centers[j - 1], 2))
                 new_value = np.exp(dividend / divisor)
@@ -161,7 +161,7 @@ def compute_error(theta, n_centers, x, y):
     centers, sigma = get_centers_and_sigma(n_centers)
     design = design_matrix(x, centers, sigma)
     predict = np.dot(design, theta)
-    power_2 = pow(predict - y, 2)
+    power_2 = np.power(predict - y, 2)
     err = np.mean(power_2)  # TODO: Change me
 
     # END TODO
