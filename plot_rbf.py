@@ -28,7 +28,7 @@ def plot_rbf(data, n_center, theta_opt, n_line_precision=100):
 
     fig, ax_list = plt.subplots(2, 2)
     plt.subplots_adjust(hspace=0.4)
-	
+
     # Plot the polynomials
     xx = np.linspace(-1, 1, n_line_precision).reshape((n_line_precision, 1))
     centers, sigma = rbf.get_centers_and_sigma(n_center)
@@ -38,7 +38,6 @@ def plot_rbf(data, n_center, theta_opt, n_line_precision=100):
 
     ax_list[0, 0].set_xlabel('x')
     ax_list[0, 0].set_ylabel('y')
-
 
     ax_list[0, 0].set_xlim([-1, 1])
     ax_list[0, 0].set_ylim([0, 1])
