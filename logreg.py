@@ -12,7 +12,6 @@ Section: Gradient descent (GD) (Logistic Regression)
 TODO Fill the cost function and the gradient
 """
 
-
 def cost(theta, x, y):
     """
     Cost of the logistic regression function.
@@ -37,8 +36,6 @@ def cost(theta, x, y):
     m, n = x.shape
 
     dot_product = np.dot(x, theta)
-    #mean_error = dot_product - y
-    #mean_squared_error = np.power(mean_error, 2)
 
     hypo = sig(dot_product)  # logistic regression hypothesis
     positive_samples = 0.0
@@ -46,21 +43,10 @@ def cost(theta, x, y):
 
     for i in range(0, m):
         if y[i]:
-            # positive_samples.append(x[i])
-            #positive_samples.append(np.log(hypo[i]))
             positive_samples += np.log(hypo[i])
-            #positive_samples = np.concatenate((positive_samples, np.log(hypo[i])))
         else:
-            # negative_samples.append(x[i])
-            #negative_samples.append(np.log(1 - hypo[i]))
             negative_samples += np.log(1 - hypo[i])
-            #negative_samples = np.concatenate((negative_samples, np.log(1 - hypo[i])))
 
-    #sum_pos = np.sum(positive_samples)
-    #sum_neg = np.sum(negative_samples)
-
-    # positive_log = np.sum(y * np.log(hypo) + (1 - y) * np.log(1 - hypo))
-    #c = (-1) * (1 / m) * (sum_pos + sum_neg)
     c = (-1) * (1 / m) * (positive_samples + negative_samples)
 
     # END TODO
@@ -91,19 +77,19 @@ def grad(theta, x, y):
     hypo = sig(dot_product)
     mean_error = hypo - y
 
-    gradient = np.zeros(m)
-    for i in range(0, m):
-        for j in range(0, n):
-            gradient[i] += mean_error[i] * x[i][j]
+    gradient = np.zeros(n)
+    for j in range(0, n):
+        for i in range(0, m):
+            gradient[j] += mean_error[i] * x[i][j]
 
     # END TODO
     ###########
 
-    #sigma = cost(theta, x, y)
-    #df = sigma * (1 - sigma)
-    #print(df)
+    # sigma = cost(theta, x, y)
+    # df = sigma * (1 - sigma)
+    # print(df)
 
+    # print((1 / m) * gradient)
 
-    #print((1 / m) * gradient)
-
-    return (1 / m) * gradient
+    g = (1 / m) * gradient
+    return g
