@@ -29,7 +29,7 @@ def get_centers_and_sigma(n_centers):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # TIPs:
     #   - Use the linspace function from numpy
@@ -38,10 +38,10 @@ def get_centers_and_sigma(n_centers):
     #
     # The width of the basis functions should be set to σ = 2/l, i.e. with a higher l,
 
-    centers = np.linspace(-1, 1, n_centers)  # TODO: Change me
-    sigma = 2.0 / n_centers  # TODO: Change me
+    centers = np.linspace(-1, 1, n_centers)  # TODO: Change me - done
+    sigma = 2.0 / n_centers  # TODO: Change me - done
 
-    # END TODO
+    # END TODO - done
     ######################
 
     return centers, sigma
@@ -57,8 +57,8 @@ def design_matrix(x, centers, sigma):
 
     E.g: for the data x = [0,1,2], the centers [0,1] and sigma = 1/sqrt(2)
     the function should return: [[1, exp(0), exp(-1)],
-								 [1, exp(-1), exp(0)],
-								 [1, exp(-4), exp(-1)]] 
+                                [1, exp(-1), exp(0)],
+                                [1, exp(-4), exp(-1)]]
 
     :param x: numpy array of shape (N,1)
     :param centers: List of centers
@@ -68,7 +68,7 @@ def design_matrix(x, centers, sigma):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Return the numpy array of shape (N,n_centers+1)
     # Storing the data of the form exp(- (x_i - c_j) ^2 / (2 sigma^2) ) at row i and column j+1
@@ -90,9 +90,9 @@ def design_matrix(x, centers, sigma):
 
             generated_design_matrix[i][j] = new_value
 
-    res = generated_design_matrix  # TODO: Change me
+    res = generated_design_matrix  # TODO: Change me - done
 
-    # END TODO
+    # END TODO - done
     ######################
 
     return res
@@ -112,7 +112,7 @@ def train(x, y, n_centers):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Returns the analytical solution of the linear regression
     #
@@ -127,9 +127,9 @@ def train(x, y, n_centers):
     inverted = np.linalg.pinv(dot_product)
     dot_product_2 = np.dot(inverted, transposed)
 
-    theta_opt = np.dot(dot_product_2, y)  # TODO: Change me
+    theta_opt = np.dot(dot_product_2, y)  # TODO: Change me - done
 
-    # END TODO
+    # END TODO - done
     ######################
 
     return theta_opt
@@ -149,7 +149,7 @@ def compute_error(theta, n_centers, x, y):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Returns the error (i.e. the cost function)
     #
@@ -162,9 +162,9 @@ def compute_error(theta, n_centers, x, y):
     design = design_matrix(x, centers, sigma)
     predict = np.dot(design, theta)
     power_2 = np.power(predict - y, 2)
-    err = np.mean(power_2)  # TODO: Change me
+    err = np.mean(power_2)  # TODO: Change me - done
 
-    # END TODO
+    # END TODO - done
     ######################
 
     return err

@@ -34,7 +34,7 @@ def main():
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Compute the arrays containing the Means Square Errors in all cases
     #
@@ -57,7 +57,7 @@ def main():
     i_best = np.argmin(mse_val)
 
     #
-    # TODO END
+    # TODO END - done
     ######################
 
     # Plot the training error as a function of the degrees

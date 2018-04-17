@@ -26,8 +26,8 @@ def design_matrix(x, degree):
 
     EX: for the data x = [0,1,2] and degree 2
     the function should return: [[1, 0, 0],
-								 [1, 1, 1],
-								 [1, 2, 4]]
+                                [1, 1, 1],
+                                [1, 2, 4]]
 
     :param x: numpy array of shape (N,1)
     :param degree: Higher degree of the polynomial
@@ -36,7 +36,7 @@ def design_matrix(x, degree):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Return the numpy array of shape (N,degree+1)
     # Storing the data of the form x_i^j at row i and column j
@@ -44,16 +44,14 @@ def design_matrix(x, degree):
     #
     # TIP: use the power function from numpy
 
-    # END TODO
+    # END TODO - done
     ######################
 
-    generated_design_matrix = np.zeros((x.size, degree + 1))
+    generated_design_matrix = np.zeros((x.size, degree + 1))  # TODO: change me - done
 
     for i in range(0, x.size):
         for j in range(0, degree + 1):
             generated_design_matrix[i][j] = np.power(x[i], j)
-
-    # generated_design_matrix = [[np.power(x.item(j), i) for i in range(0, x.size)] for j in range(0, degree + 1)]  # TODO: change me
 
     return generated_design_matrix
 
@@ -72,7 +70,7 @@ def train(x, y, degree):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Returns the analytical solution of the linear regression
     #
@@ -91,9 +89,9 @@ def train(x, y, degree):
     inverted = np.linalg.pinv(dot_product)
     dot_product_2 = np.dot(inverted, transposed)
 
-    theta_opt = np.dot(dot_product_2, y)  # TODO: Change me
+    theta_opt = np.dot(dot_product_2, y)  # TODO: Change me - done
 
-    # END TODO
+    # END TODO - done
     ######################
 
     return theta_opt
@@ -113,7 +111,7 @@ def compute_error(theta, degree, x, y):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Returns the error (i.e. the cost function)
     #
@@ -131,10 +129,10 @@ def compute_error(theta, degree, x, y):
     mean_error = predict - y
 
     power_2 = np.power(mean_error, 2)
-    err = np.mean(power_2)  # TODO: Change me
+    err = np.mean(power_2)  # TODO: Change me - done
 
     #
-    # END TODO
+    # END TODO - done
     ######################
 
     return err

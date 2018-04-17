@@ -12,6 +12,7 @@ Section: Gradient descent (GD) (Logistic Regression)
 TODO Fill the cost function and the gradient
 """
 
+
 def cost(theta, x, y):
     """
     Cost of the logistic regression function.
@@ -23,7 +24,7 @@ def cost(theta, x, y):
     """
     ##############
     #
-    # TODO
+    # TODO - done
     #
     # Write the cost of logistic regression as defined in the lecture
     # Hint:
@@ -49,7 +50,7 @@ def cost(theta, x, y):
 
     c = (-1) * (1 / m) * (positive_samples + negative_samples)
 
-    # END TODO
+    # END TODO - done
     ###########
 
     return c
@@ -68,7 +69,7 @@ def grad(theta, x, y):
 
     ##############
     #
-    # TODO
+    # TODO - done
     #
 
     m, n = x.shape
@@ -82,7 +83,7 @@ def grad(theta, x, y):
         for i in range(0, m):
             gradient[j] += mean_error[i] * x[i][j]
 
-    # END TODO
+    # END TODO - done
     ###########
 
     # sigma = cost(theta, x, y)

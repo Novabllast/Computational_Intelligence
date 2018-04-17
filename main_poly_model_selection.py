@@ -47,7 +47,7 @@ def main():
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Find the best degree that minimizes the validation error.
     # Store it in the variable i_best for plotting the results
@@ -55,11 +55,11 @@ def main():
     # TIPs:
     # - use the argmin function of numpy
     # - the code above is already giving the vectors of errors
-    i_best = np.argmin(mse_val)  # TODO: Change this
+    i_best = np.argmin(mse_val)  # TODO: Change this - done
     best_degree = degrees[i_best]
     best_theta = theta_list[i_best]
     #
-    # END TODO
+    # END TODO - done
     ######################
 
     # Plot the training error as a function of the degrees
