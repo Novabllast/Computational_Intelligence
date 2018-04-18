@@ -53,6 +53,9 @@ def main():
     theta_list = np.zeros(K, dtype=object)
     n_centers = np.arange(K) + 1
 
+    for i in range(K):
+        theta_list[i], mse_train[i], mse_val[i], mse_test[i] = rbf.train_and_test(data, n_centers[i])
+
     # Compute the MSE values
     i_best = np.argmin(mse_val)
 
