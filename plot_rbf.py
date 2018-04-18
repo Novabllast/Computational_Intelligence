@@ -96,7 +96,8 @@ def plot_errors(i_best, n_centers, mse_train, mse_val, mse_test):
     for mse, lab in zip([mse_train, mse_val, mse_test], ['train', 'val', 'test']):
         plt.plot(n_centers, mse, label=lab, linewidth=3)
 
-    plt.ylim([0, 1])
+    # plt.ylim([0, 1])
+    plt.ylim([0, 2])
     plt.axvline(x=n_centers[i_best], color='black', linestyle='--', linewidth=3,
                 label='Optimal RBFs {}'.format(n_centers[i_best]))
     plt.xlabel('RBFs')
