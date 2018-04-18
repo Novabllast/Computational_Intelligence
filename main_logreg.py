@@ -21,9 +21,9 @@ This is the main file that loads the data, compute the solution and plot the res
 
 def main():
     # Set parameters
-    degree = 1
-    eta = 1.
-    max_iter = 20
+    degree = 2
+    eta = 15
+    max_iter = 200
 
     # Load data and expand with polynomial features
     f = open('data_logreg.json', 'r')
