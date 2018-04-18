@@ -22,23 +22,25 @@ TODO boxes are to be found in 'rbf.py'
 
 
 def main():
-    # Set the n_centers of the polynomial expansion
-    n_centers = 20
+    # for i in range(1, 41):
+        n_centers = 40
 
-    data_path = 'data_linreg.json'
+        # Set the n_centers of the polynomial expansion
 
-    # Load the data
-    f = open(data_path, 'r')
-    data = json.load(f)
-    for k, v in data.items():
-        data[k] = np.array(v).reshape((len(v), 1))
+        data_path = 'data_linreg.json'
 
-    # Print the training and testing errors
-    theta, err_train, err_val, err_test = rbf.train_and_test(data, n_centers)
-    print('Training error {} \t Validation error {} \t Testing error {} '.format(err_train, err_val, err_test))
+        # Load the data
+        f = open(data_path, 'r')
+        data = json.load(f)
+        for k, v in data.items():
+            data[k] = np.array(v).reshape((len(v), 1))
 
-    plot_rbf(data, n_centers, theta)
-    plt.show()
+        # Print the training and testing errors
+        theta, err_train, err_val, err_test = rbf.train_and_test(data, n_centers)
+        print('Training error {} \t Validation error {} \t Testing error {} '.format(err_train, err_val, err_test))
+
+        plot_rbf(data, n_centers, theta)
+        plt.show()
 
 
 if __name__ == '__main__':
