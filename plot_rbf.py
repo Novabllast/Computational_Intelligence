@@ -82,7 +82,7 @@ def plot_errors(i_best, n_centers, mse_train, mse_val, mse_test):
 
     ######################
     #
-    # TODO
+    # TODO - done
     #
     # Plot with the Mean Square Error as a function of the number of centers
     # Use a different color for each sets: train, validation and test
@@ -104,5 +104,5 @@ def plot_errors(i_best, n_centers, mse_train, mse_val, mse_test):
     plt.legend()
 
     #
-    # END TODO
+    # END TODO - done
     ##############
