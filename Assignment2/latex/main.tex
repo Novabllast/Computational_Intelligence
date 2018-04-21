@@ -1,0 +1,211 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+%%%%%%%%% begin snippet
+%% You need to add the package "tabularx".
+%% Place the snippet right after \begin{document}
+
+% need tabularx
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{paralist}
+\usepackage{amssymb,amsmath,amsthm,enumitem}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{subcaption}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\usepackage[hypcap=false]{caption}
+
+\begin{document}
+\title{ Computational Intelligence, SS2018 Assignment 2}
+
+\begin{titlepage}
+       \begin{center}
+             \begin{huge}
+				   %% Update assignment number here
+                   \textbf{Assignment 2}
+             \end{huge}
+       \end{center}
+
+       \begin{center}
+             \begin{large}
+                   Computational Intelligence, SS2018
+             \end{large}
+       \end{center}
+
+       \begin{center}
+ \begin{tabularx}{\textwidth}{|>{\hsize=.33\hsize}X|>{\hsize=.33\hsize}X|>{\hsize=.33\hsize}X|} 
+
+                   \hline
+                   \multicolumn{3}{|c|}{\textbf{Team Members}} \\
+                   \hline
+                   STRUGER & Patrick & 01530664 \\
+                   \hline
+                   B\"OCK & Manfred & 01530598 \\
+                   \hline
+                   HAUPT & Anna & 01432018 \\
+                   \hline
+
+             \end{tabularx}
+       \end{center}
+
+\end{titlepage}
+
+%%%%%%%%% end snippet
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Regression with Neural Networks}
+
+\subsection{Simple Regression with Neural Networks}
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Learned function}
+    In the function ex\_1\_1\_a in file nn\_regression.py:
+    \begin{itemize}
+        \item Write code to train a neural network on the training set using the regressor method fit, and compute the output predicted on the testing set using the method predict.
+        \item Plot the learned functions for $n_h = 2, n_h = 8 ~and ~n_h = 40$ using the test dataset. Use the function plot\_learned\_function in nn\_regression\_plot.py for the plot.
+    \end{itemize}
+    In your report:    
+    \begin{itemize}
+        \item Include plots of the learned function and the actual function for all values of $n_h$.
+        \item Interpret your results in the context of under/over fitting.
+	\end{itemize}
+    
+\item \textbf{Variability of the performance of deep neural networks}\\
+	In the function calculate\_mse in file nn\_regression.py:
+    \begin{itemize}
+    	\item Implement the calculation of MSE.
+    \end{itemize}
+    In the function ex\_1\_1\_b in file nn\_regression.py:
+    \begin{itemize}
+    	\item Wrap the training together with the MSE evaluations in a for loop, and compute the MSE across 10 different random seeds. Change the random seed by passing a different value to the random\_state argument of the neural network constructor.
+    \end{itemize}
+	In your report answer the following questions (one sentence is sufficient for each question):
+    \begin{itemize}
+    	\item What is the minimum, maximum, mean and standard deviation of the mean square error obtained on the training set? Is the min MSE obtained for the same seed on the training and on the testing set? Explain why you would need a validation set to choose the best seed?
+    	\item Unlike with linear-regression and logistic regression, even if the algorithm converged the variability of the MSE across seeds is expected. Why?
+        \item What is the source of randomness introduced by Stochastic Gradient Descent (SGD)? What source of randomness will persist if SGD is replaced by standard Gradient Descent?
+    \end{itemize}
+    
+\item \textbf{Varying the number of hidden neurons:}\\
+	In the function ex\_1\_1\_c in file nn\_regression.py:
+    \begin{itemize}
+        \item Write code to train a neural network with $n = [1, 2, 3, 4, 6, 8, 12, 20, 40]$ hidden neurons on one layer. Intialize the regressor with $max_iter=10000, tol=1e-8$.
+        \item Compute the MSE over 10 random seeds. Stack the results in an array where the first dimension corresponds to the hidden neuron number and the second dimension indexes the random seed number.
+        \item Plot the mean and standard deviation as a function of $n_h$ for both the training and test data using the function plot\_mse\_vs\_neurons in nn\_regression\_plot.py.
+		\item Plot the learned functions for one of the models trained with $n_h = 40$ (make sure you use $max_iter=10000, tol=1e-8$). Use the function plot\_learned\_function in nn\_regression\_plot.py for the plot.
+    \end{itemize}
+    In your report:
+    \begin{itemize}
+      \item What is the best value of $n_h$ independently of the choice of the random seed ?
+      \item Include plots of how the MSE varies with the number of hidden neurons.
+      \item Interpret and discuss your results in the context of over/under fitting
+    \end{itemize}
+    
+\item \textbf{Variations of MSE during training:}\\
+    In the function ex\_1\_1\_d in file nn\_regression.py:
+	\begin{itemize}
+        \item Write code to train a neural network with $n_h ∈ 2, 8, 40$ hidden neurons on one layer and calculate the MSE for the testing and training set at each training iteration for a single seed, say $0$. To be able to calculate the MSEs at each iteration, set warm\_start to True and max\_iter to $1$ when initializing the network. The usage of warm\_start always keeps the previously learnt parameters instead of reinitializing them randomly when fit is called. Then, loop over  iterations and successively call the fit function and calculate the MSE on both datasets. Use the training solver ‘lbfgs’, for 10000 iterations. Stack the results in an array with where the first dimension correspond to the number of hidden neurons and the second correspond to the number of iterations Use the function plot\_mse\_vs\_iterations in nn\_regression\_plot.py to plot the variation of MSE with iterations.
+        \item Replace the solver by ‘sgd’ or ‘adam’ and compute the MSE across iterations for the same values of $n_h$.
+	\end{itemize}
+    In your report, answer the following questions:
+    \begin{itemize}
+        \item Include the plot of the variations of the MSE with three different number of hidden neurons for each solver.
+        \item Is the risk of overfitting increasing or decreasing with the number of hidden neurons ? 	\item ‘adam’ is a variant of ‘sgd’ and both are first order methods (the parameter updates are based on the gradient only), whereas ‘lbfgs’ is a second order method (the updates are also based on the Hessian). Which methods seem to perform best in this problem ? What feature of stochastic gradient descent helps to overcome overfitting ? The neural network is rather small as compared to what is used is real-life problems, according to your analysis which solver will be more appropriate when the number of neurons increases ?
+    \end{itemize}         
+\end{enumerate}
+
+\subsection{Regularized Neural Networks}
+Now we want to investigate different regularization methods for neural networks, i.e. weight decay and early stopping. Use the same dataset as before.
+
+\begin{enumerate}[label=(\alph*)]
+	\item \textbf{Weight Decay:}\\
+    Here, we train the network with different values of the regularization parameter $\alpha$. The loss function in this case looks like this:
+    \[
+    	msereg = mse + \frac{\alpha}{2n}\sum_i w_i^2
+    \]
+    In the function ex\_1\_2\_a in file nn\_regression.py:
+    \begin{itemize}
+        \item Write code to train a neural network with $n = 40$ hidden neurons with values of alpha $\alpha = [10−8, 10−7, 10−6, 10−5, 10−4, 10−3, 10−2, 10−1, 1, 10, 100]$. Stack your results in an array where the first axis correspond to the regularization parameter and the second to the number of random seeds. Use the training solver ‘lbfgs’, for 200 iterations and 10 different random seeds.
+        \item Plot the variation of MSE of the training and test set with the value of $\alpha$. Use the function plot\_mse\_vs\_alpha in nn\_regression\_plot.py to plot the MSE variation with $\alpha$.
+    \end{itemize}
+    In your report:
+	\begin{itemize}
+        \item Include plots of the variation of MSE of the training and test set with the value of $\alpha$.
+        \item What is the best value of $\alpha$?
+        \item Is regularization used to overcome overfitting or underfitting ? Why ?
+	\end{itemize}
+    
+    \item \textbf{Early Stopping:}\\
+    This question demonstrates how early stopping is very efficient at reducing overfitting. To put ourself in extreme overfitting condition, we add some noise to the training data. This is already done in nn\_regression\_main.py.\\
+	In the function ex\_1\_2\_b in file nn\_regression.py:
+    \begin{itemize}
+        \item Early stopping requires the definition of a validation set. Split your training set so that half of your old training set become your new training set and the rest is your validation set. Watch out, it is crucial to permute the order of the training set before splitting because the data in given in increasing order of $x$.
+        \item Write code to train a neural network with $n = 40$ and $\alpha = 10−3$ on each selection of the training set. Train for 2000 iterations using the ‘lbfgs’ solver for 10 different random seeds and monitor the error on each set every 20  iterations. For each individual seed, generate the list of (1) the test errors after the last iteration, (2) the test errors when the error is minimal on the validation set, (3) the ideal test error when it was minimizing the error on the test set.
+        \item Use the function plot\_bars\_early\_stopping\_mse\_comparison in nn\_regression\_plot.py to plot bar plats comparing MSE for early stopping with last iteration and the ideal case.
+    \end{itemize}
+    In your report: 
+    \begin{itemize}
+        \item Include the bar plots to compare the errors on the test sets at the last training iterations, at early stopping and when it is minimal.
+        \item In the light of question 1.1.b) is it expected that early stopping happens (validation error is minimized) at the same iteration number for all random seeds? Is it coherent with your results?
+        \item Early stopping in its standard form is a little different, instead of stopping when the validation error is minimized, one stops training as soon as the validation error increases. What are the pros and cons of those standard form of early stopping and the one you implemented?
+    \end{itemize}
+
+	\item \textbf{Combining the tricks:}\\
+     In the function ex\_1\_2\_c in file nn\_regression.py:
+    \begin{itemize}
+        \item Combining the results from all the previous questions, train a network with the ideal number of hidden neurons, regularization parameter and solver choice. Use 10 seeds, a validation set and early stopping to identify one particular network (a single seed) that performs optimally.
+    \end{itemize}
+    In your report:
+    \begin{itemize}
+        \item Explain your choice of number of hidden neurons, regularization parameter and solver. Then describe in a short paragraph but rigorously the protocol followed to identify the optimal random seed (mention all the parameter you chose such as ).
+        \item Report the mean and standard deviation of your training, validation and testing error. Report the training, validation and testing error of your optimal random seed.
+    \end{itemize}
+\end{enumerate}
+
+\section{Face Recognition with Neural Networks}
+
+\subsection{Pose Recognition}
+In the function ex\_2\_1 in file nn\_classification.py:
+\begin{itemize}
+	\item Write code to train a feed-forward neural network with 1 hidden layers containing 6 hidden units for pose recognition. Use dataset2 for training after normalization, ‘adam’ as the training solver and train for 200 iterations.
+    \item Calculate the confusion matrix
+    \item Plot the weights between each input neuron and the hidden neurons to visualize what the network has learnt in the first layer.
+\end{itemize}
+In your report:
+\begin{itemize}
+\item Include the confusion matrix you obtain and discuss. Are there any poses which can be better separated than others?
+\item Can you find particular regions of the images which get more weights than others?
+\item Include all plots in your report.
+\end{itemize}
+
+\subsection{Face Recognition}
+In the function ex\_2\_2 in file nn\_classification.py:
+\begin{itemize}
+    \item Write code to train a feed-forward neural network with 1 hidden layer containing 20 hidden units for recognising the individuals. Use dataset1 for training, ‘adam’ as the training solver and train for 1000 iterations. Use dataset2 as the test set.
+    \item Repeat the process 10 times starting from a different initial weight vector and plot the histogram for the resulting accuracy on the training and on the test set (the accuracy is proportion of correctly classified samples and it is computed with the method score of the classifier).
+    \item Use the best network (with maximal accuracy on the test set) to calculate the confusion matrix for the test set.
+	\item Plot a few misclassified images.
+\end{itemize}
+In your report:
+\begin{itemize}
+    \item Why do different networks have different accuracies? Explain the variance in the results.
+    \item Do the misclassified images have anything in common?
+    \item Include all plots in your report.
+\end{itemize}
+
+\section{Optional: Back-propagation with weight sharing}
+
+\end{document}
