@@ -28,7 +28,7 @@ def calculate_mse(nn, x, y):
     :return: Training MSE, Testing MSE
     """
     ## TODO
-    mse = 0
+    mse = mean_squared_error(y, nn.predict(x))
     return mse
 
 
@@ -44,6 +44,14 @@ def ex_1_1_a(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
+    nh = 8
+    nn = MLPRegressor(activation='logistic', solver='lbfgs',max_iter=200)
+    nn.fit(x_train, y_train)
+
+    pred_train_y = nn.predict(x_train)
+    pred_test_y = nn.predict(x_test)
+
+    plot_learned_function(nh,x_train,y_train,pred_train_y,x_test,y_test,pred_test_y)
     pass
 
 
