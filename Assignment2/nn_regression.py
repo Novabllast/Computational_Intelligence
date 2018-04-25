@@ -105,6 +105,8 @@ def ex_1_1_c(x_train, x_test, y_train, y_test):
 
 
     plot_mse_vs_neurons(np.array(train_array),np.array(test_array),n_h)
+  #  plot_learned_function(n_h[-1],x_train,y_train,train_array,x_test,y_test,test_array)
+
 
     pass
 
@@ -122,7 +124,25 @@ def ex_1_1_d(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
-    pass
+    n_h = [2,8,40]
+
+    train_array = np.zeros((3, 10000))
+    test_array = np.zeros((3, 10000))
+
+    for n in range(0, 3):
+
+        nn = MLPRegressor(tol=1e-8, activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h[n],),
+                          max_iter=1, random_state=0, warm_start=True)
+
+
+        for i in range(0,10000):
+            nn.fit(x_train, y_train)
+            train_array[n][i] = calculate_mse(nn, x_train, y_train)
+            test_array[n][i] = calculate_mse(nn, x_test, y_test)
+
+    plot_mse_vs_iterations(train_array,test_array,10000, n_h)
+
+pass
 
 
 def ex_1_2_a(x_train, x_test, y_train, y_test):
