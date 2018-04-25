@@ -28,8 +28,7 @@ def calculate_mse(nn, x, y):
     :return: Training MSE, Testing MSE
     """
     ## TODO
-    mse = mean_squared_error(y, nn.predict(x))
-    return mse
+    return mean_squared_error(y, nn.predict(x))
 
 
 def ex_1_1_a(x_train, x_test, y_train, y_test):
@@ -44,14 +43,16 @@ def ex_1_1_a(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
-    nh = 8
-    nn = MLPRegressor(activation='logistic', solver='lbfgs',max_iter=200)
+    # using 8 hidden neurons
+    n_h = 40
+    # use random state for a fixed split - guarantees always same output (200 seems beautiful)
+    nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h,), max_iter=200, random_state=200)
     nn.fit(x_train, y_train)
 
     pred_train_y = nn.predict(x_train)
     pred_test_y = nn.predict(x_test)
 
-    plot_learned_function(nh,x_train,y_train,pred_train_y,x_test,y_test,pred_test_y)
+    plot_learned_function(n_h, x_train, y_train, pred_train_y, x_test, y_test, pred_test_y)
     pass
 
 

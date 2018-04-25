@@ -29,10 +29,12 @@ class Perceptron:
 
     def _fit(self, x_train, y_train):
         ## TODO
+        #SkPerceptron.fit(x_train, y_train)
         pass
 
     def _predict(self, x):
         ## TODO
+        #SkPerceptron.predict(x)
         pass
         return np.zeros(x.shape[0])
 
