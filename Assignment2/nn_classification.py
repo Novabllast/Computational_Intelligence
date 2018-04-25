@@ -1,9 +1,11 @@
 from sklearn.metrics import confusion_matrix, mean_squared_error
 
 from sklearn.neural_network.multilayer_perceptron import MLPClassifier
-from nn_classification_plot import plot_hidden_layer_weights, plot_histogram_of_acc
+from nn_classification_plot import *
 import numpy as np
 from sklearn.metrics import confusion_matrix
+
+ADAM = 'adam'
 
 __author__ = 'bellec,subramoney'
 
@@ -29,7 +31,9 @@ def ex_2_1(input2, target2):
     """
     ## TODO
 
-    nn = MLPClassifier(activation=ACTIVATION, solver='adam', hidden_layer_sizes=(6,), max_iter=200)
+    iteration = 200
+    hidden_units = 6
+    nn = MLPClassifier(activation=ACTIVATION, solver='adam', hidden_layer_sizes=(hidden_units,), max_iter=iteration)
     target_ = target2[:, 1]
     nn.fit(input2, target2)
     hidden_layer_weights = nn.coefs_
@@ -38,6 +42,7 @@ def ex_2_1(input2, target2):
     print(matrix)
 
     plot_hidden_layer_weights(hidden_layer_weights)
+
 
 def ex_2_2(input1, target1, input2, target2):
     """
@@ -49,4 +54,17 @@ def ex_2_2(input1, target1, input2, target2):
     :return:
     """
     ## TODO
-    pass
+    iteration = 1000
+    hidden_units = 20
+    mlp_classifier = MLPClassifier(activation=ACTIVATION, solver=ADAM, hidden_layer_sizes=(hidden_units,),
+                                   max_iter=iteration)
+
+    train_acc = []
+    test_acc = []
+    misclassified_images = []
+    for i in range(0, 10):
+        mlp_classifier.random_state = i
+        mlp_classifier.fit(input1, target1)
+
+    plot_histogram_of_acc(train_acc, test_acc)
+    plot_random_images(misclassified_images)
