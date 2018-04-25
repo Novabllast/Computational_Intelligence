@@ -69,13 +69,18 @@ def ex_1_1_b(x_train, x_test, y_train, y_test):
 
     ## TODO
     n_h = 8;
-    mse_array = np.zeros(10)
+    train_array = np.zeros(10)
+    test_array  = np.zeros(10)
     for i in range(0, 10):
         nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h,), max_iter=200, random_state=i)
         nn.fit(x_train, y_train)
-        mse_array[i] = calculate_mse(nn, x_test, y_test)
+        test_array[i] = calculate_mse(nn, x_test, y_test)
+        train_array[i] = calculate_mse(nn, x_train, y_train)
 
-    print("Different mean squared errors:\n", mse_array)
+    print("MEAN:\n", np.mean(train_array))
+    print("Standard derivation:\n", np.std(train_array))
+    print("Train MSE:\n", train_array)
+    print("Test MSE:\n", test_array)
     pass
 
 
@@ -156,6 +161,8 @@ def ex_1_2_a(x_train, x_test, y_train, y_test):
     :return:
     """
     ## TODO
+    
+
     pass
 
 
