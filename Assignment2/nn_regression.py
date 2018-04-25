@@ -233,4 +233,44 @@ def ex_1_2_c(x_train, x_test, y_train, y_test):
     :return:
     """
     ## TODO
-    pass
+
+    np.random.shuffle(x_train)
+    np.random.shuffle(y_train)
+
+    x_train_half_size = int(len(x_train) / 2)
+    y_train_half_size = int(len(y_train) / 2)
+    x_valid = x_train[x_train_half_size:]
+    x_train = x_train[:x_train_half_size]
+
+    y_valid = y_train[y_train_half_size:]
+    y_train = y_train[:y_train_half_size]
+
+    n = 40
+    alpha = pow(10, -3)
+    iteration = 2000
+    random_seed = 10
+    max_iter = 20
+
+    mse_test = np.zeros((iteration, random_seed))
+    mse_valid = np.zeros((iteration, random_seed))
+
+    mse_last_iter = []
+    mse_min_valid = []
+    mse_ideal_min_test = []
+
+    for seed in range(0, random_seed):
+        nn = MLPRegressor(alpha=alpha, activation=ACTIVATION, solver='lbfgs', hidden_layer_sizes=(n,),
+                          max_iter=max_iter, random_state=seed, momentum=False)
+
+        mse = 0
+        for i in range(0, iteration):
+            nn.fit(x_train, y_train)
+            mse = calculate_mse(nn, x_test, y_test)
+            mse_test[i][seed] = mse
+            mse_valid[i][seed] = calculate_mse(nn, x_valid, y_valid)
+
+        mse_last_iter.append(mse)
+        mse_min_valid.append(np.min(mse_valid[seed]))
+        mse_ideal_min_test.append(np.min(mse_test[seed]))
+
+    plot_bars_early_stopping_mse_comparison(mse_last_iter, mse_min_valid, mse_ideal_min_test)
