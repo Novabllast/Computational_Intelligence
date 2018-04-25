@@ -126,6 +126,10 @@ def compute_error(theta, degree, x, y):
 
     design = design_matrix(x, degree)
     predict = np.dot(design, theta)
+
+   # print("lol ", predict.shape)
+    #print("x ", x.shape)
+
     mean_error = predict - y
 
     power_2 = np.power(mean_error, 2)

@@ -68,13 +68,14 @@ def ex_1_1_b(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
-    hn = 8;
-    mseArray = np.zeros(10)
+    n_h = 8;
+    mse_array = np.zeros(10)
     for i in range(0, 10):
-        nn = MLPRegressor(activation='logistic', solver='lbfgs',alpha='0.0', hidden_layer_sizes=(hn), max_iter=200, random_state=i)
+        nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h,), max_iter=200, random_state=i)
         nn.fit(x_train, y_train)
-        mse = calculate_mse(nn, x_test, y_test)
-        mseArray[i] = mse
+        mse_array[i] = calculate_mse(nn, x_test, y_test)
+
+    print("Different mean squared errors:\n", mse_array)
     pass
 
 

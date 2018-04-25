@@ -93,4 +93,5 @@ def grad(theta, x, y):
     # print((1 / m) * gradient)
 
     g = (1 / m) * gradient
+
     return g
