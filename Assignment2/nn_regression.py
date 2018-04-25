@@ -97,6 +97,20 @@ def ex_1_1_c(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
+    n_h = [1,2,3,4,6,8,12,20,40]
+    train_array = np.zeros((9,10))
+    test_array = np.zeros((9,10))
+
+    for n in range(0,9):
+        for i in range(0, 10):
+            nn = MLPRegressor(tol=1e-8,activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h[n],), max_iter=1000, random_state=i)
+            nn.fit(x_train, y_train)
+            train_array[n][i] = calculate_mse(nn, x_train, y_train)
+            test_array[n][i] = calculate_mse(nn, x_test, y_test)
+
+
+    plot_mse_vs_neurons(np.array(train_array),np.array(test_array),n_h)
+
     pass
 
 

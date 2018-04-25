@@ -45,10 +45,10 @@ def main():
     #ex_1_1_a(x_train, x_test, y_train, y_test)
 
     # 1.1 b)
-    ex_1_1_b(x_train, x_test, y_train, y_test)
+  #  ex_1_1_b(x_train, x_test, y_train, y_test)
 
     # 1.1 c)
-    #ex_1_1_c(x_train, x_test, y_train, y_test)
+    ex_1_1_c(x_train, x_test, y_train, y_test)
 
     # 1.1 d)
     #ex_1_1_d(x_train, x_test, y_train, y_test)
