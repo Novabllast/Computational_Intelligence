@@ -18,7 +18,6 @@ Fill in all the sections containing TODOs!
 
 __author__ = 'bellec,subramoney'
 
-
 def load_data():
     """
     Loads the faces data from faces.json
