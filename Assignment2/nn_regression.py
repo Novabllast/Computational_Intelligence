@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from nn_regression_plot import plot_mse_vs_neurons, plot_mse_vs_iterations, plot_learned_function, \
     plot_mse_vs_alpha, plot_bars_early_stopping_mse_comparison
 
+ACTIVATION = 'logistic'
+
 """
 Computational Intelligence TU - Graz
 Assignment 2: Neural networks
@@ -70,11 +72,12 @@ def ex_1_1_b(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
-    n_h = 8;
+    n_h = 8
     train_array = np.zeros(10)
-    test_array  = np.zeros(10)
+    test_array = np.zeros(10)
     for i in range(0, 10):
-        nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h,), max_iter=200, random_state=i)
+        nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h,), max_iter=200,
+                          random_state=i)
         nn.fit(x_train, y_train)
         test_array[i] = calculate_mse(nn, x_test, y_test)
         train_array[i] = calculate_mse(nn, x_train, y_train)
@@ -99,20 +102,20 @@ def ex_1_1_c(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
-    n_h = [1,2,3,4,6,8,12,20,40]
-    train_array = np.zeros((9,10))
-    test_array = np.zeros((9,10))
+    n_h = [1, 2, 3, 4, 6, 8, 12, 20, 40]
+    train_array = np.zeros((9, 10))
+    test_array = np.zeros((9, 10))
 
-    for n in range(0,9):
+    for n in range(0, 9):
         for i in range(0, 10):
-            nn = MLPRegressor(tol=1e-8,activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h[n],), max_iter=1000, random_state=i)
+            nn = MLPRegressor(tol=1e-8, activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h[n],),
+                              max_iter=1000, random_state=i)
             nn.fit(x_train, y_train)
             train_array[n][i] = calculate_mse(nn, x_train, y_train)
             test_array[n][i] = calculate_mse(nn, x_test, y_test)
 
-
-    plot_mse_vs_neurons(np.array(train_array),np.array(test_array),n_h)
-  #  plot_learned_function(n_h[-1],x_train,y_train,train_array,x_test,y_test,test_array)
+    plot_mse_vs_neurons(np.array(train_array), np.array(test_array), n_h)
+    #  plot_learned_function(n_h[-1],x_train,y_train,train_array,x_test,y_test,test_array)
 
 
     pass
@@ -131,7 +134,7 @@ def ex_1_1_d(x_train, x_test, y_train, y_test):
     """
 
     ## TODO
-    n_h = [2,8,40]
+    n_h = [2, 8, 40]
 
     train_array = np.zeros((3, 10000))
     test_array = np.zeros((3, 10000))
@@ -141,13 +144,13 @@ def ex_1_1_d(x_train, x_test, y_train, y_test):
         nn = MLPRegressor(tol=1e-8, activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h[n],),
                           max_iter=1, random_state=0, warm_start=True)
 
-
-        for i in range(0,10000):
+        for i in range(0, 10000):
             nn.fit(x_train, y_train)
             train_array[n][i] = calculate_mse(nn, x_train, y_train)
             test_array[n][i] = calculate_mse(nn, x_test, y_test)
 
-    plot_mse_vs_iterations(train_array,test_array,10000, n_h)
+    plot_mse_vs_iterations(train_array, test_array, 10000, n_h)
+
 
 pass
 
@@ -179,7 +182,47 @@ def ex_1_2_b(x_train, x_test, y_train, y_test):
     :return:
     """
     ## TODO
-    pass
+
+    np.random.shuffle(x_train)
+    np.random.shuffle(y_train)
+
+    x_train_half_size = int(len(x_train) / 2)
+    y_train_half_size = int(len(y_train) / 2)
+    x_valid = x_train[x_train_half_size:]
+    x_train = x_train[:x_train_half_size]
+
+    y_valid = y_train[y_train_half_size:]
+    y_train = y_train[:y_train_half_size]
+
+    n = 40
+    alpha = pow(10, -3)
+    iteration = 2000
+    random_seed = 10
+    max_iter = 20
+
+    mse_test = np.zeros((iteration, random_seed))
+    mse_valid = np.zeros((iteration, random_seed))
+
+    mse_last_iter = []
+    mse_min_valid = []
+    mse_ideal_min_test = []
+
+    for seed in range(0, random_seed):
+        nn = MLPRegressor(alpha=alpha, activation=ACTIVATION, solver='lbfgs', hidden_layer_sizes=(n,),
+                          max_iter=max_iter, random_state=seed, momentum=False)
+
+        mse = 0
+        for i in range(0, iteration):
+            nn.fit(x_train, y_train)
+            mse = calculate_mse(nn, x_test, y_test)
+            mse_test[i][seed] = mse
+            mse_valid[i][seed] = calculate_mse(nn, x_valid, y_valid)
+
+        mse_last_iter.append(mse)
+        mse_min_valid.append(np.min(mse_valid[seed]))
+        mse_ideal_min_test.append(np.min(mse_test[seed]))
+
+    plot_bars_early_stopping_mse_comparison(mse_last_iter, mse_min_valid, mse_ideal_min_test)
 
 
 def ex_1_2_c(x_train, x_test, y_train, y_test):
@@ -192,4 +235,44 @@ def ex_1_2_c(x_train, x_test, y_train, y_test):
     :return:
     """
     ## TODO
-    pass
+
+    np.random.shuffle(x_train)
+    np.random.shuffle(y_train)
+
+    x_train_half_size = int(len(x_train) / 2)
+    y_train_half_size = int(len(y_train) / 2)
+    x_valid = x_train[x_train_half_size:]
+    x_train = x_train[:x_train_half_size]
+
+    y_valid = y_train[y_train_half_size:]
+    y_train = y_train[:y_train_half_size]
+
+    n = 40
+    alpha = pow(10, -3)
+    iteration = 2000
+    random_seed = 10
+    max_iter = 20
+
+    mse_test = np.zeros((iteration, random_seed))
+    mse_valid = np.zeros((iteration, random_seed))
+
+    mse_last_iter = []
+    mse_min_valid = []
+    mse_ideal_min_test = []
+
+    for seed in range(0, random_seed):
+        nn = MLPRegressor(alpha=alpha, activation=ACTIVATION, solver='lbfgs', hidden_layer_sizes=(n,),
+                          max_iter=max_iter, random_state=seed, momentum=False)
+
+        mse = 0
+        for i in range(0, iteration):
+            nn.fit(x_train, y_train)
+            mse = calculate_mse(nn, x_test, y_test)
+            mse_test[i][seed] = mse
+            mse_valid[i][seed] = calculate_mse(nn, x_valid, y_valid)
+
+        mse_last_iter.append(mse)
+        mse_min_valid.append(np.min(mse_valid[seed]))
+        mse_ideal_min_test.append(np.min(mse_test[seed]))
+
+    plot_bars_early_stopping_mse_comparison(mse_last_iter, mse_min_valid, mse_ideal_min_test)
