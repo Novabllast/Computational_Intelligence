@@ -44,7 +44,7 @@ def main():
     ## End plot some random images
 
     ## 2.1
-    # ex_2_1(input2, target2)
+    ex_2_1(input2, target2)
     ## End 2.1
 
     ## 2.2

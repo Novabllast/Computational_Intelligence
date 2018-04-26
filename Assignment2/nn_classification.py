@@ -5,8 +5,6 @@ from nn_classification_plot import *
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
-ADAM = 'adam'
-
 __author__ = 'bellec,subramoney'
 
 """
@@ -49,7 +47,7 @@ def ex_2_1(input2, target2):
     matrix = confusion_matrix(pose, y_pred)
     print("The Confusion Matrix we obtained: \n" + str(matrix))
 
-    plot_hidden_layer_weights(hidden_layer_weights)
+    plot_hidden_layer_weights(hidden_layer_weights) # TODO
 
 
 def ex_2_2(input1, target1, input2, target2):
@@ -64,7 +62,7 @@ def ex_2_2(input1, target1, input2, target2):
     ## TODO
     iteration = 1000
     hidden_units = 20
-    mlp_classifier = MLPClassifier(activation=ACTIVATION, solver=ADAM, hidden_layer_sizes=(hidden_units,),
+    mlp_classifier = MLPClassifier(activation=ACTIVATION, solver="adam", hidden_layer_sizes=(hidden_units,),
                                    max_iter=iteration)
 
     train_acc = []
@@ -96,11 +94,11 @@ def ex_2_2(input1, target1, input2, target2):
 
     annas_favorit_number = 177
     strugers_favorit_number = 42
-    marcos_favorit_numer = 490357
+    marcos_favorit_numer = 490
     manfreds_favorit_number_aka_best_number = 7
     best_numbers_ever = [annas_favorit_number, strugers_favorit_number, marcos_favorit_numer,
                          manfreds_favorit_number_aka_best_number]
 
     for i in best_numbers_ever:
         misclassified_images = input2[i, :]
-        # plot_random_images(misclassified_images) # TODO throws exception
+        plot_random_images(misclassified_images) # TODO throws exception
