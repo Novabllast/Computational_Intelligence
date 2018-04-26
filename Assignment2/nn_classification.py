@@ -70,50 +70,38 @@ def ex_2_2(input1, target1, input2, target2):
 
     test_accuracy = np.zeros(10)
     train_accuracy = np.zeros(10)
+
+    best_network = 0
+    max_accuracy = 0
+
     for i in range(0, 10):
         nn = MLPClassifier(activation=ACTIVATION, solver="adam", alpha=0.0, hidden_layer_sizes=(hidden_units,),
                                    max_iter=1000, random_state=i)
 
         nn.fit(input1, train_face)
-        test_accuracy[i] = nn.score(test_face, nn.predict(input2))
-        train_accuracy[i] = nn.score(train_face, nn.predict(input1))
+        train_accuracy[i] = nn.score(input1, train_face)
+        test_accuracy[i] = nn.score(input2, test_face)
 
-    #plot_histogram_of_acc(train_accuracy, test_accuracy)
+        if test_accuracy[i] > max_accuracy:
+            best_network = nn
+            max_accuracy = test_accuracy[i]
 
-    # train_acc = []
-    # test_acc = []
-    # training_person = target1[:, 0]
-    # test_person = target2[:, 0]
-    #
-    # for i in range(0, 10):
-    #     mlp_classifier.random_state = i
-    #     mlp_classifier.fit(input1, training_person)
-    #     predict_test = mlp_classifier.predict(input2)
-    #     predict_training = mlp_classifier.predict(input1)
-    #     #test_acc.append(mlp_classifier.score(test_person, predict_test))      # TODO throws exception
-    #     #train_acc.append(mlp_classifier.score(training_person, predict_training))# TODO throws exception
-    #     test_acc.append(accuracy_score(test_person, predict_test))
-    #     train_acc.append(accuracy_score(training_person, predict_training))
-    #
-    # best_network = max(test_acc)
-    # best_network_index = test_acc.index(best_network)
-    #
-    # mlp_classifier.random_state = best_network_index
-    # mlp_classifier.fit(input1, training_person)
-    #
-    # y_pred = mlp_classifier.predict(input2)
-    # matrix = confusion_matrix(test_person, y_pred)
-    # print("The Confusion Matrix we obtained: \n" + str(matrix))
-    #
-    # plot_histogram_of_acc(train_acc, test_acc)
-    #
-    # annas_favorit_number = 177
-    # strugers_favorit_number = 42
-    # marcos_favorit_numer = 490
-    # manfreds_favorit_number_aka_best_number = 7
-    # best_numbers_ever = [annas_favorit_number, strugers_favorit_number, marcos_favorit_numer,
-    #                      manfreds_favorit_number_aka_best_number]
-    #
-    # for i in best_numbers_ever:
-    #     misclassified_images = input2[i, :]
-    #     plot_random_images(misclassified_images) # TODO throws exception
+    plot_histogram_of_acc(train_accuracy, test_accuracy)
+
+    # Use the best network to calculate the confusion matrix for the test set.
+    y_pred = best_network.predict(input2)
+    matrix = confusion_matrix(test_face, y_pred)
+
+    print("The Confusion Matrix we obtained: \n" + str(matrix))
+
+    # Plot a few misclassified images.
+    annas_favorit_number = 177
+    marcos_favorit_numer = 490
+    strugers_favorit_number_aka_best_mirp = 13
+    manfreds_favorit_number_aka_best_number = 7
+    best_numbers_ever = [annas_favorit_number, strugers_favorit_number_aka_best_mirp, marcos_favorit_numer,
+                         manfreds_favorit_number_aka_best_number]
+
+    for i in best_numbers_ever:
+        misclassified = np.where(test_face != best_network.predict(input2))
+        plot_random_images(input2[misclassified])
