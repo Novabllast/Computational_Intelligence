@@ -17,6 +17,11 @@ Part 1: Regression with neural networks
 This file contains functions to train and test the neural networks corresponding the the questions in the assignment,
 as mentioned in comments in the functions.
 Fill in all the sections containing TODO!
+
+the first column codes the person
+the second column the pose
+the third column the emotion
+the last column indicates whether the person is wearing sunglasses
 """
 
 ACTIVATION = 'tanh'
@@ -33,13 +38,16 @@ def ex_2_1(input2, target2):
 
     iteration = 200
     hidden_units = 6
-    nn = MLPClassifier(activation=ACTIVATION, solver='adam', hidden_layer_sizes=(hidden_units,), max_iter=iteration)
-    target_ = target2[:, 1]
-    nn.fit(input2, target2)
-    hidden_layer_weights = nn.coefs_
-    print(hidden_layer_weights)
-    matrix = confusion_matrix(input2, target2)
-    print(matrix)
+    mlp_classifier = MLPClassifier(activation=ACTIVATION, solver='adam', hidden_layer_sizes=(hidden_units,),
+                                   max_iter=iteration)
+    pose = target2[:, 1]
+    mlp_classifier.fit(input2, pose)
+    coefs_ = mlp_classifier.coefs_
+    hidden_layer_weights = coefs_[0]  # using index zero because using index 1 => exception
+
+    y_pred = mlp_classifier.predict(input2)
+    matrix = confusion_matrix(pose, y_pred)
+    print("The Confusion Matrix we obtained: ", matrix)
 
     plot_hidden_layer_weights(hidden_layer_weights)
 
