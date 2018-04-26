@@ -44,15 +44,17 @@ def ex_1_1_a(x_train, x_test, y_train, y_test):
 
     ## TODO
     # using 8 hidden neurons
-    n_h = 40
-    # use random state for a fixed split - guarantees always same output (200 seems beautiful)
-    nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n_h,), max_iter=200, random_state=200)
-    nn.fit(x_train, y_train)
+    n_h = [2,8,40]
 
-    pred_train_y = nn.predict(x_train)
-    pred_test_y = nn.predict(x_test)
+    for i in n_h:
+        # use random state for a fixed split - guarantees always same output (200 seems beautiful)
+        nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(i,), max_iter=200, random_state=200)
+        nn.fit(x_train, y_train)
 
-    plot_learned_function(n_h, x_train, y_train, pred_train_y, x_test, y_test, pred_test_y)
+        pred_train_y = nn.predict(x_train)
+        pred_test_y = nn.predict(x_test)
+
+        plot_learned_function(n_h, x_train, y_train, pred_train_y, x_test, y_test, pred_test_y)
     pass
 
 
