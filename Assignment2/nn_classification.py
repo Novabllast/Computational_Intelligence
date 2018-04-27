@@ -32,7 +32,7 @@ def ex_2_1(input2, target2):
     :param target2: The target from dataset2
     :return:
     """
-    ## TODO
+    ## TODO - done
 
     hidden_units = 6
     nn = MLPClassifier(activation=ACTIVATION, solver='adam', hidden_layer_sizes=(hidden_units,),
@@ -49,8 +49,6 @@ def ex_2_1(input2, target2):
     print("The Confusion Matrix we obtained: \n" + str(matrix))
 
     plot_hidden_layer_weights(hidden_layer_weights)
-
-    pass
 
 
 def ex_2_2(input1, target1, input2, target2):
@@ -75,6 +73,7 @@ def ex_2_2(input1, target1, input2, target2):
     max_accuracy = 0
     nn = MLPClassifier(activation=ACTIVATION, solver="adam", hidden_layer_sizes=(hidden_units,),
                        max_iter=1000)
+
     for i in range(0, 10):
         nn.random_state = i
 
@@ -98,10 +97,10 @@ def ex_2_2(input1, target1, input2, target2):
     annas_favorit_number = 177
     marcos_favorit_numer = 490
     strugers_favorit_number_aka_best_mirp = 13
-    manfreds_favorit_number_aka_best_number = 7
+    manfreds_favorit_number_is_a_emirp_a_lucky_fortunate_sexy_and_happy_prime = 79
     best_numbers_ever = [annas_favorit_number, strugers_favorit_number_aka_best_mirp, marcos_favorit_numer,
-                         manfreds_favorit_number_aka_best_number]
+                         manfreds_favorit_number_is_a_emirp_a_lucky_fortunate_sexy_and_happy_prime]
 
-    for i in best_numbers_ever:
+    for _ in best_numbers_ever:
         misclassified = np.where(test_face != best_network.predict(input2))
         plot_random_images(input2[misclassified])
