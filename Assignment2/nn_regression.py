@@ -167,23 +167,23 @@ def ex_1_2_a(x_train, x_test, y_train, y_test):
     :param y_test: The testing targets
     :return:
     """
-    ## TODO
+    ## TODO - done
     n_h = 40
     test_array = np.zeros((11, 10))
     train_array = np.zeros((11, 10))
-    alphas = [pow(10, -8), pow(10, -7), pow(10, -6), pow(10, -5), pow(10, -4), pow(10, -3), pow(10, -2), pow(10, -1), 1,
-              10, 100]
-    for i in range(0, 11):
+    alphas = [pow(10, i) for i in range(-8, 3)]
+
+    for alpha in alphas:
         for j in range(0, 10):
-            nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=alphas[i], hidden_layer_sizes=(n_h,),
+            index = alphas.index(alpha)
+            nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=alpha, hidden_layer_sizes=(n_h,),
                               max_iter=200, random_state=j)
+
             nn.fit(x_train, y_train)
-            test_array[i][j] = calculate_mse(nn, x_test, y_test)
-            train_array[i][j] = calculate_mse(nn, x_train, y_train)
+            test_array[index][j] = calculate_mse(nn, x_test, y_test)
+            train_array[index][j] = calculate_mse(nn, x_train, y_train)
 
     plot_mse_vs_alpha(train_array, test_array, alphas)
-
-    pass
 
 
 def ex_1_2_b(x_train, x_test, y_train, y_test):
