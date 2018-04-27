@@ -28,13 +28,13 @@ class Perceptron:
         return y_predictions
 
     def _fit(self, x_train, y_train):
-        ## TODO
-        #SkPerceptron.fit(x_train, y_train)
+        ## TODO - Bonus
+        # SkPerceptron.fit(x_train, y_train)
         pass
 
     def _predict(self, x):
-        ## TODO
-        #SkPerceptron.predict(x)
+        ## TODO - Bonus
+        # SkPerceptron.predict(x)
         pass
         return np.zeros(x.shape[0])
 
@@ -81,7 +81,7 @@ def plot_decision_boundary(perceptron, x, y):
 
 def main():
     x, y = load_data()
-    #x, y = load_non_linearly_separable_data()
+    # x, y = load_non_linearly_separable_data()
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
 
     learning_rate = 0.1

@@ -26,6 +26,9 @@
 \setlength{\belowdisplayskip}{3pt}
 \usepackage[hypcap=false]{caption}
 
+\captionsetup{justification=centering}
+\captionsetup{format=plain, font=small, labelfont=bf}
+
 \begin{document}
 \title{ Computational Intelligence, SS2018 Assignment 2}
 
@@ -82,6 +85,32 @@
         \item Include plots of the learned function and the actual function for all values of $n_h$.
         \item Interpret your results in the context of under/over fitting.
 	\end{itemize}
+
+\begin{figure}[htp]
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/11a_2.png}
+  \captionof{figure}{Simple regression with 2 neurons.}
+  \label{plot_simple_nh2}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/11a_8.png}
+  \captionof{figure}{Simple regression with 8 neurons.}
+  \label{plot_simple_nh8}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[htp]
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/11a_40.png}
+  \captionof{figure}{Simple regression with 40 neurons.}
+  \label{plot_simple_nh40}
+\end{minipage}
+\end{figure}
+
+The more hidden neurons are used, the more accuracy in the prediction of the training data occurs. When using fewer neurons it is more likely that the effect of \textit{underfitting} occurs while when using too much neurons the effect of \textit{overfitting} may occur.
+
+\newpage
     
 \item \textbf{Variability of the performance of deep neural networks}\\
 	In the function calculate\_mse in file nn\_regression.py:
@@ -93,12 +122,46 @@
     	\item Wrap the training together with the MSE evaluations in a for loop, and compute the MSE across 10 different random seeds. Change the random seed by passing a different value to the random\_state argument of the neural network constructor.
     \end{itemize}
 	In your report answer the following questions (one sentence is sufficient for each question):
-    \begin{itemize}
-    	\item What is the minimum, maximum, mean and standard deviation of the mean square error obtained on the training set? Is the min MSE obtained for the same seed on the training and on the testing set? Explain why you would need a validation set to choose the best seed?
-    	\item Unlike with linear-regression and logistic regression, even if the algorithm converged the variability of the MSE across seeds is expected. Why?
-        \item What is the source of randomness introduced by Stochastic Gradient Descent (SGD)? What source of randomness will persist if SGD is replaced by standard Gradient Descent?
-    \end{itemize}
-    
+
+\begin{itemize}
+\item \textbf{What is the minimum, maximum, mean and standard deviation of the mean square error obtained on the training set? Is the min MSE obtained for the same seed on the training and on the testing set? Explain why you would need a validation set to choose the best seed?}
+
+\begin{table}[!h]
+\centering
+\label{ad}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Random Seed} & \textbf{Training Error} & \textbf{Testing Error} \\ \hline
+\textbf{1}  &0.05680241   & 0.13079428 \\ \hline
+\textbf{2}  &0.0572133   & 0.19897999 \\ \hline
+\textbf{3}  &\textcolor{red}{0.0432381}   & 0.20902372 \\ \hline
+\textbf{4}  &0.04436419   & \textcolor{red}{0.11277367} \\ \hline
+\textbf{5}  &0.05516039   & 0.18864168 \\ \hline
+\textbf{6}  &0.05033942   & 0.18287762 \\ \hline
+\textbf{7}  &\textcolor{blue}{0.06278832}   & 0.19871679 \\ \hline
+\textbf{8}  &0.0627082   & 0.18217017 \\ \hline
+\textbf{9}  &0.05904944   & \textcolor{blue}{0.28337206} \\ \hline
+\textbf{10} &0.0466659   & 0.19281981 \\ \hline
+\end{tabular}
+\end{table}
+
+The minimum mean squared error is \textit{0.0432381} using a random seed of 4, while the maximum mean squared error of \textit{0.06278832} occurs when using a random seed of 9. The mean is \textit{0.05383296660111668} and the standard derivation is \textit{0.00688234499225213}.
+\newline \newline
+As shown in the table above, the minimum MSE for the testing does not indicate the minimum MSE for the training set. It could be very useful to introduce a validation set because it seems to be similar to the testing set. Therefore the validation set indicates the testing set and can be used to find the best matching seed. \\
+
+\item \textbf{Unlike with linear-regression and logistic regression, even if the algorithm converged the variability of the MSE across seeds is expected. Why?}
+\newline \newline
+That is expected because of the \textit{train-test-split} function, which does not split always the same way (if random state is not set). So the initial weights for calculating the MSE across seeds is not constant. \\
+
+\item \textbf{What is the source of randomness introduced by Stochastic Gradient Descent (SGD)? What source of randomness will persist if SGD is replaced by standard Gradient Descent?}
+\newline \newline
+In Stochastic Gradient Descent the parameters for every sample observation are estimated (not just the initial one) which gives it a lot of randomness - each sample is evaluated iteratively.
+The initial random configuration will persist when replacing SGD by standard Gradient Descent.
+
+\end{itemize}
+
+\newpage
+
 \item \textbf{Varying the number of hidden neurons:}\\
 	In the function ex\_1\_1\_c in file nn\_regression.py:
     \begin{itemize}
@@ -127,6 +190,8 @@
     \end{itemize}         
 \end{enumerate}
 
+\newpage
+
 \subsection{Regularized Neural Networks}
 Now we want to investigate different regularization methods for neural networks, i.e. weight decay and early stopping. Use the same dataset as before.
 
@@ -141,13 +206,25 @@ Now we want to investigate different regularization methods for neural networks,
         \item Write code to train a neural network with $n = 40$ hidden neurons with values of alpha $\alpha = [10−8, 10−7, 10−6, 10−5, 10−4, 10−3, 10−2, 10−1, 1, 10, 100]$. Stack your results in an array where the first axis correspond to the regularization parameter and the second to the number of random seeds. Use the training solver ‘lbfgs’, for 200 iterations and 10 different random seeds.
         \item Plot the variation of MSE of the training and test set with the value of $\alpha$. Use the function plot\_mse\_vs\_alpha in nn\_regression\_plot.py to plot the MSE variation with $\alpha$.
     \end{itemize}
-    In your report:
-	\begin{itemize}
-        \item Include plots of the variation of MSE of the training and test set with the value of $\alpha$.
-        \item What is the best value of $\alpha$?
-        \item Is regularization used to overcome overfitting or underfitting ? Why ?
-	\end{itemize}
-    
+In your report:
+\begin{itemize}
+\item \textbf{Include plots of the variation of MSE of the training and test set with the value of $\alpha$.}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.50]{plots/12a.png}        \caption{Variation of MSE of the training and test set with the value of $\alpha$.}
+  \label{fig:12a}
+\end{figure}
+
+\item \textbf{What is the best value of $\alpha$?} \\
+The best value for $\alpha$ seems to be $10^{-2}$. \\
+
+\item \textbf{Is regularization used to overcome overfitting or underfitting? Why?} \\
+Regularization is used to keep the value of the regularization parameters as small as possible. Therefore it is used to overcome overfitting because it prefers simple models.
+\end{itemize}
+
+\newpage
+
     \item \textbf{Early Stopping:}\\
     This question demonstrates how early stopping is very efficient at reducing overfitting. To put ourself in extreme overfitting condition, we add some noise to the training data. This is already done in nn\_regression\_main.py.\\
 	In the function ex\_1\_2\_b in file nn\_regression.py:
@@ -175,6 +252,8 @@ Now we want to investigate different regularization methods for neural networks,
     \end{itemize}
 \end{enumerate}
 
+\newpage
+
 \section{Face Recognition with Neural Networks}
 
 \subsection{Pose Recognition}
@@ -186,10 +265,58 @@ In the function ex\_2\_1 in file nn\_classification.py:
 \end{itemize}
 In your report:
 \begin{itemize}
-\item Include the confusion matrix you obtain and discuss. Are there any poses which can be better separated than others?
-\item Can you find particular regions of the images which get more weights than others?
-\item Include all plots in your report.
+\item \textbf{Include the confusion matrix you obtain and discuss. Are there any poses which can be better separated than others?}
+\newline \newline
+The Confusion Matrix we obtained: 
+\begin{table}[th]
+\centering
+\label{confusion_matrix_pose}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+   & \textbf{Straight} & \textbf{Left} & \multicolumn{1}{l|}{\textbf{Right}} & \multicolumn{1}{l|}{\textbf{Up}} \\ \hline
+\textbf{Straight} & 15                & 4             & 5                                   & 7                                \\ \hline
+\textbf{Left}     & 3                 & 136           & 0                                   & 2                                \\ \hline
+\textbf{Right}    & 0                 & 0             & 134                                 & 4                                \\ \hline
+\textbf{Up}       & 12                & 3             & 2                                   & 127                              \\ \hline
+\end{tabular}
+\caption{Confusion Matrix}
+\end{table}
+
+%\begin{table}[th]
+% \centering
+% \label{confusion_matrix_pose}
+% \begin{tabular}{|c|c|c|c|c|} \hline
+%   & \textbf{Straight} & \textbf{Left} & \multicolumn{1}{l|}{\textbf{Right}} & \multicolumn{1}{l|}{\textbf{Up}} \\ \hline
+%\textbf{Straight} & 82                & 15             & 12                                   & 32                                \\ \hline
+%\textbf{Left}     & 2                 & 129           & 5                                   & 5                                \\ \hline
+%\textbf{Right}    & 0                 & 6             & 129                                 & 3                                \\ \hline
+%\textbf{Up}       & 8                & 6             & 8                                   & 122                              \\ \hline
+%\end{tabular}
+%\caption{Confusion Matrix}
+%\end{table}
+
+\noindent
+The higher the weight of the confusion matrix, the better the accuracy of the pose recognition. In our matrix we obtain high weights for \textit{left} and \textit{right} values. They have more accuracy than \textit{straight} or \textit{up}. But the accuracy for up poses is still very accurate.
+
+\item \textbf{Can you find particular regions of the images which get more weights than others?}
+\newline \newline
+In our confusion matrix, particular the \textit{left}, \textit{right} and the \textit{up} regions got more weights than others. The higher the diagonal values of the matrix, the more accuracy we have in our pose recognition.
+
+\item \textbf{Include all plots in your report.} \\
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/pose_recognition.png}
+  \captionof{figure}{Recognized Poses}
+  \label{pose_recognition}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/pose_recognition_hidden_units.png}
+  \captionof{figure}{Weighted Regions}
+  \label{pose_recognition_hidden_units}
+\end{minipage}
 \end{itemize}
+
+\newpage
 
 \subsection{Face Recognition}
 In the function ex\_2\_2 in file nn\_classification.py:
@@ -201,11 +328,88 @@ In the function ex\_2\_2 in file nn\_classification.py:
 \end{itemize}
 In your report:
 \begin{itemize}
-    \item Why do different networks have different accuracies? Explain the variance in the results.
-    \item Do the misclassified images have anything in common?
-    \item Include all plots in your report.
+\item \textbf{Include all plots in your report.}
+
+\begin{figure}[htp]
+\centering
+  \includegraphics[scale=0.45]{plots/face_recognition.png}
+  \caption{Face recognition with different poses.}
+  \label{plot_simple_nh2}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.45]{plots/face_recognition_histogram.png}
+  \caption{Accuracy histogram of training and testing set.}
+  \label{plot_simple_nh8}
+\end{figure}
+
+\item \textbf{Why do different networks have different accuracies? Explain the variance in the results.}
+\newline \newline
+We computed networks with different initial weight vectors and so they differ in values and accuracy.
+The accuracy of the training set is very close to 1.0 while we got some fluctuations in the testing set, where the accuracy is still very high with mostly 0.95.
+
+\newpage
+
+The Confusion Matrix we obtained: \\
+\begin{table}[ht]
+\centering
+\label{my-label}
+\begin{tabular}{llllllllllllllllllll}
+27 & 0  & 0  & 0  & 0  & 0  & 2  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 29 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 28 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 1  & 0  & 27 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 24 & 3  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 28 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 8  & 19 & 0  & 0  & 1  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 6  & 0  & 0  & 0  & 0  & 0  & 23 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 29 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 28 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 28 & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 23 & 0  & 0  & 0  & 2  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 29 & 0  & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 27 & 0  & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 29 & 0  & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 29 & 0  & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 27 & 0  & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 29 & 0  & 0  \\
+0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 29 & 0  \\
+0  & 0  & 0  & 0  & 0  & 1  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 0  & 28
+\end{tabular}
+\caption{Confusion matrix generated by the network with the most accuracy on training set.}
+\end{table}
+
+\item \textbf{Do the misclassified images have anything in common?}
+
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/missclassified1.png}
+  \captionof{figure}{Misclassified image set 1.}
+  \label{plot_simple_nh2}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/missclassified2.png}
+  \captionof{figure}{Misclassified image set 2.}
+  \label{plot_simple_nh8}
+\end{minipage}
+
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/missclassified3.png}
+  \captionof{figure}{Misclassified image set 3.}
+  \label{plot_simple_nh2}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/missclassified4.png}
+  \captionof{figure}{Misclassified image set 4.}
+  \label{plot_simple_nh8}
+\end{minipage}
+\newline \newline \newline
+Some of the images are very equal to each other. Also the poses, especially \textit{left} and \textit{right} commonly appear in all misclassified image sets. 
+
 \end{itemize}
 
-\section{Optional: Back-propagation with weight sharing}
+%\section{Optional: Back-propagation with weight sharing}
 
 \end{document}
