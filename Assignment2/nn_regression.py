@@ -117,7 +117,6 @@ def ex_1_1_c(x_train, x_test, y_train, y_test):
     plot_mse_vs_neurons(np.array(train_array), np.array(test_array), n_h)
     #  plot_learned_function(n_h[-1],x_train,y_train,train_array,x_test,y_test,test_array)
 
-
     pass
 
 
@@ -166,7 +165,18 @@ def ex_1_2_a(x_train, x_test, y_train, y_test):
     :return:
     """
     ## TODO
-    
+    n_h = 40
+    test_array = np.zeros((11, 10))
+    train_array = np.zeros((11, 10))
+    alphas = [pow(10, -8), pow(10, -7), pow(10, -6), pow(10, -5), pow(10, -4), pow(10, -3), pow(10, -2), pow(10, -1), 1, 10, 100]
+    for i in range(0, 11):
+        for j in range(0, 10):
+            nn = MLPRegressor(activation='logistic', solver='lbfgs', alpha=alphas[i], hidden_layer_sizes=(n_h,), max_iter=200, random_state=j)
+            nn.fit(x_train, y_train)
+            test_array[i][j] = calculate_mse(nn, x_test, y_test)
+            train_array[i][j] = calculate_mse(nn, x_train, y_train)
+
+    plot_mse_vs_alpha(train_array, test_array, alphas)
 
     pass
 
@@ -181,6 +191,7 @@ def ex_1_2_b(x_train, x_test, y_train, y_test):
     :param y_test: The testing targets
     :return:
     """
+
     ## TODO
 
     np.random.shuffle(x_train)

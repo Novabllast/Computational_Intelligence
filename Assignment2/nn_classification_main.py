@@ -18,6 +18,7 @@ Fill in all the sections containing TODOs!
 
 __author__ = 'bellec,subramoney'
 
+
 def load_data():
     """
     Loads the faces data from faces.json
@@ -47,7 +48,7 @@ def main():
     ## End 2.1
 
     ## 2.2
-    # ex_2_2(input1, target1, input2, target2)
+    ex_2_2(input1, target1, input2, target2)
     ## End 2.2
 
 
