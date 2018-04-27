@@ -35,8 +35,8 @@ def ex_2_1(input2, target2):
     ## TODO
 
     hidden_units = 6
-    nn = MLPClassifier(activation=ACTIVATION, solver='adam', alpha=0.0, hidden_layer_sizes=(hidden_units,),
-                                   max_iter=200)
+    nn = MLPClassifier(activation=ACTIVATION, solver='adam', hidden_layer_sizes=(hidden_units,),
+                       max_iter=200)
     pose = target2[:, 1]
     nn.fit(input2, pose)
 
@@ -73,10 +73,10 @@ def ex_2_2(input1, target1, input2, target2):
 
     best_network = 0
     max_accuracy = 0
-
+    nn = MLPClassifier(activation=ACTIVATION, solver="adam", hidden_layer_sizes=(hidden_units,),
+                       max_iter=1000)
     for i in range(0, 10):
-        nn = MLPClassifier(activation=ACTIVATION, solver="adam", alpha=0.0, hidden_layer_sizes=(hidden_units,),
-                                   max_iter=1000, random_state=i)
+        nn.random_state = i
 
         nn.fit(input1, train_face)
         train_accuracy[i] = nn.score(input1, train_face)
