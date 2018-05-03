@@ -313,12 +313,12 @@ def ex_1_2_c(x_train, x_test, y_train, y_test):
     print("Mean: " + str(mse_test_mean))
     print("Standard deviation: " + str(mse_test_standard_deviation))
 
-    print("\n")
+    print()
     print("Mean Square Error Training: ")
     print("Mean: " + str(mse_train_mean))
     print("Standard deviation: " + str(mse_train_standard_deviation))
 
-    print("\n")
+    print()
     print("Mean Square Error Validation: ")
     print("Mean: " + str(mse_valid_mean))
     print("Standard deviation: " + str(mse_valid_standard_deviation))
