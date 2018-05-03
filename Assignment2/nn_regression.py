@@ -119,7 +119,7 @@ def ex_1_1_c(x_train, x_test, y_train, y_test):
             y_pred_train = nn.predict(x_train)
             y_pred_test = nn.predict(x_test)
 
-            if n == 40:
+            if n == 1:
                 plot_learned_function(n, x_train, y_train, y_pred_train, x_test, y_test, y_pred_test)
 
     plot_mse_vs_neurons(np.array(train_array), np.array(test_array), n_h)
@@ -144,8 +144,12 @@ def ex_1_1_d(x_train, x_test, y_train, y_test):
     train_array = np.zeros((3, iterations))
     test_array = np.zeros((3, iterations))
 
+    #solver = 'adam'
+    #solver = 'lbfgs'
+    #solver = 'sgd'
+
     for n in n_h:
-        nn = MLPRegressor(tol=1e-8, activation='logistic', solver='lbfgs', alpha=0.0, hidden_layer_sizes=(n,),
+        nn = MLPRegressor(tol=1e-8, activation='logistic', solver='adam', alpha=0.0, hidden_layer_sizes=(n,),
                           max_iter=1, random_state=0, warm_start=True)
 
         for i in range(0, iterations):
