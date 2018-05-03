@@ -265,30 +265,66 @@ def ex_1_2_c(x_train, x_test, y_train, y_test):
 
     n = 40
     alpha = pow(10, -3)
-    iteration = 2000
+    iteration = 100
     random_seed = 10
     max_iter = 20
 
     mse_test = np.zeros((iteration, random_seed))
     mse_valid = np.zeros((iteration, random_seed))
+    mse_train = np.zeros((iteration, random_seed))
 
-    mse_last_iter = []
-    mse_min_valid = []
-    mse_ideal_min_test = []
+    mse_test_early_stopping = []
+    mse_train_early_stopping = []
+    mse_valid_early_stopping = []
+
+    nn = MLPRegressor(alpha=alpha, activation=ACTIVATION, solver='lbfgs', hidden_layer_sizes=(n,),
+                      max_iter=max_iter, momentum=False)
 
     for seed in range(0, random_seed):
-        nn = MLPRegressor(alpha=alpha, activation=ACTIVATION, solver='lbfgs', hidden_layer_sizes=(n,),
-                          max_iter=max_iter, random_state=seed, momentum=False)
+        nn.random_state = seed
 
-        mse = 0
         for i in range(0, iteration):
             nn.fit(x_train, y_train)
-            mse = calculate_mse(nn, x_test, y_test)
-            mse_test[i][seed] = mse
+            mse_test[i][seed] = calculate_mse(nn, x_train, y_train)
+            mse_train[i][seed] = calculate_mse(nn, x_test, y_test)
             mse_valid[i][seed] = calculate_mse(nn, x_valid, y_valid)
 
-        mse_last_iter.append(mse)
-        mse_min_valid.append(np.min(mse_valid[seed]))
-        mse_ideal_min_test.append(np.min(mse_test[seed]))
+        early_stopping = mse_valid[:, seed]
+        early_stopping_index = np.argmin(early_stopping)
+        mse_test_early_stopping.append(mse_train[early_stopping_index, seed])
+        mse_train_early_stopping.append(mse_test[early_stopping_index, seed])
+        mse_valid_early_stopping.append(mse_valid[early_stopping_index, seed])
 
-    plot_bars_early_stopping_mse_comparison(mse_last_iter, mse_min_valid, mse_ideal_min_test)
+    mse_test_mean = np.mean(mse_test_early_stopping)
+    mse_test_standard_deviation = np.std(mse_test_early_stopping)
+
+    mse_train_mean = np.mean(mse_train_early_stopping)
+    mse_train_standard_deviation = np.std(mse_train_early_stopping)
+
+    mse_valid_mean = np.mean(mse_valid_early_stopping)
+    mse_valid_standard_deviation = np.std(mse_valid_early_stopping)
+
+    optimal_seed = np.argmin(mse_valid_early_stopping)
+    mse_test_optimal = np.argmin(mse_test_early_stopping)
+    mse_train_optimal = np.argmin(mse_train_early_stopping)
+    mse_valid_optimal = np.argmin(mse_valid_early_stopping)
+
+    print("Mean Square Error Test: ")
+    print("Mean: " + str(mse_test_mean))
+    print("Standard deviation: " + str(mse_test_standard_deviation))
+
+    print("\n")
+    print("Mean Square Error Training: ")
+    print("Mean: " + str(mse_train_mean))
+    print("Standard deviation: " + str(mse_train_standard_deviation))
+
+    print("\n")
+    print("Mean Square Error Validation: ")
+    print("Mean: " + str(mse_valid_mean))
+    print("Standard deviation: " + str(mse_valid_standard_deviation))
+
+    print("\n")
+    print("Optimal seed: ", optimal_seed)
+    print("Training MSE with optimal seed: " + str(mse_test_optimal))
+    print("Testing MSE with optimal seed:  " + str(mse_train_optimal))
+    print("Validation with optimal seed:   " + str(mse_valid_optimal))
