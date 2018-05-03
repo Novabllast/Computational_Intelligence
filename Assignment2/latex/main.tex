@@ -172,22 +172,102 @@ The initial random configuration will persist when replacing SGD by standard Gra
     \end{itemize}
     In your report:
     \begin{itemize}
-      \item What is the best value of $n_h$ independently of the choice of the random seed ?
-      \item Include plots of how the MSE varies with the number of hidden neurons.
-      \item Interpret and discuss your results in the context of over/under fitting
-    \end{itemize}
+\item \textbf{What is the best value of $n_h$ independently of the choice of the random seed?}
+\newline
+The best amount of neural networks we obtained is 6. \\
+
+\item \textbf{Include plots of how the MSE varies with the number of hidden neurons.}
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.25]{plots/11c_1.png}
+  \captionof{figure}{Regression with 1 neuron \\ $\rightarrow$ \textit{underfitting}.}
+  \label{plot_simple_nh2}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.25]{plots/11c_6.png}
+  \captionof{figure}{Regression with 6 neuron \\ $\rightarrow$ \textit{mostly accurate}.}
+  \label{plot_simple_nh8}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.25]{plots/11c_20.png}
+  \captionof{figure}{Regression with 20 neuron \\ $\rightarrow$ \textit{overfitting}}
+  \label{plot_simple_nh2}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.25]{plots/11c_40.png}
+  \captionof{figure}{Regression with 40 neuron \\ $\rightarrow$ \textit{overfitting}}
+  \label{plot_simple_nh8}
+\end{minipage}
+\end{figure}
+
+\newpage
+
+\item \textbf{Interpret and discuss your results in the context of over/under fitting}
+\newline \newline
+When using neurons under 6, we got the problem of underfitting, while when using more than 40 neurons the effect of overfitting may occur.
+\end{itemize}
     
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.35]{plots/11c_mseVSneurons.png}
+  \captionof{figure}{The mean and standard deviation as a function of $n\_{h}$ for both the training and test data.}
+  \label{plot_simple_nh}
+\end{figure}
+\hfill
+
 \item \textbf{Variations of MSE during training:}\\
-    In the function ex\_1\_1\_d in file nn\_regression.py:
-	\begin{itemize}
-        \item Write code to train a neural network with $n_h ∈ 2, 8, 40$ hidden neurons on one layer and calculate the MSE for the testing and training set at each training iteration for a single seed, say $0$. To be able to calculate the MSEs at each iteration, set warm\_start to True and max\_iter to $1$ when initializing the network. The usage of warm\_start always keeps the previously learnt parameters instead of reinitializing them randomly when fit is called. Then, loop over  iterations and successively call the fit function and calculate the MSE on both datasets. Use the training solver ‘lbfgs’, for 10000 iterations. Stack the results in an array with where the first dimension correspond to the number of hidden neurons and the second correspond to the number of iterations Use the function plot\_mse\_vs\_iterations in nn\_regression\_plot.py to plot the variation of MSE with iterations.
+In the function ex\_1\_1\_d in file nn\_regression.py:
+\begin{itemize}
+\item Write code to train a neural network with $n_h ∈ 2, 8, 40$ hidden neurons on one layer and calculate the MSE for the testing and training set at each training iteration for a single seed, say $0$. To be able to calculate the MSEs at each iteration, set warm\_start to True and max\_iter to $1$ when initializing the network. The usage of warm\_start always keeps the previously learnt parameters instead of reinitializing them randomly when fit is called. Then, loop over  iterations and successively call the fit function and calculate the MSE on both datasets. Use the training solver ‘lbfgs’, for 10000 iterations. Stack the results in an array with where the first dimension correspond to the number of hidden neurons and the second correspond to the number of iterations Use the function plot\_mse\_vs\_iterations in nn\_regression\_plot.py to plot the variation of MSE with iterations.
         \item Replace the solver by ‘sgd’ or ‘adam’ and compute the MSE across iterations for the same values of $n_h$.
 	\end{itemize}
     In your report, answer the following questions:
     \begin{itemize}
-        \item Include the plot of the variations of the MSE with three different number of hidden neurons for each solver.
-        \item Is the risk of overfitting increasing or decreasing with the number of hidden neurons ? 	\item ‘adam’ is a variant of ‘sgd’ and both are first order methods (the parameter updates are based on the gradient only), whereas ‘lbfgs’ is a second order method (the updates are also based on the Hessian). Which methods seem to perform best in this problem ? What feature of stochastic gradient descent helps to overcome overfitting ? The neural network is rather small as compared to what is used is real-life problems, according to your analysis which solver will be more appropriate when the number of neurons increases ?
-    \end{itemize}         
+
+\item \textbf{Is the risk of overfitting increasing or decreasing with the number of hidden neurons?}
+\newline \newline
+In our case lbfgs seems to be perform best.
+\newline Overfitting increases with the number of hidden neurons.
+
+\newpage
+
+\item \textbf{‘adam’ is a variant of ‘sgd’ and both are first order methods (the parameter updates are based on the gradient only), whereas ‘lbfgs’ is a second order method (the updates are also based on the Hessian). Which methods seem to perform best in this problem ? What feature of stochastic gradient descent helps to overcome overfitting ? The neural network is rather small as compared to what is used is real-life problems, according to your analysis which solver will be more appropriate when the number of neurons increases?}
+\newline \newline
+To overcome overfitting are the regularization parameter alpha, early stopping or mini-batch learning is used.
+If the number of neurons increases first order methods are more appropriate (e.g adam solver). \\
+
+\item \textbf{Include the plot of the variations of the MSE with three different number of hidden neurons for each solver.}
+
+\begin{figure}[htp]
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/11d_adam.png}
+  \captionof{figure}{Variation with  Adam Solver.}
+  \label{plot_simple_nh2}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/11d_lbfgs.png}
+  \captionof{figure}{Variation with Lbfgs Solver.}
+  \label{plot_simple_nh8}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[htp]
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.35]{plots/11d_sgd.png}
+  \captionof{figure}{Variation with Sgd Solver.}
+  \label{plot_simple_nh40}
+\end{minipage}
+\end{figure}
+
+\end{itemize}         
 \end{enumerate}
 
 \newpage
@@ -233,23 +313,72 @@ Regularization is used to keep the value of the regularization parameters as sma
         \item Write code to train a neural network with $n = 40$ and $\alpha = 10−3$ on each selection of the training set. Train for 2000 iterations using the ‘lbfgs’ solver for 10 different random seeds and monitor the error on each set every 20  iterations. For each individual seed, generate the list of (1) the test errors after the last iteration, (2) the test errors when the error is minimal on the validation set, (3) the ideal test error when it was minimizing the error on the test set.
         \item Use the function plot\_bars\_early\_stopping\_mse\_comparison in nn\_regression\_plot.py to plot bar plats comparing MSE for early stopping with last iteration and the ideal case.
     \end{itemize}
-    In your report: 
-    \begin{itemize}
-        \item Include the bar plots to compare the errors on the test sets at the last training iterations, at early stopping and when it is minimal.
-        \item In the light of question 1.1.b) is it expected that early stopping happens (validation error is minimized) at the same iteration number for all random seeds? Is it coherent with your results?
-        \item Early stopping in its standard form is a little different, instead of stopping when the validation error is minimized, one stops training as soon as the validation error increases. What are the pros and cons of those standard form of early stopping and the one you implemented?
-    \end{itemize}
+In your report: 
+\begin{itemize}
+\item \textbf{Include the bar plots to compare the errors on the test sets at the last training iterations, at early stopping and when it is minimal.}
 
-	\item \textbf{Combining the tricks:}\\
-     In the function ex\_1\_2\_c in file nn\_regression.py:
-    \begin{itemize}
-        \item Combining the results from all the previous questions, train a network with the ideal number of hidden neurons, regularization parameter and solver choice. Use 10 seeds, a validation set and early stopping to identify one particular network (a single seed) that performs optimally.
-    \end{itemize}
-    In your report:
-    \begin{itemize}
-        \item Explain your choice of number of hidden neurons, regularization parameter and solver. Then describe in a short paragraph but rigorously the protocol followed to identify the optimal random seed (mention all the parameter you chose such as ).
-        \item Report the mean and standard deviation of your training, validation and testing error. Report the training, validation and testing error of your optimal random seed.
-    \end{itemize}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.35]{plots/12b.png}
+  \captionof{figure}{Early stopping.}
+  \label{plot_simple_nh}
+\end{figure}
+
+\item \textbf{In the light of question 1.1.b) is it expected that early stopping happens (validation error is minimized) at the same iteration number for all random seeds? Is it coherent with your results?}
+\newline \newline
+It is not expected that early stopping happens at the same iteration number for all random seeds because of the different initial weights set by the random state parameter. This is also shown in our results.
+
+\item \textbf{Early stopping in its standard form is a little different, instead of stopping when the validation error is minimized, one stops training as soon as the validation error increases. What are the pros and cons of those standard form of early stopping and the one you implemented?}
+\newline \newline
+The standard method of early stopping stops the training when the validation error increases, this is why this method can be faster but the validation error can be higher.
+\end{itemize}
+
+\newpage
+
+\item \textbf{Combining the tricks:}\\
+In the function ex\_1\_2\_c in file nn\_regression.py:
+\begin{itemize}
+\item Combining the results from all the previous questions, train a network with the ideal number of hidden neurons, regularization parameter and solver choice. Use 10 seeds, a validation set and early stopping to identify one particular network (a single seed) that performs optimally.
+\end{itemize}
+In your report:
+\begin{itemize}
+\item \textbf{Explain your choice of number of hidden neurons, regularization parameter and solver. Then describe in a short paragraph but rigorously the protocol followed to identify the optimal random seed (mention all the parameter you chose such as).}
+\newline \newline
+We decided to use 40 neurons for the calculation for reliable measurements because we used this amount of neurons for the previous calculations, so we are able to get valid and comparable data.
+For the regularization parameter alpha we used \textit{$10^{-2}$} regarding the best value for alpha from exercise 1.2a.
+By experimenting with different values for the solver and regularization parameter, we got to the conclusion that the solver \textit{lbfgs} delivered the best results for our purpose.
+\newline \newline
+During the iteration over the random seeds we calculate the MSE for the training, testing and validation sets 100 times.
+We use early stopping to identify one particular network as mentioned in the assignment sheet. We then calculate the early stopping index in our MSE lists by using the \textit{argmin} function to evaluate the best matches.
+
+\item \textbf{Report the mean and standard deviation of your training, validation and testing error. Report the training, validation and testing error of your optimal random seed.}
+\newline \newline
+\textbf{Mean Square Error Test:}
+\begin{itemize}
+\item Mean: \textit{1.1399337348359726}
+\item Standard deviation: \textit{0.0023326551020294577}
+\end{itemize}
+\hfill \newline
+\textbf{Mean Square Error Training:}
+\begin{itemize}
+\item Mean: \textit{1.0163030942948361}
+\item Standard deviation: \textit{7.195428704528305e-05}
+\end{itemize}
+\hfill \newline
+\textbf{Mean Square Error Validation:}
+\begin{itemize}
+\item Mean:\textit{ 0.9796973640162612}
+\item Standard deviation: \textit{0.00038479446712075645}
+\end{itemize}
+\hfill \newline
+\textbf{Optimal seed: 1}
+\begin{itemize}
+\item Training MSE with optimal seed:\textit{ 2}
+\item Testing MSE with optimal seed: \textit{2}
+\item Validation with optimal seed: \textit{1}
+\end{itemize}
+
+\end{itemize}
 \end{enumerate}
 
 \newpage
@@ -265,6 +394,7 @@ In the function ex\_2\_1 in file nn\_classification.py:
 \end{itemize}
 In your report:
 \begin{itemize}
+
 \item \textbf{Include the confusion matrix you obtain and discuss. Are there any poses which can be better separated than others?}
 \newline \newline
 The Confusion Matrix we obtained: 
@@ -274,33 +404,20 @@ The Confusion Matrix we obtained:
 \begin{tabular}{|c|c|c|c|c|}
 \hline
    & \textbf{Straight} & \textbf{Left} & \multicolumn{1}{l|}{\textbf{Right}} & \multicolumn{1}{l|}{\textbf{Up}} \\ \hline
-\textbf{Straight} & 15                & 4             & 5                                   & 7                                \\ \hline
-\textbf{Left}     & 3                 & 136           & 0                                   & 2                                \\ \hline
-\textbf{Right}    & 0                 & 0             & 134                                 & 4                                \\ \hline
-\textbf{Up}       & 12                & 3             & 2                                   & 127                              \\ \hline
+\textbf{Straight} & 126                & 3             & 5                                   & 7                                \\ \hline
+\textbf{Left}     & 1                 & 138           & 0                                   & 2                                \\ \hline
+\textbf{Right}    & 1                 & 0             & 136                                 & 1                                \\ \hline
+\textbf{Up}       & 11                & 4             & 1                                   & 128                              \\ \hline
 \end{tabular}
 \caption{Confusion Matrix}
 \end{table}
 
-%\begin{table}[th]
-% \centering
-% \label{confusion_matrix_pose}
-% \begin{tabular}{|c|c|c|c|c|} \hline
-%   & \textbf{Straight} & \textbf{Left} & \multicolumn{1}{l|}{\textbf{Right}} & \multicolumn{1}{l|}{\textbf{Up}} \\ \hline
-%\textbf{Straight} & 82                & 15             & 12                                   & 32                                \\ \hline
-%\textbf{Left}     & 2                 & 129           & 5                                   & 5                                \\ \hline
-%\textbf{Right}    & 0                 & 6             & 129                                 & 3                                \\ \hline
-%\textbf{Up}       & 8                & 6             & 8                                   & 122                              \\ \hline
-%\end{tabular}
-%\caption{Confusion Matrix}
-%\end{table}
-
 \noindent
-The higher the weight of the confusion matrix, the better the accuracy of the pose recognition. In our matrix we obtain high weights for \textit{left} and \textit{right} values. They have more accuracy than \textit{straight} or \textit{up}. But the accuracy for up poses is still very accurate.
+The higher the weight of the confusion matrix, the better the accuracy of the pose recognition. In our matrix we obtain high weights for \textit{left} and \textit{right} values. They have more accuracy than \textit{straight} or \textit{up}. But the accuracy for up and straight poses is still very accurate.
 
 \item \textbf{Can you find particular regions of the images which get more weights than others?}
 \newline \newline
-In our confusion matrix, particular the \textit{left}, \textit{right} and the \textit{up} regions got more weights than others. The higher the diagonal values of the matrix, the more accuracy we have in our pose recognition.
+In our confusion matrix, particular the \textit{left}, \textit{right}, \textit{straight} and the \textit{up} regions got more weights than others. The higher the diagonal values of the matrix, the more accuracy we have in our pose recognition.
 
 \item \textbf{Include all plots in your report.} \\
 \begin{minipage}{0.4\textwidth}
