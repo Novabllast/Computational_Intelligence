@@ -119,7 +119,7 @@ def ex_1_1_c(x_train, x_test, y_train, y_test):
             y_pred_train = nn.predict(x_train)
             y_pred_test = nn.predict(x_test)
 
-            if n == 40 and i == 9:
+            if n == 40:
                 plot_learned_function(n, x_train, y_train, y_pred_train, x_test, y_test, y_pred_test)
 
     plot_mse_vs_neurons(np.array(train_array), np.array(test_array), n_h)
