@@ -6,6 +6,8 @@ from sklearn.metrics import confusion_matrix
 from svm_plot import plot_svm_decision_boundary, plot_score_vs_degree, plot_score_vs_gamma, plot_mnist, \
     plot_confusion_matrix
 
+RBF = 'rbf'
+
 LINEAR = 'linear'
 
 """
@@ -166,7 +168,7 @@ def ex_2_c(x_train, y_train, x_test, y_test):
     test_score = []
     train_score = []
 
-    svc = svm.SVC(kernel='rbf')
+    svc = svm.SVC(kernel=RBF)
 
     for gamma in gammas:
         svc.gamma = gamma
@@ -193,13 +195,31 @@ def ex_3_a(x_train, y_train, x_test, y_test):
     :return:
     """
     ###########
-    ## TODO:
-    ## Train multi-class SVMs with one-versus-rest strategy with
-    ## - linear kernel
-    ## - rbf kernel with gamma going from 10**-5 to 10**5
-    ## - plot the scores with varying gamma using the function plot_score_versus_gamma
-    ## - Mind that the chance level is not .5 anymore and add the score obtained with the linear kernel as optional argument of this function
+    # TODO:
+    # Train multi-class SVMs with one-versus-rest strategy with
+    # - linear kernel
+    # - rbf kernel with gamma going from 10**-5 to 10**5
+    # - plot the scores with varying gamma using the function plot_score_versus_gamma
+    # - Mind that the chance level is not .5 anymore and add the score obtained
+    #   with the linear kernel as optional argument of this function
     ###########
+
+    gammas = [pow(10, i) for i in range(-5, 6)]
+
+    svc = svm.SVC(kernel=RBF, decision_function_shape='ovr')
+    train_scores = []
+    test_scores = []
+
+    for gamma in gammas:
+        svc.gamma = gamma
+        svc.fit(x_train, y_train)
+        train_scores.append(svc.score(x_train, y_train))
+        test_scores.append(svc.score(x_test, y_test))
+
+    lin_score_train = []
+    plot_score_vs_gamma(train_scores, test_scores, gammas, lin_score_train=lin_score_train)
+    highest_error_rate = np.max(test_scores)
+    print("Highest error rate: " + highest_error_rate)
 
 
 def ex_3_b(x_train, y_train, x_test, y_test):
@@ -212,18 +232,19 @@ def ex_3_b(x_train, y_train, x_test, y_test):
     :return:
     """
     ###########
-    ## TODO:
-    ## Train multi-class SVMs with a LINEAR kernel
-    ## Use the sklearn.metrics.confusion_matrix to plot the confusion matrix.
-    ## Find the index for which you get the highest error rate.
-    ## Plot the confusion matrix with plot_confusion_matrix.
-    ## Plot the first 10 occurrences of the most misclassified digit using plot_mnist.
+    # TODO:
+    # Train multi-class SVMs with a LINEAR kernel
+    # Use the sklearn.metrics.confusion_matrix to plot the confusion matrix.
+    # Find the index for which you get the highest error rate.
+    # Plot the confusion matrix with plot_confusion_matrix.
+    # Plot the first 10 occurrences of the most misclassified digit using plot_mnist.
     ###########
 
     labels = range(1, 6)
+    y_pred = np.zeros(x_train.shape)
 
     sel_error = np.array([0])  # Numpy indices to select images that are misclassified.
     i = 0  # should be the label number corresponding the largest classification error
 
     # Plot with mnist plot
-    plot_mnist(x_test[sel_err], y_pred[sel_err], labels=labels[i], k_plots=10, prefix='Predicted class')
+    plot_mnist(x_test[sel_error], y_pred[sel_error], labels=labels[i], k_plots=10, prefix='Predicted class')
