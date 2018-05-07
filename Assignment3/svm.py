@@ -138,7 +138,9 @@ def ex_2_b(x_train, y_train, x_test, y_test):
         train_score.append(svc.score(x_train, y_train))
 
     plot_score_vs_degree(train_score, test_score, degrees)
+
     highest_test_score = np.max(test_score)
+    print("Highest test score: " + str(highest_test_score))
     svc.degree = highest_test_score
     svc.fit(x_train, y_train)
     plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
@@ -154,13 +156,31 @@ def ex_2_c(x_train, y_train, x_test, y_test):
     :return:
     """
     ###########
-    ## TODO:
-    ## Train SVMs with RBF kernels for different values of the gamma
-    ## and plot the variation of the test and training scores with gamma using 'plot_score_vs_gamma' function.
-    ## Plot the decision boundary and support vectors for the best value of gamma
-    ## using 'plot_svm_decision_boundary' function
+    # TODO:
+    # Train SVMs with RBF kernels for different values of the gamma
+    # and plot the variation of the test and training scores with gamma using 'plot_score_vs_gamma' function.
+    # Plot the decision boundary and support vectors for the best value of gamma
+    # using 'plot_svm_decision_boundary' function
     ###########
     gammas = np.arange(0.01, 2, 0.02)
+    test_score = []
+    train_score = []
+
+    svc = svm.SVC(kernel='rbf')
+
+    for gamma in gammas:
+        svc.gamma = gamma
+        svc.fit(x_train, y_train)
+        train_score.append(svc.score(x_train, y_train))
+        test_score.append(svc.score(x_test, y_test))
+
+    plot_score_vs_gamma(train_score, test_score, gammas)
+
+    highest_test_score = np.max(test_score)
+    print("Highest test score: " + str(highest_test_score))
+    svc.gamma = highest_test_score
+    svc.fit(x_train, y_train)
+    plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
 
 
 def ex_3_a(x_train, y_train, x_test, y_test):
