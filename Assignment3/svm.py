@@ -29,7 +29,9 @@ def ex_1_a(x, y):
     ## Train an SVM with a linear kernel
     ## and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
     ###########
-    pass
+    svc = svm.SVC(kernel='linear')
+    svc.fit(x, y)
+    plot_svm_decision_boundary(svc, x, y)
 
 
 def ex_1_b(x, y):
