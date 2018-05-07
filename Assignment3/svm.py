@@ -6,6 +6,8 @@ from sklearn.metrics import confusion_matrix
 from svm_plot import plot_svm_decision_boundary, plot_score_vs_degree, plot_score_vs_gamma, plot_mnist, \
     plot_confusion_matrix
 
+LINEAR = 'linear'
+
 """
 Computational Intelligence TU - Graz
 Assignment 3: Support Vector Machine, Kernels & Multiclass classification
@@ -25,11 +27,11 @@ def ex_1_a(x, y):
     :return:
     """
     ###########
-    ## TODO:
-    ## Train an SVM with a linear kernel
-    ## and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
+    # TODO:
+    # Train an SVM with a linear kernel
+    # and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
     ###########
-    svc = svm.SVC(kernel='linear')
+    svc = svm.SVC(kernel=LINEAR)
     svc.fit(x, y)
     plot_svm_decision_boundary(svc, x, y)
 
@@ -42,12 +44,18 @@ def ex_1_b(x, y):
     :return:
     """
     ###########
-    ## TODO:
-    ## Add a point (4,0) with label 1 to the data set and then
-    ## train an SVM with a linear kernel
-    ## and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
+    # TODO:
+    # Add a point (4,0) with label 1 to the data set and then
+    # train an SVM with a linear kernel
+    # and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
     ###########
-    pass
+
+    x = np.append(x, [[4, 0]], axis=0)
+    y = np.append(y, [1])
+
+    svc = svm.SVC(kernel=LINEAR)
+    svc.fit(x, y)
+    plot_svm_decision_boundary(svc, x, y)
 
 
 def ex_1_c(x, y):
@@ -58,12 +66,22 @@ def ex_1_c(x, y):
     :return:
     """
     ###########
-    ## TODO:
-    ## Add a point (4,0) with label 1 to the data set and then
-    ## train an SVM with a linear kernel with different values of C
-    ## and plot the decision boundary and support vectors  for each using 'plot_svm_decision_boundary' function
+    # TODO:
+    # Add a point (4,0) with label 1 to the data set and then
+    # train an SVM with a linear kernel with different values of C
+    # and plot the decision boundary and support vectors  for each using 'plot_svm_decision_boundary' function
     ###########
     Cs = [1e6, 1, 0.1, 0.001]
+
+    x = np.append(x, [[4, 0]], axis=0)
+    y = np.append(y, [1])
+
+    svc = svm.SVC(kernel=LINEAR)
+
+    for value in Cs:
+        svc.C = value
+        svc.fit(x, y)
+        plot_svm_decision_boundary(svc, x, y)
 
 
 def ex_2_a(x_train, y_train, x_test, y_test):
