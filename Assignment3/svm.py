@@ -118,14 +118,30 @@ def ex_2_b(x_train, y_train, x_test, y_test):
     :return:
     """
     ###########
-    ## TODO:
-    ## Train SVMs with polynomial kernels for different values of the degree
-    ## (Remember to set the 'coef0' parameter to 1)
-    ## and plot the variation of the test and training scores with polynomial degree using 'plot_score_vs_degree' func.
-    ## Plot the decision boundary and support vectors for the best value of degree
-    ## using 'plot_svm_decision_boundary' function
+    # TODO:
+    # Train SVMs with polynomial kernels for different values of the degree
+    # (Remember to set the 'coef0' parameter to 1)
+    # and plot the variation of the test and training scores with polynomial degree using 'plot_score_vs_degree' func.
+    # Plot the decision boundary and support vectors for the best value of degree
+    # using 'plot_svm_decision_boundary' function
     ###########
-    degrees = range(1, 20)
+    degrees = range(1, 21)
+    train_score = []
+    test_score = []
+
+    svc = svm.SVC(kernel='poly', coef0=1)
+
+    for degree in degrees:
+        svc.degree = degree
+        svc.fit(x_train, y_train)
+        test_score.append(svc.score(x_test, y_test))
+        train_score.append(svc.score(x_train, y_train))
+
+    plot_score_vs_degree(train_score, test_score, degrees)
+    highest_test_score = np.max(test_score)
+    svc.degree = highest_test_score
+    svc.fit(x_train, y_train)
+    plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
 
 
 def ex_2_c(x_train, y_train, x_test, y_test):
