@@ -107,7 +107,7 @@ def ex_2_a(x_train, y_train, x_test, y_test):
     plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
 
     score = svc.score(x_test, y_test)
-    print(score)
+    print("Score: " + str(score))
 
 
 def ex_2_b(x_train, y_train, x_test, y_test):
@@ -127,7 +127,7 @@ def ex_2_b(x_train, y_train, x_test, y_test):
     # Plot the decision boundary and support vectors for the best value of degree
     # using 'plot_svm_decision_boundary' function
     ###########
-    degrees = range(1, 21)
+    degrees = list(range(1, 21))
     train_score = []
     test_score = []
 
@@ -141,8 +141,9 @@ def ex_2_b(x_train, y_train, x_test, y_test):
 
     plot_score_vs_degree(train_score, test_score, degrees)
 
-    highest_test_score = np.max(test_score)
-    print("Highest test score: " + str(highest_test_score))
+    highest_test_score = max(test_score)
+    degree = test_score.index(highest_test_score) + 1
+    print("Degree " + str(degree) + " produces the Highest Test Score " + str(highest_test_score))
     svc.degree = highest_test_score
     svc.fit(x_train, y_train)
     plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
@@ -178,8 +179,10 @@ def ex_2_c(x_train, y_train, x_test, y_test):
 
     plot_score_vs_gamma(train_score, test_score, gammas)
 
-    highest_test_score = np.max(test_score)
-    print("Highest test score: " + str(highest_test_score))
+    highest_test_score = max(test_score)
+    highest_testscore_index = np.argmax(test_score)
+    gamma = gammas[highest_testscore_index]
+    print("A Gamma value of " + str(gamma) + " produces the Highest Test Score " + str(highest_test_score))
     svc.gamma = highest_test_score
     svc.fit(x_train, y_train)
     plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)

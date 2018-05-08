@@ -67,8 +67,8 @@ def ex_3():
 
 
 def main():
-    # ex_1()
-    # ex_2()
+    ex_1()
+    ex_2()
     ex_3()
 
 
