@@ -29,7 +29,7 @@ def ex_1_a(x, y):
     :return:
     """
     ###########
-    # TODO:
+    # TODO: - done
     # Train an SVM with a linear kernel
     # and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
     ###########
@@ -46,7 +46,7 @@ def ex_1_b(x, y):
     :return:
     """
     ###########
-    # TODO:
+    # TODO: - done
     # Add a point (4,0) with label 1 to the data set and then
     # train an SVM with a linear kernel
     # and plot the decision boundary and support vectors using 'plot_svm_decision_boundary' function
@@ -68,7 +68,7 @@ def ex_1_c(x, y):
     :return:
     """
     ###########
-    # TODO:
+    # TODO: - done
     # Add a point (4,0) with label 1 to the data set and then
     # train an SVM with a linear kernel with different values of C
     # and plot the decision boundary and support vectors  for each using 'plot_svm_decision_boundary' function
@@ -96,7 +96,7 @@ def ex_2_a(x_train, y_train, x_test, y_test):
     :return:
     """
     ###########
-    # TODO:
+    # TODO: - done
     # Train an SVM with a linear kernel for the given dataset
     # and plot the decision boundary and support vectors  for each using 'plot_svm_decision_boundary' function
     ###########
@@ -159,7 +159,7 @@ def ex_2_c(x_train, y_train, x_test, y_test):
     :return:
     """
     ###########
-    # TODO:
+    # TODO: - done
     # Train SVMs with RBF kernels for different values of the gamma
     # and plot the variation of the test and training scores with gamma using 'plot_score_vs_gamma' function.
     # Plot the decision boundary and support vectors for the best value of gamma
@@ -209,7 +209,7 @@ def ex_3_a(x_train, y_train, x_test, y_test):
 
     gammas = [pow(10, i) for i in range(-5, 6)]
 
-    svc = svm.SVC(kernel=RBF, decision_function_shape='ovr')
+    svc = svm.SVC(C=10, kernel=RBF, decision_function_shape='ovr')
     train_scores = []
     test_scores = []
 
@@ -219,10 +219,16 @@ def ex_3_a(x_train, y_train, x_test, y_test):
         train_scores.append(svc.score(x_train, y_train))
         test_scores.append(svc.score(x_test, y_test))
 
-    lin_score_train = []
-    plot_score_vs_gamma(train_scores, test_scores, gammas, lin_score_train=lin_score_train)
+    svc.kernel = LINEAR
+    svc.gamma = 'auto'
+    svc.fit(x_train, y_train)
+
+    lin_score_test = svc.score(x_test, y_test)
+    lin_score_train = svc.score(x_train, y_train)
+
+    plot_score_vs_gamma(train_scores, test_scores, gammas, lin_score_train, lin_score_test)
     highest_error_rate = np.max(test_scores)
-    print("Highest error rate: " + highest_error_rate)
+    print("Highest error rate: " + str(highest_error_rate))
 
 
 def ex_3_b(x_train, y_train, x_test, y_test):
@@ -244,7 +250,12 @@ def ex_3_b(x_train, y_train, x_test, y_test):
     ###########
 
     labels = range(1, 6)
-    y_pred = np.zeros(x_train.shape)
+    svc = svm.SVC(C=10, kernel=LINEAR)
+    svc.fit(x_train, y_train)
+    y_pred = svc.predict(x_test)
+
+    con_matrix = confusion_matrix(y_test, y_pred, labels)
+    plot_confusion_matrix(con_matrix, labels)
 
     sel_error = np.array([0])  # Numpy indices to select images that are misclassified.
     i = 0  # should be the label number corresponding the largest classification error
