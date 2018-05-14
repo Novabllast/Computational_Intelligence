@@ -185,7 +185,7 @@ def ex_2_c(x_train, y_train, x_test, y_test):
     highest_testscore_index = np.argmax(test_score)
     gamma = gammas[highest_testscore_index]
     print("A Gamma value of " + str(gamma) + " produces the Highest Test Score " + str(highest_test_score))
-    svc.gamma = highest_test_score
+    svc.gamma = gamma
     svc.fit(x_train, y_train)
     plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
 

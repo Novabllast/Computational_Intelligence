@@ -202,7 +202,7 @@ Plot the decision boundary and support vectors for the kernel with the highest t
 \hfill
 \begin{minipage}{0.4\textwidth}
   \includegraphics[scale=0.30]{plots/ex2b_2.png}
-  \captionof{figure}{Decision boundary and support vectors for the kernel with the highest test score. \textcolor{red}{[ntbd]}}
+  \captionof{figure}{Decision boundary and support vectors for the kernel with the highest test score.}
   \label{fig:11}
 \end{minipage}
 \end{figure}
@@ -214,7 +214,6 @@ Degree 9 produces the Highest Test Score 0.9575
 \newpage
 
 \item Fill in function ex\_2\_c in file svm.py to repeat the above steps for an RBF kernel with values of $\gamma = 0.01, 0.03, . . . , 1.97, 1.99$. Plot the variation of training and testing score with the value of $\gamma$ using the function plot\_score\_vs\_gamma in file svm\_plot.py. Plot the decision boundary and support vectors for the kernel with the highest test score using plot\_svm\_decision\_boundary.
-\newline \newline
 
 \begin{figure}[htp]
 \centering
@@ -250,13 +249,13 @@ A Gamma value of 1.85 produces the Highest Test Score 0.9425
 \end{tabular}
 \caption{Highest Test Score for different Kernel Types}
 \end{table}
-\item Which of the considered kernels performs best and why?\newline
-Of the three kernel types, the kernel type \textit{poly} scored the highest score because \textcolor{red}{[ntbd]} it's logical 
-\item Compare the complexity of decision boundaries and the number of Support Vectors found.\newline
- \textcolor{red}{[ntbd]}
-\item Which kernel generalizes best for the given dataset?\newline
-For the given dataset the poly Kernel generalizes best
-\textcolor{red}{[ntbd]}
+\item \textbf{Which of the considered kernels performs best and why?} \newline
+Of the three kernel types, the kernel type \textit{poly} scored the highest score because it focuses on classifying data points corresponding to the same class as possible. Which performs better in the general way while the rbf kernel focuses on classifying data points on the most occurrence of data points of the same class. So this is better for striking features. 
+\item \textbf{Compare the complexity of decision boundaries and the number of Support Vectors found.} \newline
+The decision boundary for the \textit{linear} kernel is the less complex than the other kernels, while the \textit{rbf} kernel is the most complex one. The \textit{rbf} kernel got the most support vectors while the number of the support vectors of the other kernels is the same.
+
+\item \textbf{Which kernel generalizes best for the given dataset?} \newline
+For the given dataset the poly Kernel generalizes best.
 \end{enumerate}
 \end{itemize}
 
@@ -265,24 +264,64 @@ For the given dataset the poly Kernel generalizes best
 \newpage
 \section{Multiclass classification}
 For this task you will use a linear SVM as a binary classifier to solve a multiclass problem. For this purpose use the data file data\_mnist.json which contains training $(X, Y )$ and test $(XT, Y T)$ sets of handwritten digits. To simplify the problem we consider only the first $5$ digits: $1, . . . , 5$. Each data sample in $X$ (a handwritten digit) is an image of $28 \times 28$ pixels. Note that here the labels are not binary, but rather each data sample belongs to one of the $5$ classes. Load the data file and plot several data samples to see handwritten digits (use plot\_mnist). The goal of this task is to use the one-vs-all approach with SVM for multiclass classification in order to recognize digits. In all simulations of this task use the parameter $C = 10$. 
-In function ex\_3 in file svm\_main.py the data points are first loaded from the data file and plotted so that we can observe the structure of the MNIST dataset. Do the following:
+In function ex\_3 in file svm\_main.py the data points are first loaded from the data file and plotted so that we can observe the structure of the MNIST dataset.
+
+\begin{figure}[htp]
+\centering
+  \includegraphics[scale=0.38]{plots/ex3.png}
+  \captionof{figure}{Dataset with handwritten digits.}
+  \label{fig:14}
+\end{figure}
+
+Do the following:
 \begin{enumerate}[label=(\alph*)]
 \item In function ex\_3\_a in the file svm.py, use the scikit learn implementation of one-versus-rest multiclass classification. This is done by specifying the argument $decision\_function\_shape='ovr'$ when creating the classifier object. Train the classifier on the MNIST dataset for a LINEAR kernel and a RBF kernel with gamma ranging from $10^5$ to $10^{−5}$ (plot this for $10$ values of gammas in between). Plot the results with plot\_score\_vs\_gamma, and specify the score obtained with a linear kernel using the optional argument lin\_score\_train. Note that the chance level has changed for this example.
+
+\begin{figure}[htp]
+\centering
+  \includegraphics[scale=0.38]{plots/ex3a.png}
+  \captionof{figure}{Classifier on the MNIST dataset for a LINEAR kernel and a RBF kernel with gamma ranging from $10^5$ to $10^{−5}$}
+  \label{fig:15}
+\end{figure}
+
+In the results of variation between the \textit{rbf} kernel and the \textit{linear} kernel the \textit{linear} kernel performs better than the \textit{rbf} one because it just differentiate between lighter and darker colors.
+
+\newpage
+
 \item In function ex\_3\_b in the file svm.py, train a multi-class SVC with a linear kernel. Use the function confusion\_matrix from scikit-learn to get the confusion matrix. Plot the confusion matrix with plot\_confusion\_matrix. Plot the first $10$ images from the test set of the most misclassified digit using plot\_mnist. (For example, if digit 3 is the most misclassified digit, plot the first $10$ images miss-classified as 3 in the test set)
+
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.5]{plots/ex3b_1.png}
+  \captionof{figure}{Confusion matrix.}
+  \label{fig:16}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.5]{plots/ex3b_2.png}
+  \captionof{figure}{$10$ images from the test set of the most misclassified digit.}
+  \label{fig:17}
+\end{minipage}
+\end{figure}
 
 \end{enumerate}
 In your report:
 \begin{itemize}
-\item Recall the algorithms ‘One-versus-Rest’ (or versus-all) and ‘One-versus-one’ multi-class classification
-procedures. How many binary classifiers need to be trained in both cases?
-\item Include plots for ex\_3\_a with the scores of a linear and a rbf kernels.
-\item Discuss those results. In particular why does a linear kernel perform well on images?
-\item Find the digit class for which you get the highest error rate.
-\item Include plots for ex\_3\_b of the confusion matrix and the first $10$ images from the test set of the most misclassified digit.
-\item With the help of these two plots, discuss why the classifier is doing these mistakes.
+\item \textbf{Recall the algorithms ‘One-versus-Rest’ (or versus-all) and ‘One-versus-one’ multi-class classification procedures. How many binary classifiers need to be trained in both cases?}
+
+The \textbf{one-versus-all} algorithm fits with one classifier per class. For each classifier the class is fitted against all other classes and is computational efficient because it only has to train n classes classifiers $\Rightarrow O(n)$.
+
+The \textbf{one-versus-one} algorithm concentrates on fitting one classifier per class pair. It is less computational efficient than the The one-versus-all because it has to train $n classes * (n classes - 1) / 2$ classifiers $\Rightarrow O(n^{2})$.
+
+\item \textbf{Find the digit class for which you get the highest error rate.} Digit class $5$ produces the highest error rate.
+
+\item \textbf{With the help of these two plots, discuss why the classifier is doing these mistakes.}
+The digit 3 is the most misclassified image. This might appear because some of the handwritten 1 and 3 digits are similar to the digit 5 and so the most misclassified class is 5.
 \end{itemize}
 
 \end{document}
+
 
 
 
