@@ -1,3 +1,5 @@
+from collections import Counter
+
 import numpy as np
 from sklearn import svm
 from sklearn.metrics import confusion_matrix
@@ -226,7 +228,7 @@ def ex_3_a(x_train, y_train, x_test, y_test):
     lin_score_test = svc.score(x_test, y_test)
     lin_score_train = svc.score(x_train, y_train)
 
-    plot_score_vs_gamma(train_scores, test_scores, gammas, lin_score_train, lin_score_test)
+    plot_score_vs_gamma(train_scores, test_scores, gammas, lin_score_train=lin_score_train, lin_score_test=lin_score_test, baseline=.2)
     highest_error_rate = np.max(test_scores)
     print("Highest error rate: " + str(highest_error_rate))
 
@@ -257,8 +259,13 @@ def ex_3_b(x_train, y_train, x_test, y_test):
     con_matrix = confusion_matrix(y_test, y_pred, labels)
     plot_confusion_matrix(con_matrix, labels)
 
-    sel_error = np.array([0])  # Numpy indices to select images that are misclassified.
-    i = 0  # should be the label number corresponding the largest classification error
+    sel_error = np.where(y_test != y_pred)
+    error_list = y_pred[sel_error]
+    occurences = Counter(error_list)
 
-    # Plot with mnist plot
-    plot_mnist(x_test[sel_error], y_pred[sel_error], labels=labels[i], k_plots=10, prefix='Predicted class')
+    # should be the label number corresponding the largest classification error
+    i = max(occurences)
+
+    print("Label corresponding to the largest classification error : ", i)
+
+    plot_mnist(x_test[sel_error], y_pred[sel_error], labels=i, k_plots=10, prefix='Predicted class')
