@@ -146,7 +146,7 @@ def ex_2_b(x_train, y_train, x_test, y_test):
     highest_test_score = max(test_score)
     degree = test_score.index(highest_test_score) + 1
     print("Degree " + str(degree) + " produces the Highest Test Score " + str(highest_test_score))
-    svc.degree = highest_test_score
+    svc.degree = degree
     svc.fit(x_train, y_train)
     plot_svm_decision_boundary(svc, x_train, y_train, x_test, y_test)
 
