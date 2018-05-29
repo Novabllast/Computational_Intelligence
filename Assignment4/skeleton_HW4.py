@@ -75,6 +75,9 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
     params = np.zeros([1, nr_anchors])
     # TODO (1) check whether a given anchor is Gaussian or exponential
     # TODO (2) estimate the according parameter based
+
+    normaltest = stats.normaltest(reference_measurement)
+    gaussian_kde = stats.gaussian_kde(reference_measurement)
     return params
 
 
@@ -93,8 +96,18 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # tol = ...  # tolerance
     # max_iter = ...  # maximum iterations for GN
 
+    tol = 0.01  # tolerance value to terminate, scalar"""
+    max_iter = 10  # maximum number of iterations, scalar
+    p_start = np.array(0, 0)  # initial position, 2x1
+    r = np.array(nr_anchors, 1)  # distance_estimate, nr_anchors x 1
+    estimates = []
+
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
+    for i in range(0, nr_samples):
+        least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
+        estimates.append(least_squares_gn)
+
     # TODO calculate error measures and create plots----------------
     pass
 
@@ -136,8 +149,12 @@ def least_squares_GN(p_anchor, p_start, r, max_iter, tol):
         r... distance_estimate, nr_anchors x 1
         max_iter... maximum number of iterations, scalar
         tol... tolerance value to terminate, scalar"""
-    pass
 
+    least_squares = []
+    for iteration in range(0, max_iter):
+        least_squares.append("Do your magic here")
+
+    return least_squares
 
 # --------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------
