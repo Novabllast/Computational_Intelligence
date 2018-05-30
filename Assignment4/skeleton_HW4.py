@@ -1,6 +1,7 @@
 # Filename: HW4_skeleton.py
 # Author: Christian Knoll, Florian Kaum
 # Edited: May, 2018
+import random
 
 import numpy as np
 import matplotlib.cm as cm
@@ -98,17 +99,38 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
 
     tol = 0.01  # tolerance value to terminate, scalar"""
     max_iter = 10  # maximum number of iterations, scalar
-    p_start = np.array(0, 0)  # initial position, 2x1
-    r = np.array(nr_anchors, 1)  # distance_estimate, nr_anchors x 1
-    estimates = []
+    pls_estimates = np.zeros((2, 2))
+    anchor_min = -6
+    anchor_max = 6
 
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
+        # p_start = np.array([[(random.random() * 12) - 6, (random.random() * 12) - 6]])
+        p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
+        r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
-        estimates.append(least_squares_gn)
+        pls_estimates[i] = least_squares_gn
 
     # TODO calculate error measures and create plots----------------
+    # The mean and variance of the position estimation error ||PLS - P||.
+    np_abs = np.abs(pls_estimates - p_true)
+    mean = np.mean(np_abs)
+    var = np.var(np_abs)
+
+    # Scatter plots of the estimated positions. Fit a two-dimensional Gaussian distribution
+    # to the point cloud of estimated positions and draw its contour lines. You can use the
+    # provided function plot_gauss_contour(mu,cov,xmin,xmax,ymin,ymax,title).
+    # Do the estimated positions look Gaussian?
+    # Input:
+    #   mu... mean vector, 2x1
+    #   cov...covariance matrix, 2x2
+    #   xmin,xmax... minimum and maximum value for width of plot-area, scalar
+    #   ymin,ymax....minimum and maximum value for height of plot-area, scalar
+    #   title... title of the plot (optional), string"""
+
+    title = "Some Fancy Title"
+    # plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
     pass
 
 
@@ -118,7 +140,7 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
     Input:
         data...distance measurements to unkown agent, nr_measurements x nr_anchors
         nr_anchors... scalar
-        p_anchor... position of anchors, nr_anchors x 2 
+        p_anchor... position of anchors, nr_anchors x 2
         lambdas... estimated parameters (scenario 3), nr_anchors x 1
         p_true... true position (needed to calculate error), 2x2 """
     # TODO
@@ -156,13 +178,14 @@ def least_squares_GN(p_anchor, p_start, r, max_iter, tol):
 
     return least_squares
 
+
 # --------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------
 # Helper Functions
 # --------------------------------------------------------------------------------
 def plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title="Title"):
     """ creates a contour plot for a bivariate gaussian distribution with specified parameters
-    
+
     Input:
       mu... mean vector, 2x1
       cov...covariance matrix, 2x2
@@ -188,7 +211,7 @@ def plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title="Title"):
 def ecdf(realizations):
     """ computes the empirical cumulative distribution function for a given set of realizations.
     The output can be plotted by plt.plot(x,Fx)
-    
+
     Input:
       realizations... vector with realizations, Nx1
     Output:
