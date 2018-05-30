@@ -106,7 +106,6 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
-        # p_start = np.array([[(random.random() * 12) - 6, (random.random() * 12) - 6]])
         p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
         r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
