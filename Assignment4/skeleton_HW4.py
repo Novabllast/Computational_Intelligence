@@ -107,7 +107,6 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
-        # p_start = np.array([[(random.random() * 12) - 6, (random.random() * 12) - 6]])
         p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
         r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
@@ -176,7 +175,7 @@ def least_squares_GN(p_anchor, p_start, r: np.ndarray, max_iter, tol):
     entries = r.size
     for iteration in range(0, max_iter):
         jr = np.zeros((entries, 2))
-        d = np.zeros((entries, ))
+        d = np.zeros((entries,))
         x = p_start[0]
         y = p_start[1]
 
@@ -197,7 +196,7 @@ def least_squares_GN(p_anchor, p_start, r: np.ndarray, max_iter, tol):
         matmul_factor2 = r - d
         matmul_product = np.matmul(matmul_factor1, matmul_factor2)
         p_start = p_start - matmul_product
-        estimated_position = np.linalg.norm(p_start)
+        estimated_position = np.linalg.norm(matmul_product)
         if estimated_position < tol:
             break
 
