@@ -8,6 +8,7 @@ import matplotlib.cm as cm
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+from scipy.misc import derivative
 
 from scipy.stats import multivariate_normal
 
@@ -106,6 +107,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
+        # p_start = np.array([[(random.random() * 12) - 6, (random.random() * 12) - 6]])
         p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
         r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
@@ -162,7 +164,7 @@ def position_estimation_bayes(data, nr_anchors, p_anchor, prior_mean, prior_cov,
 
 
 # --------------------------------------------------------------------------------
-def least_squares_GN(p_anchor, p_start, r, max_iter, tol):
+def least_squares_GN(p_anchor, p_start, r: np.ndarray, max_iter, tol):
     """ apply Gauss Newton to find the least squares solution
     Input:
         p_anchor... position of anchors, nr_anchors x 2
@@ -171,11 +173,35 @@ def least_squares_GN(p_anchor, p_start, r, max_iter, tol):
         max_iter... maximum number of iterations, scalar
         tol... tolerance value to terminate, scalar"""
 
-    least_squares = []
+    entries = r.size
     for iteration in range(0, max_iter):
-        least_squares.append("Do your magic here")
+        jr = np.zeros((entries, 2))
+        d = np.zeros((entries, ))
+        x = p_start[0]
+        y = p_start[1]
 
-    return least_squares
+        for i in range(0, entries):
+            # x − xi /sqrt((xi − x)² + (yi − y)²)
+            x_i = p_anchor[i, 0]
+            y_i = p_anchor[i, 1]
+            # x − xi / sqrt((xi − x)² + (yi − y)²)
+            sqrt = np.sqrt(np.power(x_i - x, 2) + np.power(y_i - y, 2))
+            d[i] = sqrt
+            jr[i, 0] = (x - x_i) / sqrt
+            # y − yi / sqrt((xi − x)² + (yi − y)²
+            jr[i, 1] = (y - y_i) / sqrt
+
+        matmul_inv = np.matmul(np.transpose(jr), jr)
+        inv = np.linalg.inv(matmul_inv)
+        matmul_factor1 = np.matmul(inv, np.transpose(jr))
+        matmul_factor2 = r - d
+        matmul_product = np.matmul(matmul_factor1, matmul_factor2)
+        p_start = p_start - matmul_product
+        estimated_position = np.linalg.norm(p_start)
+        if estimated_position < tol:
+            break
+
+    return estimated_position
 
 
 # --------------------------------------------------------------------------------
