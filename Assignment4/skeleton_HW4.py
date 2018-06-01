@@ -17,9 +17,9 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    scenario = 1  # all anchors are Gaussian
-    # scenario = 2    # 1 anchor is exponential, 3 are Gaussian
-    # scenario = 3    # all anchors are exponential
+    #scenario = 1  # all anchors are Gaussian
+    #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
+    scenario = 3    # all anchors are exponential
 
     # specify position of anchors
     p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
@@ -138,7 +138,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
 
     title = "Red X"
     # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
-    plot_gauss_contour(mu, cov, xmin=-6, xmax=6, ymin=-6, ymax=6, title=title)
+    #plot_gauss_contour(mu, cov, xmin=-6, xmax=6, ymin=-6, ymax=6, title=title)
 
 
 # --------------------------------------------------------------------------------
@@ -151,6 +151,21 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
         lambdas... estimated parameters (scenario 3), nr_anchors x 1
         p_true... true position (needed to calculate error), 2x2 """
     # TODO
+
+    jL = np.zeros((10 * 20, 10 * 20))
+    for x in range (-5,5):
+        for y in range(-5, 5):
+            for i in range (0,4):
+                x_i = p_anchor[i, :]
+                y_i = p_anchor[i, :]
+                r = data[i,0]
+                #d = np.sqrt(np.power(x_i-x,2)+(np.power(y_i-y,2)))
+                d = np.linalg.norm(p_anchor[i, :] - [x, y])
+                if(r>=d):
+                    jL[(x+5)*20,(y+5)*20] = lambdas[0,i] * np.exp(-lambdas[0,i])*(r-d)
+                else:
+                    jL[(x+5) * 20, (y+5) * 20] = 0
+
     pass
 
 
