@@ -100,7 +100,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
 
     tol = 0.01  # tolerance value to terminate, scalar"""
     max_iter = 10  # maximum number of iterations, scalar
-    pls_estimates = np.zeros((2, 2))
+    pls_estimates = np.zeros((nr_samples, 2))
     anchor_min = -6
     anchor_max = 6
 
@@ -117,6 +117,13 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     np_abs = np.abs(pls_estimates - p_true)
     mean = np.mean(np_abs)
     var = np.var(np_abs)
+    mean_x = np.mean(pls_estimates[:, 0])
+    mean_y = np.mean(pls_estimates[:, 1])
+    mu =[mean_x, mean_y]
+    cov = np.cov(np.transpose(pls_estimates))
+
+    print("Mean: ", mean)
+    print("Var: ", var)
 
     # Scatter plots of the estimated positions. Fit a two-dimensional Gaussian distribution
     # to the point cloud of estimated positions and draw its contour lines. You can use the
@@ -129,9 +136,9 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     #   ymin,ymax....minimum and maximum value for height of plot-area, scalar
     #   title... title of the plot (optional), string"""
 
-    title = "Some Fancy Title"
-    # plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
-    pass
+    title = "Red X"
+    # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
+    plot_gauss_contour(mu, cov, xmin=-6, xmax=6, ymin=-6, ymax=6, title=title)
 
 
 # --------------------------------------------------------------------------------
