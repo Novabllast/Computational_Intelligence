@@ -76,10 +76,22 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
         p_ref... reference point, 2x2 """
     params = np.zeros([1, nr_anchors])
     # TODO (1) check whether a given anchor is Gaussian or exponential
+    alpha = 1e-3
+    normal = False
+    for i in range(0, nr_anchors):
+
+        normaltest = stats.normaltest(reference_measurement[:, i])
+        pvalue = normaltest[1]
+        if pvalue < alpha:
+            normal = True
+        else:
+            normal = False
+
+    print("Norma: ", normal)
+
     # TODO (2) estimate the according parameter based
 
-    normaltest = stats.normaltest(reference_measurement)
-    gaussian_kde = stats.gaussian_kde(reference_measurement)
+
     return params
 
 
