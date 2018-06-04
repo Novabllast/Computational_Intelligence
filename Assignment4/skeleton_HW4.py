@@ -112,8 +112,10 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
         p_true... true position (needed to calculate error) 2x2 
         use_exponential... determines if the exponential anchor in scenario 2 is used, bool"""
 
-    if not use_exponential:
-        pass
+    # if use_exponential:  # TODO is always true
+    #     p_anchor = np.delete(p_anchor, -1, axis=0)
+    #     data = np.delete(data, -1, axis=1)
+    #     nr_anchors = 3
 
     nr_samples = np.size(data, 0)
 
