@@ -74,22 +74,30 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
         nr_anchors... scalar
         p_anchor... position of anchors, nr_anchors x 2
         p_ref... reference point, 2x2 """
-    params = np.zeros([1, nr_anchors])
-    # TODO (1) check whether a given anchor is Gaussian or exponential
+
     alpha = 1e-3
-    normal = False
+    params = np.zeros([1, nr_anchors])
+    nr_samples = np.size(reference_measurement, 0)
+
     for i in range(0, nr_anchors):
+
+        r_ref = np.linalg.norm(p_ref - p_anchor[i, :])
 
         normaltest = stats.normaltest(reference_measurement[:, i])
         pvalue = normaltest[1]
-        if pvalue < alpha:
-            normal = True
+
+        # check whether a given anchor is Gaussian or exponential
+        if pvalue > alpha:
+            # normal
+            sigma_sqrt = (np.linalg.norm(reference_measurement[:, i] - r_ref) ** 2) / nr_samples
+            params[:, i] = sigma_sqrt
+
         else:
-            normal = False
+            # exponential
+            lambda0 = nr_samples / np.sum(reference_measurement[:, i] - r_ref)
+            params[:, i] = lambda0
 
-    print("Norma: ", normal)
-
-    # TODO (2) estimate the according parameter based
+    print("Params: ", params)
 
     return params
 
