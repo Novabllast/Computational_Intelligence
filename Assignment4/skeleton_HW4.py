@@ -215,7 +215,7 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
     x = left
     y = bottom
 
-    jL = np.zeros((10 * 20, 10 * 20))
+    j_l = np.zeros((10 * 20, 10 * 20))
     for x_cord in range(-5, 5):
         for y_cord in range(-5, 5):
             prop = np.zeros(nr_anchors)
@@ -230,15 +230,23 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
                 else:
                     prop[i] = 0
 
-                jL[x_cord, y_cord] = np.prod(prop)
+                j_l[x_cord, y_cord] = np.prod(prop)
                 y += step
 
             x += step
             y = left
 
-        max_jl = np.argmax(jL)
-        print(max_jl)
-        print(lambdas)
+    xmin = np.min(j_l[:, 0])
+    xmax = np.max(j_l[:, 0])
+    ymin = np.min(j_l[:, 1])
+    ymax = np.max(j_l[:, 1])
+    j_l_max = np.argmax(j_l)
+
+    print("jLmax ", j_l_max)
+    print("ymin: ", ymin, "  xmin: ", xmin)
+    print("xmax: ", xmax, "  ymax: ", ymax)
+
+    plot_anchors_and_agent(nr_anchors, p_anchor, p_true, j_l)
 
 
 # --------------------------------------------------------------------------------
