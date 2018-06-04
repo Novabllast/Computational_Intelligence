@@ -17,9 +17,9 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    #scenario = 1  # all anchors are Gaussian
-    #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
-    scenario = 3    # all anchors are exponential
+    scenario = 1  # all anchors are Gaussian
+    # scenario = 2    # 1 anchor is exponential, 3 are Gaussian
+    # scenario = 3  # all anchors are exponential
 
     # specify position of anchors
     p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
@@ -91,7 +91,6 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
 
     # TODO (2) estimate the according parameter based
 
-
     return params
 
 
@@ -104,6 +103,10 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
         p_anchor... position of anchors, nr_anchors x 2 
         p_true... true position (needed to calculate error) 2x2 
         use_exponential... determines if the exponential anchor in scenario 2 is used, bool"""
+
+    if not use_exponential:
+        pass
+
     nr_samples = np.size(data, 0)
 
     # TODO set parameters
@@ -131,8 +134,13 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     var = np.var(np_abs)
     mean_x = np.mean(pls_estimates[:, 0])
     mean_y = np.mean(pls_estimates[:, 1])
-    mu =[mean_x, mean_y]
+    mu = [mean_x, mean_y]
     cov = np.cov(np.transpose(pls_estimates))
+
+    xmin = np.min(pls_estimates[:, 0])
+    xmax = np.min(pls_estimates[:, 0])
+    ymin = np.min(pls_estimates[:, 1])
+    ymax = np.min(pls_estimates[:, 1])
 
     print("Mean: ", mean)
     print("Var: ", var)
@@ -148,9 +156,9 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     #   ymin,ymax....minimum and maximum value for height of plot-area, scalar
     #   title... title of the plot (optional), string"""
 
-    title = "Red X"
+    title = "Some fancy Text"
     # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
-    #plot_gauss_contour(mu, cov, xmin=-6, xmax=6, ymin=-6, ymax=6, title=title)
+    plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
 
 
 # --------------------------------------------------------------------------------
@@ -165,18 +173,18 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
     # TODO
 
     jL = np.zeros((10 * 20, 10 * 20))
-    for x in range (-5,5):
+    for x in range(-5, 5):
         for y in range(-5, 5):
-            for i in range (0,4):
+            for i in range(0, 4):
                 x_i = p_anchor[i, :]
                 y_i = p_anchor[i, :]
-                r = data[i,0]
-                #d = np.sqrt(np.power(x_i-x,2)+(np.power(y_i-y,2)))
+                r = data[i, 0]
+                # d = np.sqrt(np.power(x_i-x,2)+(np.power(y_i-y,2)))
                 d = np.linalg.norm(p_anchor[i, :] - [x, y])
-                if(r>=d):
-                    jL[(x+5)*20,(y+5)*20] = lambdas[0,i] * np.exp(-lambdas[0,i])*(r-d)
+                if (r >= d):
+                    jL[(x + 5) * 20, (y + 5) * 20] = lambdas[0, i] * np.exp(-lambdas[0, i]) * (r - d)
                 else:
-                    jL[(x+5) * 20, (y+5) * 20] = 0
+                    jL[(x + 5) * 20, (y + 5) * 20] = 0
 
     pass
 
