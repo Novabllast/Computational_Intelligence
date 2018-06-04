@@ -50,11 +50,12 @@ def main():
 
         # 2) Position estimation using least squares
         # TODO
-        if (scenario == 2):
+        if scenario == 2:
             exponential = True
         else:
             exponential = False
-        pls_estimation = position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, exponential)
+
+        pls_estimation = position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, exponential, scenario)
 
         if (scenario == 3):
             # TODO: don't forget to plot joint-likelihood function for the first measurement
@@ -104,7 +105,6 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
     nr_samples = np.size(reference_measurement, 0)
 
     for i in range(0, nr_anchors):
-
         r_ref = np.linalg.norm(p_ref - p_anchor[i, :])
 
         normaltest = stats.normaltest(reference_measurement[:, i])
@@ -115,7 +115,6 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
             # normal
             sigma_sqrt = (np.linalg.norm(reference_measurement[:, i] - r_ref) ** 2) / nr_samples
             params[:, i] = sigma_sqrt
-
         else:
             # exponential
             lambda0 = nr_samples / np.sum(reference_measurement[:, i] - r_ref)
@@ -127,7 +126,7 @@ def parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref):
 
 
 # --------------------------------------------------------------------------------
-def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_exponential):
+def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_exponential, scenario):
     """estimate the position by using the least squares approximation. 
     Input:
         data...distance measurements to unkown agent, nr_measurements x nr_anchors
@@ -136,7 +135,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
         p_true... true position (needed to calculate error) 2x2 
         use_exponential... determines if the exponential anchor in scenario 2 is used, bool"""
 
-    if use_exponential:  # TODO is always true
+    if use_exponential:
         p_anchor = np.delete(p_anchor, 0, axis=0)
         data = np.delete(data, 0, axis=1)
         nr_anchors = 3
@@ -150,13 +149,10 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     tol = 0.00001  # tolerance value to terminate, scalar"""
     max_iter = 10  # maximum number of iterations, scalar
     pls_estimates = np.zeros((nr_samples, 2))
-    anchor_min = -6
-    anchor_max = 6
 
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
-        # p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
         p_start = np.random.uniform(-5, 5, (2,))
         r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
@@ -171,8 +167,6 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     mean_y = np.mean(pls_estimates[:, 1])
     mu = np.array([mean_x, mean_y])
     cov = np.cov(np.transpose(pls_estimates))
-    # Fx = np.zeros((4, 2000))
-    # x = np.zeros((4, 2000))
 
     plt.scatter(pls_estimates[:, 0], pls_estimates[:, 1])
 
@@ -195,8 +189,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     #   ymin,ymax....minimum and maximum value for height of plot-area, scalar
     #   title... title of the plot (optional), string"""
 
-    title = "Scenario"
-    # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
+    title = "Scenario " + str(scenario)
 
     plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
 
