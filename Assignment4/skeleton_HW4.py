@@ -17,13 +17,13 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    #scenario = 1  # all anchors are Gaussian
-    #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
-    #scenario = 3  # all anchors are exponential
+    # scenario = 1  # all anchors are Gaussian
+    # scenario = 2    # 1 anchor is exponential, 3 are Gaussian
+    # scenario = 3  # all anchors are exponential
 
-    Fx_list = np.zeros((3,2000))
-    x_list = np.zeros((3,2000))
-    for scenario in range (1,4):
+    Fx_list = np.zeros((3, 2000))
+    x_list = np.zeros((3, 2000))
+    for scenario in range(1, 4):
 
         # specify position of anchors
         p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
@@ -51,8 +51,9 @@ def main():
         # 2) Position estimation using least squares
         # TODO
         if (scenario == 2):
-            exponential=True
-        else: exponential=False
+            exponential = True
+        else:
+            exponential = False
         pls_estimation = position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, exponential)
 
         if (scenario == 3):
@@ -69,17 +70,17 @@ def main():
             prior_cov = np.eye(2)
             position_estimation_bayes(data, nr_anchors, p_anchor, prior_mean, prior_cov, params, p_true)
 
-
         error = []
-        for idx in range (0,nr_samples):
-            error.append(np.sqrt((pls_estimation[idx, 0] - p_true[0][0]) ** 2 + (pls_estimation[idx, 1] - p_true[0][1]) ** 2))
+        for idx in range(0, nr_samples):
+            error.append(
+                np.sqrt((pls_estimation[idx, 0] - p_true[0][0]) ** 2 + (pls_estimation[idx, 1] - p_true[0][1]) ** 2))
         Fx, x = ecdf(error)
-        Fx_list[scenario-1, :] = Fx
-        x_list[scenario-1, :] = x
+        Fx_list[scenario - 1, :] = Fx
+        x_list[scenario - 1, :] = x
 
-    for scenario in range (0,3):
-        plt.plot(x_list[scenario,:], Fx_list[scenario,:], label=('Scenario ' + str(scenario+1)))
-    #plt.plot(x, Fx, label=('Scenario ' + str(scenario)))
+    for scenario in range(0, 3):
+        plt.plot(x_list[scenario, :], Fx_list[scenario, :], label=('Scenario ' + str(scenario + 1)))
+    # plt.plot(x, Fx, label=('Scenario ' + str(scenario)))
 
     plt.xlabel("x")
     plt.ylabel("Fx")
@@ -136,9 +137,9 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
         use_exponential... determines if the exponential anchor in scenario 2 is used, bool"""
 
     if use_exponential:  # TODO is always true
-         p_anchor = np.delete(p_anchor, 0, axis=0)
-         data = np.delete(data, 0, axis=1)
-         nr_anchors = 3
+        p_anchor = np.delete(p_anchor, 0, axis=0)
+        data = np.delete(data, 0, axis=1)
+        nr_anchors = 3
 
     nr_samples = np.size(data, 0)
 
@@ -155,7 +156,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
-        #p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
+        # p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
         p_start = np.random.uniform(-5, 5, (2,))
         r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
@@ -170,8 +171,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     mean_y = np.mean(pls_estimates[:, 1])
     mu = np.array([mean_x, mean_y])
     cov = np.cov(np.transpose(pls_estimates))
-    #Fx = np.zeros((4, 2000))
-    #x = np.zeros((4, 2000))
+    # Fx = np.zeros((4, 2000))
+    # x = np.zeros((4, 2000))
 
     plt.scatter(pls_estimates[:, 0], pls_estimates[:, 1])
 
@@ -199,9 +200,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
 
     plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
 
-
-
     return pls_estimates
+
 
 # --------------------------------------------------------------------------------
 def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true):
@@ -214,21 +214,41 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
         p_true... true position (needed to calculate error), 2x2 """
     # TODO
 
-    jL = np.zeros((10 * 20, 10 * 20))
-    for x in range(-5, 5):
-        for y in range(-5, 5):
-            for i in range(0, 4):
-                x_i = p_anchor[i, :]
-                y_i = p_anchor[i, :]
-                r = data[i, 0]
-                # d = np.sqrt(np.power(x_i-x,2)+(np.power(y_i-y,2)))
-                d = np.linalg.norm(p_anchor[i, :] - [x, y])
-                if (r >= d):
-                    jL[(x + 5) * 20, (y + 5) * 20] = lambdas[0, i] * np.exp(-lambdas[0, i]) * (r - d)
-                else:
-                    jL[(x + 5) * 20, (y + 5) * 20] = 0
+    left = min(p_anchor[1, :])
+    right = max(p_anchor[1, :])
+    top = max(p_anchor[2, :])
+    bottom = min(p_anchor[2, :])
+    step = 0.05
+    w = range(left, right)
+    h = range(top, bottom)
 
-    pass
+    points = np.zeros(np.size(5, 2), np.size(5, 2));
+
+    x = left
+    y = bottom
+
+    jL = np.zeros((10 * 20, 10 * 20))
+    for x_cord in range(-5, 5):
+        for y_cord in range(-5, 5):
+            prop = np.zeros(nr_anchors)
+            x_i = p_anchor[:, 0]
+            y_i = p_anchor[:, 1]
+            d = np.sqrt(np.power(x_i - x, 2) + (np.power(y_i - y, 2)))
+
+            for i in range(0, data.size):
+                r = data[i, d]
+                r_i = r  # TODO
+                d_i = d # TODO
+                if r_i >= d_i:
+                    prop[i] = lambdas[0, i] * np.exp(-lambdas[0, i]) * (r_i - d_i)
+
+                jL[x_cord, y_cord] = np.prod(prop)
+
+                x += step
+
+            y += step
+            x = left
+
 
 
 # --------------------------------------------------------------------------------
