@@ -17,9 +17,9 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    #scenario = 1  # all anchors are Gaussian
-    scenario = 2    # 1 anchor is exponential, 3 are Gaussian
-    # scenario = 3  # all anchors are exponential
+    scenario = 1  # all anchors are Gaussian
+    #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
+    #scenario = 3  # all anchors are exponential
 
     # specify position of anchors
     p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
@@ -140,6 +140,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     #Fx = np.zeros((4, 2000))
     #x = np.zeros((4, 2000))
 
+    plt.scatter(pls_estimates[:, 0], pls_estimates[:, 1])
+
     xmin = np.min(pls_estimates[:, 0])
     xmax = np.max(pls_estimates[:, 0])
     ymin = np.min(pls_estimates[:, 1])
@@ -161,6 +163,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
 
     title = "Some fancy Text"
     # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
+
     plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
 
 
@@ -170,8 +173,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
 
     Fx, x = ecdf(error)
     plt.plot(x,Fx)
-    plt.legend()
     plt.title('CDF')
+    plt.legend()
     plt.show()
 
 
