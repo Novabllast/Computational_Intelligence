@@ -17,8 +17,8 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    scenario = 1  # all anchors are Gaussian
-    # scenario = 2    # 1 anchor is exponential, 3 are Gaussian
+    #scenario = 1  # all anchors are Gaussian
+    scenario = 2    # 1 anchor is exponential, 3 are Gaussian
     # scenario = 3  # all anchors are exponential
 
     # specify position of anchors
@@ -113,7 +113,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # tol = ...  # tolerance
     # max_iter = ...  # maximum iterations for GN
 
-    tol = 0.01  # tolerance value to terminate, scalar"""
+    tol = 0.00001  # tolerance value to terminate, scalar"""
     max_iter = 10  # maximum number of iterations, scalar
     pls_estimates = np.zeros((nr_samples, 2))
     anchor_min = -6
@@ -122,7 +122,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     # TODO estimate position for  i in range(0, nr_samples)
     # least_squares_GN(p_anchor,p_start, r, max_iter, tol)
     for i in range(0, nr_samples):
-        p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
+        #p_start = np.array((random.uniform(anchor_min, anchor_max), random.uniform(anchor_min, anchor_max)))
+        p_start = np.random.uniform(-5, 5, (2,))
         r = data[i, :]
         least_squares_gn = least_squares_GN(p_anchor, p_start, r, max_iter, tol)
         pls_estimates[i] = least_squares_gn
@@ -135,13 +136,14 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     mean_x = np.mean(pls_estimates[:, 0])
     mean_y = np.mean(pls_estimates[:, 1])
     mu = np.array([mean_x, mean_y])
-
     cov = np.cov(np.transpose(pls_estimates))
+    #Fx = np.zeros((4, 2000))
+    #x = np.zeros((4, 2000))
 
     xmin = np.min(pls_estimates[:, 0])
-    xmax = np.min(pls_estimates[:, 0])
+    xmax = np.max(pls_estimates[:, 0])
     ymin = np.min(pls_estimates[:, 1])
-    ymax = np.min(pls_estimates[:, 1])
+    ymax = np.max(pls_estimates[:, 1])
 
     print("Mean: ", mean)
     print("Var: ", var)
@@ -160,6 +162,17 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     title = "Some fancy Text"
     # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
     plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
+
+
+    error =  []
+    for idx, value in enumerate(data[0]):
+        error.append(np.sqrt((pls_estimates[idx,0] - p_true[0][0])**2 + (pls_estimates[idx,1] - p_true[0][1])**2))
+
+    Fx, x = ecdf(error)
+    plt.plot(x,Fx)
+    plt.legend()
+    plt.title('CDF')
+    plt.show()
 
 
 # --------------------------------------------------------------------------------
@@ -243,7 +256,7 @@ def least_squares_GN(p_anchor, p_start, r: np.ndarray, max_iter, tol):
         if estimated_position < tol:
             break
 
-    return estimated_position
+    return p_start
 
 
 # --------------------------------------------------------------------------------
