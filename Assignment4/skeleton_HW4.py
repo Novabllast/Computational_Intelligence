@@ -17,13 +17,13 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    # scenario = 1  # all anchors are Gaussian
-    # scenario = 2    # 1 anchor is exponential, 3 are Gaussian
-    # scenario = 3  # all anchors are exponential
+    #scenario = 1  # all anchors are Gaussian
+    #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
+    #scenario = 3  # all anchors are exponential
 
-    Fx_list = np.zeros((3, 2000))
-    x_list = np.zeros((3, 2000))
-    for scenario in range(1, 4):
+    Fx_list = np.zeros((3,2000))
+    x_list = np.zeros((3,2000))
+    for scenario in range (1,4):
 
         # specify position of anchors
         p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
