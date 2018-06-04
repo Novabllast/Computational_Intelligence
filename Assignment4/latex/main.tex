@@ -115,6 +115,7 @@ Case ~I ~(Gaussian): p(r_i|p) = \frac{1}{\sqrt[]{2\pi\sigma^2_i}}e^{-\frac{(r_i-
 Case ~2 ~(Exponential): p(r_i|p) = \begin{cases} \lambda_i e^{-\lambda_i(r_i-d_i(p)),} & r_i\geq d_i(p)\\ 0 & else  \end{cases}
 \]
 
+\noindent
 The dependence on the parameter $p$ is given as the Euclidean distance to the \textit{i}-th anchor, i.e.
 \[
 d_i(p) = \sqrt[]{(x_i-x)^2 + (y_i-y)^2}.
@@ -125,11 +126,13 @@ Ideally we would like to obtain the ML estimation of the position $p$, i.e.,
 \hat{P}ML = arg ~\underset{p}{max} p(r|p) = arg ~\underset{p}{max} \prod_{i=1}^{N_A} p(r_i|p)
 \]
 
+\noindent
 The nonlinear dependence in (4), however, does not allow for a closed form solution of an ML estimator for $p$. A popular approximation to the maximum likelihood estimator is the least-squares estimator, i.e., to minimize the sum of squares of the measurement errors:
 \[
 \hat{P}ML \approx \hat{P}LS = arg ~\underset{p}{min} \sum_{i=1}^{N_A} (r_i-d_i(p))^2 = \norm{r-d(p)}^2 
 \]
 
+\noindent
 where the vector $r$ contains all $N_A = 4$ distance measurements $r_i$, and $d(p)$ is a vector that contains distances to all anchors $d_i(p)$, according to (4).
 However, $d_i$ still has a nonlinear dependence of $p$. Therefore, we will use an iterative algorithm – the Gauss-Newton algorithm – to obtain the least-squares approximation: It requires the calculation of the Jacobian matrix of the measurement errors, which collects the first-order derivatives (linearizations) of the measurement errors. In this example, this matrix has the dimensions $(N_A × 2)$. The two columns are defined as
 
@@ -137,15 +140,19 @@ However, $d_i$ still has a nonlinear dependence of $p$. Therefore, we will use a
 [J_r(p)]_{i,1} = \frac{\partial(r_i-d_i(p))}{\partial x} \quad [J_r(p)]_{i,2} = \frac{\partial(r_i-d_i(p))}{\partial y}.
 \]
 
+\noindent
 The algorithm starts with an initial guess $\hat{P}^(0)$ and updates the parameter in the \textit{t}-th iteration as
 
 \[
 \hat{p^{(t+1)}} = \hat{p^{(t)}} - \Big ( J^T_d(\hat{P}^{(t)})J_d(\hat{P}^{(t)})\Big) ^{-1} J^T_d(\hat{P}^{(t)}) \Big (r-d(\hat{P}^{(t)}) \Big)
 \]
 
+\noindent
 The algorithm stops after a previously defined maximum number of iterations or if the change in the estimated position is smaller than a chosen tolerance value $ \gamma, i.e., \norm{\hat{P}^{(t)} - \hat{P}^{(t-1)}} < \gamma$.
 
-\section{Maximum Likelihood Estimation of Model Parameters}
+\newpage
+
+\section{Maximum Likelihood Estimation of Model Parameters [6 Points]}
 
 First we must specify the statistical model and estimate the according model parameters. In order to do so reference measurements were performed at a known distance $d_i(pref)$.
 We use three different scenarios for the evaluation. Each scenario considers a different assignment of the measurement models (2) and (3):
@@ -156,16 +163,52 @@ We use three different scenarios for the evaluation. Each scenario considers a d
   \item \textbf{Scenario 3:} Measurements of all anchors follow the Exponential model.
 \end{itemize}
 
+\noindent
 Note that anchors with the same type of error-distribution also have the same parameters, i.e., the measurements are sampled from the same distribution.
 The according measurements are contained in the files reference\_i.data as $(N × N_A)$ matrices $R$, where $N = 2000$ is the number of measurements.
 
 \begin{itemize}[label={}]
-  \item For scenario 2, find out which is the anchor with exponentially distributed measurements.
-  \item Analytically derive the maximum likelihood solution for the exponential distribution.
-  \item Estimate the parameters of the measurement models (2) and (3), i.e., estimate $\sigma^2_i$ and $\gamma_i$ for all anchors in all 3 scenarios using the maximum likelihood method.
+
+\item \textbf{For scenario 2, find out which is the anchor with exponentially distributed measurements.} \\
+For scenario 2, anchor 1 is the anchor with the exponentially distributed measurements.
+  
+\item \textbf{Analytically derive the maximum likelihood solution for the exponential distribution.}
+
+\begin{align*}
+p(r_i,p) &= \prod_{j=1}^N p(r_i^j,p) \\
+p(r_i|p) &= \begin{cases} \lambda_i e^{-\lambda_i(r_i-d_i(p)),} & r_i\geq d_i(p)\\ 0 & else \end{cases} \\
+p(r_i|p) &= \lambda_ie^{-\lambda_i(r_i-d_i(p))} \\
+log(p(r_i|p)) &= log(\lambda_ie^{-\lambda_i(r_i-d_i(p))}) \\
+log(p(r_i|p)) &= log(\lambda_i)-\lambda_i(r_i-d_i(p)) \\
+F = log(p(r_i|p)) &= log(\prod_{j=1}^N p(r^j,p))
+= \sum_{i=1}^{N_A} \sum_{j=1}^N log(p(r_i^j, p))
+= \sum_{i=1}^{N_A} \sum_{j=1}^N log(\lambda_i) - \lambda_i(r_i^j - d_i(p)) \\
+\frac{\partial F}{\partial \lambda} &= \sum_{i=1}^N \frac{1}{\lambda_i} - (r_i^j-d_i(p)) = 0 \\
+&= \frac{N}{\lambda_i} - \sum_{i=1}^N (r_i^j-d_i(p)) = 0 \\
+&\Rightarrow \frac{N}{\lambda_i} = \sum_{i=1}^N (r_i^j-d_i(p)) \\
+&\Rightarrow \lambda_i = \frac{N}{\sum_{i=1}^N (r_i^j-d_i(p))}
+\end{align*}
+
+\item \textbf{Estimate the parameters of the measurement models (2) and (3), i.e., estimate $\sigma^2_i$ and $\gamma_i$ for all anchors in all 3 scenarios using the maximum likelihood method.} \\
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|} 
+\hline
+ &Scenario 1 &Scenario 2 &Scenario 3 \\
+\hline
+anchor 1 &$\sigma^2 = 0.09093724$ &$\lambda = 1.12104677$ &$\lambda = 1.07967051$ \\ 
+anchor 2 &$\sigma^2 = 0.08836757$ &$\sigma^2 = 0.08373868$ &$\lambda = 1.08875735$ \\ 
+anchor 3 &$\sigma^2 = 0.08706409$ &$\sigma^2 = 0.09334484$ &$\lambda = 1.11085105$ \\
+anchor 4 &$\sigma^2 = 0.09249329$ &$\sigma^2 = 0.08987343$ &$\lambda = 1.13717563$ \\
+\hline
+\end{tabular}
+\end{center}
+
 \end{itemize}
 
-\section{Estimation of the Position}
+\newpage
+
+\section{Estimation of the Position [11 Points]}
 After specification of the statistical model we can estimate the position of the agent at an unkown position. Note that the estimation of the position must not take into account the true position but only the measurement data provided in measurements\_i.data . We further provide the true position \textbf{ptrue} for error evaluation.
 
 \subsection{Least-Squares Estimation of the Position}
@@ -173,20 +216,85 @@ First, we will use the least squares approximation (cf. (6)) to maximize the lik
 
 \begin{itemize}
 \item Show analytically that for scenario 1 (joint likelihood for the distances is Gaussian), the least-squares estimator of the position is equivalent to the maximum likelihood estimator, i.e., (5) equals (6).
+
+\begin{align*}
+\hat{P}ML &= arg ~\underset{p}{max} p(r|p) = arg ~\underset{p}{max} \prod_{i=1}^{N_A} p(r_i|p) \\
+&= arg~\underset{p}{max} \prod_{i=1}^{N_A} \frac{1}{\sqrt[]{2\pi\sigma^2_i}}e^{-\frac{(r_i-d_i(p))^2}{2\sigma^2_i}} \\
+\textcolor{blue}{Assumption:} \qquad &\textbf{Since $\log$ is increasing,} \\ &\textbf{$F(p^*) \geq F(p)$ implies $\log F(p^∗) \geq \log F(p).$} \\
+&\textbf{So $p^*$ maximizes $\log F(p)$ as well.} \\
+&= arg~max~\log(\prod_{i=1}^{N_A} p(r_i|p)) \\
+&= arg~\underset{p}{max} ~\log(\prod_{i=1}^{N_A} \frac{1}{\sqrt[]{2\pi\sigma^2_i}}e^{-\frac{(r_i-d_i(p))^2}{2\sigma^2_i}}) \\
+&= arg~\underset{p}{max} \sum_{i=1}^{N_A} (\log(\frac{1}{\sqrt[]{2\pi\sigma^2_i}}) - \frac{(r_i-d_i(p))^2}{2\sigma^2_i}) \\
+&\textbf{Since the first component is independent of p,} \\
+&\textbf{the given formula can be simplified as followed:} \\
+&= arg~max \sum_{i=1}^{N_A} - (r_i-d_i(p))^2 \\
+&\approx \hat{P}LS = arg ~\underset{p}{min} \sum_{i=1}^{N_A} (r_i-d_i(p))^2 = \norm{r-d(p)}^2
+\end{align*}
+
 \item Implement the Gauss-Newton algorithm to find the least-squares estimate for the position. Write a function least\_squares\_GN(p\_anchor,p\_start, r, max\_iter, tol), which takes the $(2 × N_A)$ anchor positions, the $(2 × 1)$ initial position, the $(N_A × 1)$ distance estimates, the maximum number of iterations, and the chosen tolerance as input. You may choose suitable values for the tolerance and the maximum number of iterations on your own. The output is the estimated position. 
 \item For all three scenarios, evaluate your estimation algorithm using the provided data. For each of the $N = 2000$ independent measurements, choose the starting position $p_0$ randomly according to a uniform distribution within the square spanned by the anchor points.\newline
 Have a look at:
 
 \begin{itemize}
-  \item The mean and variance of the position estimation error $\norm{\hat{P}LS -P}$.
-  \item Scatter plots of the estimated positions. Fit a two-dimensional Gaussian distribution to the point cloud of estimated positions and draw its contour lines. You can use the provided function plot\_gauss\_contour(mu,cov,xmin,xmax,ymin,ymax,title). Do the estimated positions look Gaussian?
-  \item You can compare the different scenarios by looking at the cumulative distribution function (CDF) of the position estimation error, i.e. the probability that the error is smaller than a given error. You can use the provided function $Fx,x = ecdf(realizations)$ for the estimation of the CDF. For plotting, use $plt.plot(x,Fx)$. What can you say about the probability of large estimation errors, and how does this depend on the scenario?
+\item The mean and variance of the position estimation error $\norm{\hat{P}LS -P}$.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|} 
+\hline
+ &Scenario 1 &Scenario 2 &Scenario 3 \\
+\hline
+mean\_err &0.1771926602294497 &0.2516488327922233 &0.7693183033545665 \\
+\hline
+var\_err &0.018036940711145255 &0.04320495245070751 &0.6679380143534694 \\
+\hline
+\end{tabular}
+\end{center}
+
+\newpage
+
+\item Scatter plots of the estimated positions. Fit a two-dimensional Gaussian distribution to the point cloud of estimated positions and draw its contour lines. You can use the provided function plot\_gauss\_contour(mu,cov,xmin,xmax,ymin,ymax,title). Do the estimated positions look Gaussian?
+  
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.38]{plots/plot_gauss_contour_scenario_1.png}
+  \captionof{figure}{Gauss diagram for the estimated position for scenario 1.}
+  \label{fig:16}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.38]{plots/plot_gauss_contour_scenario_2.png}
+  \captionof{figure}{Gauss diagram for the estimated position for scenario 2.}
+  \label{fig:17}
+\end{minipage}
+\end{figure}
+\hfill
+\begin{figure}[htp]
+\centering
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.38]{plots/plot_gauss_contour_scenario_3.png}
+  \captionof{figure}{Gauss diagram for for the estimated position scenario 3.}
+  \label{fig:16}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+  \includegraphics[scale=0.58]{plots/cdf.png}
+  \captionof{figure}{Cumulative distribution function of the position estimation.}
+  \label{fig:17}
+\end{minipage}
+\end{figure}
+ 
+\noindent
+\item You can compare the different scenarios by looking at the cumulative distribution function (CDF) of the position estimation error, i.e. the probability that the error is smaller than a given error. You can use the provided function $Fx,x = ecdf(realizations)$ for the estimation of the CDF. For plotting, use $plt.plot(x,Fx)$. What can you say about the probability of large estimation errors, and how does this depend on the scenario?
 
 \end{itemize}
 
-\item Consider scenario 2.: We observed that the least-squares estimator is equivalent to the maximum likelihood estimator for Gaussian error distributions. Therefore, try neglecting the anchor with the exponentially distributed measurements at all! Compare your results to before! What can you observe (Gaussianity of the estimated positions, probability of large errors, . . . )?
+\item Consider scenario 2.: We observed that the least-squares estimator is equivalent to the maximum likelihood estimator for Gaussian error distributions. Therefore, try neglecting the anchor with the exponentially distributed measurements at all! Compare your results to before! What can you observe (Gaussianity of the estimated positions, probability of large errors, . . . )? \\
+%\textcolor{red}{[ntbd]}
 
 \end{itemize}
+
+\newpage
 
 \subsection{Numerical Maximum-Likelihood Estimation of the Position}
 For non-Gaussian distributed data, the maximum likelihood-estimator is in general not equivalent to the least-squares estimator. In this example, we want to compare the least-squares estimator with a direct maximization of the likelihood function for scenario 3 (all anchors have exponentially distributed measurements).
@@ -212,6 +320,7 @@ Again, use the evaluation over the grid. Describe the results! Does the prior kn
 
 
 \end{document}
+
 
 
 
