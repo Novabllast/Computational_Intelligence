@@ -81,7 +81,6 @@ def main():
 
     for scenario in range(0, 3):
         plt.plot(x_list[scenario, :], Fx_list[scenario, :], label=('Scenario ' + str(scenario + 1)))
-    # plt.plot(x, Fx, label=('Scenario ' + str(scenario)))
 
     plt.xlabel("x")
     plt.ylabel("Fx")
@@ -212,10 +211,6 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
     top = max(p_anchor[2, :])
     bottom = min(p_anchor[2, :])
     step = 0.05
-    w = range(left, right)
-    h = range(top, bottom)
-
-    points = np.zeros(np.size(5, 2), np.size(5, 2));
 
     x = left
     y = bottom
@@ -228,20 +223,22 @@ def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true
             y_i = p_anchor[:, 1]
             d = np.sqrt(np.power(x_i - x, 2) + (np.power(y_i - y, 2)))
 
-            for i in range(0, data.size):
-                r = data[i, d]
-                r_i = r  # TODO
-                d_i = d # TODO
+            enum = enumerate(zip(data[0, :], d))
+            for i, (r_i, d_i) in enum:
                 if r_i >= d_i:
                     prop[i] = lambdas[0, i] * np.exp(-lambdas[0, i]) * (r_i - d_i)
+                else:
+                    prop[i] = 0
 
                 jL[x_cord, y_cord] = np.prod(prop)
+                y += step
 
-                x += step
+            x += step
+            y = left
 
-            y += step
-            x = left
-
+        max_jl = np.argmax(jL)
+        print(max_jl)
+        print(lambdas)
 
 
 # --------------------------------------------------------------------------------
