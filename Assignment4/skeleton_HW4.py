@@ -50,7 +50,10 @@ def main():
 
         # 2) Position estimation using least squares
         # TODO
-        pls_estimation = position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, True)
+        if (scenario == 2):
+            exponential=True
+        else: exponential=False
+        pls_estimation = position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, exponential)
 
         if (scenario == 3):
             # TODO: don't forget to plot joint-likelihood function for the first measurement
@@ -132,10 +135,10 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
         p_true... true position (needed to calculate error) 2x2 
         use_exponential... determines if the exponential anchor in scenario 2 is used, bool"""
 
-    # if use_exponential:  # TODO is always true
-    #     p_anchor = np.delete(p_anchor, -1, axis=0)
-    #     data = np.delete(data, -1, axis=1)
-    #     nr_anchors = 3
+    if use_exponential:  # TODO is always true
+         p_anchor = np.delete(p_anchor, 0, axis=0)
+         data = np.delete(data, 0, axis=1)
+         nr_anchors = 3
 
     nr_samples = np.size(data, 0)
 
@@ -191,7 +194,7 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     #   ymin,ymax....minimum and maximum value for height of plot-area, scalar
     #   title... title of the plot (optional), string"""
 
-    title = "Some fancy Text"
+    title = "Scenario"
     # TODO sometime throws: ValueError: zero-size array to reduction operation minimum which has no identity
 
     plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
