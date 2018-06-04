@@ -17,52 +17,73 @@ from scipy.stats import multivariate_normal
 # Assignment 4
 def main():
     # choose the scenario
-    scenario = 1  # all anchors are Gaussian
+    #scenario = 1  # all anchors are Gaussian
     #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
     #scenario = 3  # all anchors are exponential
 
-    # specify position of anchors
-    p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
-    nr_anchors = np.size(p_anchor, 0)
+    Fx_list = np.zeros((3,4))
+    x_list = np.zeros((3,4))
+    for scenario in range (1,4):
 
-    # position of the agent for the reference mearsurement
-    p_ref = np.array([[0, 0]])
-    # true position of the agent (has to be estimated)
-    p_true = np.array([[2, -4]])
-    #    p_true = np.array([[2,-4])
+        # specify position of anchors
+        p_anchor = np.array([[5, 5], [-5, 5], [-5, -5], [5, -5]])
+        nr_anchors = np.size(p_anchor, 0)
 
-    plot_anchors_and_agent(nr_anchors, p_anchor, p_true, p_ref)
+        # position of the agent for the reference mearsurement
+        p_ref = np.array([[0, 0]])
+        # true position of the agent (has to be estimated)
+        p_true = np.array([[2, -4]])
+        #    p_true = np.array([[2,-4])
 
-    # load measured data and reference measurements for the chosen scenario
-    data, reference_measurement = load_data(scenario)
+        plot_anchors_and_agent(nr_anchors, p_anchor, p_true, p_ref)
 
-    # get the number of measurements 
-    assert (np.size(data, 0) == np.size(reference_measurement, 0))
-    nr_samples = np.size(data, 0)
+        # load measured data and reference measurements for the chosen scenario
+        data, reference_measurement = load_data(scenario)
 
-    # 1) ML estimation of model parameters
-    # TODO
-    params = parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref)
+        # get the number of measurements
+        assert (np.size(data, 0) == np.size(reference_measurement, 0))
+        nr_samples = np.size(data, 0)
 
-    # 2) Position estimation using least squares
-    # TODO
-    position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, True)
-
-    if (scenario == 3):
-        # TODO: don't forget to plot joint-likelihood function for the first measurement
-
-        # 3) Postion estimation using numerical maximum likelihood
+        # 1) ML estimation of model parameters
         # TODO
-        position_estimation_numerical_ml(data, nr_anchors, p_anchor, params, p_true)
+        params = parameter_estimation(reference_measurement, nr_anchors, p_anchor, p_ref)
 
-        # 4) Position estimation with prior knowledge (we roughly know where to expect the agent)
+        # 2) Position estimation using least squares
         # TODO
-        # specify the prior distribution
-        prior_mean = p_true
-        prior_cov = np.eye(2)
-        position_estimation_bayes(data, nr_anchors, p_anchor, prior_mean, prior_cov, params, p_true)
+        pls_estimation = position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, True)
 
-    pass
+        if (scenario == 3):
+            # TODO: don't forget to plot joint-likelihood function for the first measurement
+
+            # 3) Postion estimation using numerical maximum likelihood
+            # TODO
+            position_estimation_numerical_ml(data, nr_anchors, p_anchor, params, p_true)
+
+            # 4) Position estimation with prior knowledge (we roughly know where to expect the agent)
+            # TODO
+            # specify the prior distribution
+            prior_mean = p_true
+            prior_cov = np.eye(2)
+            position_estimation_bayes(data, nr_anchors, p_anchor, prior_mean, prior_cov, params, p_true)
+
+
+
+        error = []
+        for idx in range (0,nr_anchors):
+            error.append(np.sqrt((pls_estimation[idx, 0] - p_true[0][0]) ** 2 + (pls_estimation[idx, 1] - p_true[0][1]) ** 2))
+        Fx, x = ecdf(error)
+        Fx_list[scenario-1, :] = Fx
+        x_list[scenario-1, :] = x
+
+    for scenario in range (0,3):
+        plt.plot(x_list[scenario,:], Fx_list[scenario,:], label=('Scenario ' + str(scenario+1)))
+    #plt.plot(x, Fx, label=('Scenario ' + str(scenario)))
+
+    plt.xlabel("x")
+    plt.ylabel("Fx")
+    plt.legend()
+    plt.title('CDF')
+    plt.show()
 
 
 # --------------------------------------------------------------------------------
@@ -175,16 +196,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     plot_gauss_contour(mu, cov, xmin, xmax, ymin, ymax, title)
 
 
-    error =  []
-    for idx, value in enumerate(data[0]):
-        error.append(np.sqrt((pls_estimates[idx,0] - p_true[0][0])**2 + (pls_estimates[idx,1] - p_true[0][1])**2))
 
-    Fx, x = ecdf(error)
-    plt.plot(x,Fx)
-    plt.title('CDF')
-    plt.legend()
-    plt.show()
-
+    return pls_estimates
 
 # --------------------------------------------------------------------------------
 def position_estimation_numerical_ml(data, nr_anchors, p_anchor, lambdas, p_true):
