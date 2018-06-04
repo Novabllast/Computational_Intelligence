@@ -134,7 +134,8 @@ def position_estimation_least_squares(data, nr_anchors, p_anchor, p_true, use_ex
     var = np.var(np_abs)
     mean_x = np.mean(pls_estimates[:, 0])
     mean_y = np.mean(pls_estimates[:, 1])
-    mu = [mean_x, mean_y]
+    mu = np.array([mean_x, mean_y])
+
     cov = np.cov(np.transpose(pls_estimates))
 
     xmin = np.min(pls_estimates[:, 0])
@@ -228,9 +229,9 @@ def least_squares_GN(p_anchor, p_start, r: np.ndarray, max_iter, tol):
             # x − xi / dist((xi − x)² + (yi − y)²)
             dist = np.sqrt(np.power(x_i - x, 2) + np.power(y_i - y, 2))
             d[i] = dist
-            jr[i, 0] = (x_i - x) / dist             # TODO why x_i - x
+            jr[i, 0] = (x_i - x) / dist  # TODO why x_i - x
             # y − yi / dist((xi − x)² + (yi − y)²
-            jr[i, 1] = (y_i - y) / dist             # TODO why y_i - y
+            jr[i, 1] = (y_i - y) / dist  # TODO why y_i - y
 
         matmul_inv = np.matmul(np.transpose(jr), jr)
         inv = np.linalg.inv(matmul_inv)
