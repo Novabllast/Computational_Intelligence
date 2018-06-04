@@ -21,8 +21,8 @@ def main():
     #scenario = 2    # 1 anchor is exponential, 3 are Gaussian
     #scenario = 3  # all anchors are exponential
 
-    Fx_list = np.zeros((3,4))
-    x_list = np.zeros((3,4))
+    Fx_list = np.zeros((3,2000))
+    x_list = np.zeros((3,2000))
     for scenario in range (1,4):
 
         # specify position of anchors
@@ -67,9 +67,8 @@ def main():
             position_estimation_bayes(data, nr_anchors, p_anchor, prior_mean, prior_cov, params, p_true)
 
 
-
         error = []
-        for idx in range (0,nr_anchors):
+        for idx in range (0,nr_samples):
             error.append(np.sqrt((pls_estimation[idx, 0] - p_true[0][0]) ** 2 + (pls_estimation[idx, 1] - p_true[0][1]) ** 2))
         Fx, x = ecdf(error)
         Fx_list[scenario-1, :] = Fx
