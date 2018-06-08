@@ -1,0 +1,162 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+%%%%%%%%% begin snippet
+%% You need to add the package "tabularx".
+%% Place the snippet right after \begin{document}
+
+% need tabularx
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{paralist}
+\usepackage{amssymb,amsmath,amsthm,enumitem}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{subcaption}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\usepackage[hypcap=false]{caption}
+
+\captionsetup{justification=centering}
+\captionsetup{format=plain, font=small, labelfont=bf}
+
+\begin{document}
+\title{ Computational Intelligence, SS2018 Assignment 5}
+
+\begin{titlepage}
+       \begin{center}
+             \begin{huge}
+				   %% Update assignment number here
+                   \textbf{Assignment 5}
+             \end{huge}
+       \end{center}
+
+       \begin{center}
+             \begin{large}
+                   Computational Intelligence, SS2018
+             \end{large}
+       \end{center}
+
+       \begin{center}
+ \begin{tabularx}{\textwidth}{|>{\hsize=.33\hsize}X|>{\hsize=.33\hsize}X|>{\hsize=.33\hsize}X|}
+
+                   \hline
+                   \multicolumn{3}{|c|}{\textbf{Team Members}} \\
+                   \hline
+                   STRUGER & Patrick & 01530664 \\
+                   \hline
+                   B\"OCK & Manfred & 01530598 \\
+                   \hline
+                   HAUPT & Anna & 01432018 \\
+                   \hline
+
+             \end{tabularx}
+       \end{center}
+
+\end{titlepage}
+
+%%%%%%%%% end snippet
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Background}
+This section explains the algorithms that have to be implemented. The actual tasks are provided in the subsequent sections.
+
+\subsection{Expectation Maximization Algorithm}
+
+\begin{enumerate}
+\item Write a function that implements the EM algorithm: \\
+$alpha, mean, cov, LL, labels = EM(X, K, alpha\_0, mu\_0, sigma\_0, max\_iter, tol).$\\
+Here, $X$ is the data set and consists of $N = 150$ samples. $K$ is the number of Gaussian components. The initial parameter vector is $alpha\_0$, $mean\_0$, and $cov\_0$. The maximum number of iterations and the tolerance are given by $max iter$ and $tol$. After convergence the function returns the final parameter vector given by alpha, mu, and cov, as well as the log-likelihood over the iterations in LL. The function further returns the labels that
+are obtained by performing soft classification of each sample according to (2)
+\newline
+You may use the provided function $P = likelihood\_multivariate\_normal(X,mu,cov,log)$ that estimates the likelihood, or the log-likelihood, of $X$ given the specified multivariate Gaussian distribution.
+\end{enumerate}
+
+\subsection{K-means algorithm}
+You should implement the K-means algorithm as discussed in the lecture and compare the results with the ones obtained with the EM-algorithm. Remember that you can interpret K-means as a version of the EM-algorithm with several simplifications: First, the classes are just represented by their means, second, there are no class weights and third, a hard classification is performed for all samples. The latter also means that for the parameter update, only the points classified to this component play a role.
+\begin{enumerate}
+\item  Write a function $centers\_0 = init\_k\_means(dimension, nr\_clusters, scenario)$ that provides the initial cluster centers centers\_0.
+\item Further write a function that implements the K-means algorithm: $centers, D, labels = k\_means(X, K, centers\_0, max\_iter, tol)$\\
+Here, $X$ is the data, $K$ is the number of clusters, centers\_0 are the initial cluster centers and max\_iter and tol are the maximum number of iterations and the tolerance. The function returns the optimized cluster centers centers and the cumulative distance over the iterations in $D$. All labels are obtained by performing hard classification for each sample.
+\end{enumerate}
+
+
+\subsection{Principal Component Analysis (PCA)}
+You should also implement PCA as discussed in the lecture and apply it to reduce the dimension of the data from $D = 4$ to $M = 2$.
+\begin{enumerate}
+  \item Write a function $Y,V = PCA(data, M, whitening)$ that computes the first $M$ principal components and transforms the data, so that $y_n = U^T x_n$. The function should further return V that explains the amount of variance that is explained by the transformation.
+  \item (bonus-task) If different features are on different scales it can be an important preprocessing step to transform the data such that $Y$ has zero mean and a covariance matrix equal to the identity matrix. Implement this and perform the according transformation if $whitening = True$.
+\end{enumerate}
+
+
+
+
+\section{Classification/ Clustering}
+We use three different scenarios (Sec. 2.1- 2.3) in order to evaluate the EM- and the K-means algorithm. Each scenario uses a different pre-processing step before applying the algorithms. Test your EM-algorithm for all three scenarios:
+
+\begin{enumerate}
+  \item Compare the result with the labeled data set (i.e., consider labels as well). Make a scatter plot of the data and plot the Gaussian mixture model over this plot. You can use the provided function plot\_gauss\_contour(mu,cov,xmin,xmax,ymin,ymax,nr\_points,title) for plotting each of the Gaussian components. The factors $\alpha_k$ are neglected for the visualization. Make sure to choose an appropriate range for plotting
+  \item your tests, select the correct number of components (K = 3), but also check the result when you use more or less components. How do you choose your initialization $\Theta_0$? Does this choice have an influence on the result?
+  \item Also plot the log-likelihood function over the iterations! What is the behavior of this function over the iterations?
+  \item Make a scatter plot of the data that shows the result of the soft-classification that is done in the E-step. Therefore classify each sample using $r^n_k$, and plot the samples in different colors for each of the three classes. You may use the provided functions plot\_iris\_data(data,labels) and reassign\_class\_labels(labels) in order to produce comparable plots.
+\end{enumerate}
+
+Further apply and evaluate your K-means algorithm for all three scenarios:
+\begin{enumerate}[resume]
+  \item Perform the same tasks as for the EM-algorithm to evaluate the performance! The way to plot the classes/components is different now: in the scatter plot, plot the mean value for each class and plot the points classified to this class in a certain color.
+  \item  What is the nature of the boundaries between the classes? Compare with the results of the soft-classification in the EM-algorithm! Also compare with the labeled data, can K-means find the class structure well?
+\end{enumerate}
+
+
+
+\subsection{2 dimensional feature [14 + 2* Points]}
+In this scenario we consider only two of the available features (sepal length and petal length), i.e., x\_2dim.
+\begin{enumerate}
+  \item Perform all of the above-mentioned tasks for the EM algorithm. [7 Points]
+  \item Perform all of the above-mentioned tasks for the K-means algorithm. [7 Points]
+  \item  (bonus-task) You may additionally choose any other pair of features; how would this change the classification accuracy? [2* Points]
+\end{enumerate}
+
+
+
+\subsection{4 dimensional feature [7 Points]}
+In this scenario we apply our algorithms to the full data set with four features, i.e., x\_4dim. The classification has to be performed for $D = 4$; it is sufficient, however to visualize your results by plotting the same two features as in scenario 2.1. Again perform all of the above-mentioned tasks for both algorithms.
+\begin{enumerate}
+  \item How do the convergence properties and the accuracy of you classification change in comparison to scenario 2.1? [4 Points]
+  \item Within your EM-function confine the structure of the covariance matrices to diagonal matrices! What is the influence on the result. [3 Points]
+\end{enumerate}
+
+
+
+\subsection{Processing the data with PCA [8 + 3* Points]}
+Here we perform PCA first to reduce the dimension to $M = 2$ while preserving most of the variance and then apply our algorithms to the transformed data set, i.e., x\_2dim\_pca.
+\begin{enumerate}
+  \item How much of the variance in the data is explained this way? [3 Points]
+  \item How does the performance of your algorithms compare to scenario 2.1 and scenario 2.2? [5 Points]
+  \item (bonus-task) Apply PCA with whitening, so that the transformed data has zero mean and a unit covariance matrix. How does this influence the choice of your initialization? [3* Points]
+\end{enumerate}
+
+\section*{Samples from a Gaussian Mixture Model [4 Points]}
+\begin{enumerate}
+  \item Write a function $Y = sample\_GMM(alpha, mu, cov, N)$, that draws $N$ samples from a two-dimensional Gaussian Mixture distribution given by the parameters $alpha$, $mu$ and $cov$!
+  \item Using a GMM of your choice $(K > 3)$, demonstrate the correctness of your function!
+\end{enumerate}
+\end{document}
+
+
+
+
