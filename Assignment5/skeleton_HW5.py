@@ -47,8 +47,8 @@ def main():
     # nr_components = ... #n number of components
 
     # TODO: implement
-    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    # alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    # alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
     # initial_centers = init_k_means(dimension = dim, nr_clusters=nr_components, scenario=scenario)
     # ... = k_means(x_2dim, nr_components, initial_centers, max_iter, tol)
 
@@ -63,7 +63,7 @@ def main():
     # TODO set parameters
     tol = 4  # tolerance
     max_iter = 20  # maximum iterations for GN
-    nr_components = 3  # n number of components
+    nr_components = 4  # n number of components
 
     # TODO: implement
     # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
@@ -291,6 +291,15 @@ def k_means(X, K, centers_0, max_iter, tol):
             break
 
     # TODO: classify all samples after convergence
+
+    colors = ['r', 'g', 'b', 'y', 'c', 'm']
+
+    for i in range(K):
+        points = centers[i]
+        plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
+    plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
+
+    plt.show()
 
     labels = ['k-means']
     return centers_0, D, labels
