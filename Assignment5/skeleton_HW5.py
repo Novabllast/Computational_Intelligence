@@ -242,9 +242,11 @@ def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
         :param dataset: """
     # TODO choose suitable initial values for each scenario
 
-    initial_centers = np.zeros((dimension, nr_clusters))
-    for m in range(0, nr_clusters):
-        center = dataset[random.randint(0, len(dataset) - 1)]
+    # Step 1
+    initial_centers = np.zeros((nr_clusters, dimension))
+    for m in range(0, dimension):
+        index = random.randint(0, len(dataset) - 1)
+        center = dataset[index]
         initial_centers[:, m] = center
 
     return initial_centers
@@ -262,11 +264,20 @@ def k_means(X, K, centers_0, max_iter, tol):
         cumulative_distance... cumulative distance over all iterations, nr_iterations x 1
         labels... class labels after performing hard classification, nr_samples x 1"""
     D = X.shape[1]
-    assert D == centers_0.shape[0]
+    D_center = centers_0.shape[0]
+    assert D == D_center
     # TODO: iteratively update the cluster centers
 
-    for iteration in range(0, max_iter):
-        pass
+    is_stable = False
+    distance = np.zeros((K, len(X)))
+
+    # for iteration in range(0, max_iter):
+        # Step 2
+        # for cluster in range(0, K):
+            # dist = np.linalg.norm(a - b)
+            # distance[cluster, :]
+
+        # if is_stable:
 
     # TODO: classify all samples after convergence
     pass
