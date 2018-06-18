@@ -1,6 +1,7 @@
 # Filename: HW5_skeleton.py
 # Author: Christian Knoll
 # Edited: May, 2018
+import random
 
 import numpy as np
 import matplotlib.cm as cm
@@ -20,16 +21,16 @@ from sklearn import datasets
 def main():
     # ------------------------
     # 0) Get the input 
-    ## (a) load the modified iris data
+    # (a) load the modified iris data
     data, labels = load_iris_data()
 
-    ## (b) construct the datasets 
+    # (b) construct the datasets
     x_2dim = data[:, [0, 2]]
     x_4dim = data
     # TODO: implement PCA
     x_2dim_pca = PCA(data, nr_dimensions=2, whitening=False)
 
-    ## (c) visually inspect the data with the provided function (see example below)
+    # (c) visually inspect the data with the provided function (see example below)
     plot_iris_data(x_2dim, labels)
 
     # ------------------------
@@ -58,15 +59,16 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    # tol = ...  # tolerance
-    # max_iter = ...  # maximum iterations for GN
-    # nr_components = ... #n number of components
+    tol = 0.001  # tolerance
+    max_iter = 100  # maximum iterations for GN
+    nr_components = 2  # n number of components
 
     # TODO: implement
     # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
-    # ... = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
-    # initial_centers = init_k_means(dimension = dim, nr_cluster=nr_components, scenario=scenario)
-    # ... = k_means(x_2dim,nr_components, initial_centers, max_iter, tol)
+    # alpha, mu, cov, LL, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+
+    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
+    centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results by looking at the same slice as in 1)
 
@@ -137,16 +139,23 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
 
 # --------------------------------------------------------------------------------
-def init_k_means(dimension=None, nr_clusters=None, scenario=None):
+def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
     """ initializes the k_means algorithm
     Input: 
         dimension... dimension D of the dataset, scalar
         nr_clusters...scalar
         scenario... optional parameter that allows to further specify the settings, scalar
     Returns:
-        initial_centers... initial cluster centers,  D x nr_clusters"""
-    # TODO chosse suitable inital values for each scenario
-    pass
+        initial_centers... initial cluster centers,  D x nr_clusters
+        :param dataset: """
+    # TODO choose suitable initial values for each scenario
+
+    initial_centers = np.zeros((dimension, nr_clusters))
+    for m in range(0, nr_clusters):
+        center = dataset[random.randint(0, len(dataset) - 1)]
+        initial_centers[:, m] = center
+
+    return initial_centers
 
 
 # --------------------------------------------------------------------------------
@@ -163,6 +172,9 @@ def k_means(X, K, centers_0, max_iter, tol):
     D = X.shape[1]
     assert D == centers_0.shape[0]
     # TODO: iteratively update the cluster centers
+
+    for iteration in range(0, max_iter):
+        pass
 
     # TODO: classify all samples after convergence
     pass
