@@ -43,12 +43,12 @@ def main():
 
     # TODO set parameters
     # tol = ...  # tolerance
-    # max_iter = ...  # maximum iterations for GN
+    max_iter = 150  # maximum iterations for GN (maybe this is the number of N = 150)
     # nr_components = ... #n number of components
 
     # TODO: implement
-    # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
-    # ... = EM(x_2dim,nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
     # initial_centers = init_k_means(dimension = dim, nr_clusters=nr_components, scenario=scenario)
     # ... = k_means(x_2dim, nr_components, initial_centers, max_iter, tol)
 
@@ -105,7 +105,7 @@ def main():
 
 # --------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------
-def init_EM(dimension=2, nr_components=3, scenario=None):
+def init_EM(data, dimension=2, nr_components=3, scenario=None):
     """ initializes the EM algorithm
     Input: 
         dimension... dimension D of the dataset, scalar
@@ -116,6 +116,24 @@ def init_EM(dimension=2, nr_components=3, scenario=None):
         mean_0 ... initial mean values, D x nr_components
         cov_0 ...  initial covariance for each component, D x D x nr_components"""
     # TODO choose suitable initial values for each scenario
+
+    # 1.) EM algorithm for GMM:
+
+    # initializing alpha - uniforme Verteilungsfunktion
+    alpha_0 = np.ones((1, nr_components)) * (1 / nr_components)
+
+    # initializing mean - select m samples randomly
+    mean_0 = np.ones((dimension, nr_components))
+
+    # initializing cov_0 dimension
+    cov_0 = np.zeros((dimension, dimension, nr_components))
+
+    for i in range(0, nr_components):
+        mean_0[:, i] = data[random.randint(0, len(data) - 1)]
+        cov_0[:, :, i] = np.cov(data, rowvar=False)
+
+    return alpha_0, mean_0, cov_0
+
     pass
 
 
@@ -139,6 +157,80 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     D = X.shape[1]
     assert D == mean_0.shape[0]
     # TODO: iteratively compute the posterior and update the parameters
+
+    # print("started EM algorithm")
+    # N = len(X)  # X.size/2
+    # print(X.size, X.shape, len(X))
+    # alpha = np.ones((M,)) * alpha_0
+    # mu = mu_0
+    # Sigma = np.ones((M, 2, 2))
+    # r = np.zeros((M, N))
+    # L = 0.0
+    # L_old = 0.0
+    # L_array = np.zeros((max_iter,))
+    #
+    # print("going to assign sigma_0")
+    # for m in range(0, M):
+    #     Sigma[m, :, :] *= Sigma_0
+    #
+    # # print(Sigma)
+    #
+    # plt.xlabel('Iterations')
+    # plt.ylabel('Log Likelihood')
+    # plt.title('Log-Likelihood over the Iterations')
+    #
+    # for i in range(0, max_iter):
+    #
+    #     if (i % 10 == 0):
+    #         print("iteration", i)
+    #
+    #     # expectation step
+    #     for m in range(0, M):
+    #         dist = multivariate_normal(mu[m, :], Sigma[m, :, :])
+    #         r[m, :] = dist.pdf(X) * alpha[m]
+    #
+    #     rsum = np.sum(r, axis=0)
+    #
+    #     r = np.einsum('mn, n->mn', r, np.reciprocal(rsum))
+    #
+    #     # likelihood calculation
+    #     L = sum(np.log(rsum))
+    #     L_array[i] = L
+    #     # print("L", L)
+    #     if (np.abs(L_old - L) < 10 ** -12):
+    #         plt.plot(L_array[:i])
+    #         plt.show()
+    #         if (classify == True):
+    #             y = np.argmax(r, axis=0)
+    #             plt.scatter(X[:, 0], X[:, 1], c=y, s=0.1)
+    #             plt.title('Classification of EM')
+    #             plt.xlabel('x')
+    #             plt.ylabel(('y'))
+    #             plt.show()
+    #         return alpha, mu, Sigma, L
+    #     L_old = L
+    #
+    #     # maximization step
+    #     for m in range(0, M):
+    #         rsum1 = np.sum(r, axis=1)
+    #         mu[m, :] = np.average(X, axis=0, weights=r[m, :])
+    #
+    #         alpha[m] = sum(r[m, :]) / N
+    #
+    #         Sigma[m, :, :] = np.cov(X, rowvar=False, ddof=0, aweights=r[m, :])
+    #         if diag == True:
+    #             Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
+    #
+    # plt.plot(L_array)
+    # plt.show()
+    # if (classify == True):
+    #     y = np.argmax(r, axis=0)
+    #     plt.scatter(X[:, 0], X[:, 1], c=y, s=0.1)
+    #     plt.title('Classification of EM')
+    #     plt.xlabel('x')
+    #     plt.ylabel(('y'))
+    #     plt.show()
+    # return alpha, mu, Sigma, L
 
     # TODO: classify all samples after convergence
     pass
