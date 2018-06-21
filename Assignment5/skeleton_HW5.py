@@ -40,7 +40,7 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    # tol = ...  # tolerance
+    tol = 0.00001  # tolerance
     max_iter = 150  # maximum iterations for GN (maybe this is the number of N = 150)
     # nr_components = ... #n number of components
 
@@ -114,7 +114,7 @@ def init_EM(data, dimension=2, nr_components=3, scenario=None):
     # 1.) EM algorithm for GMM:
 
     # initializing alpha - uniforme Verteilungsfunktion
-    alpha_0 = np.ones((1, nr_components)) * (1 / nr_components)
+    alpha_0 = np.ones((nr_components,)) * (1 / nr_components)
 
     # initializing mean - select m samples randomly
     mean_0 = np.ones((dimension, nr_components))
@@ -151,6 +151,127 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     D = X.shape[1]
     assert D == mean_0.shape[0]
     # TODO: iteratively compute the posterior and update the parameters
+
+    classify = True
+
+    N = len(X)
+    r_kn = np.zeros((K, N))
+    #r_kn = np.zeros((N, K))
+
+    labels = np.zeros(K)
+
+    L = 0.0
+    L_old = 0.0
+    L_array = np.zeros((max_iter))
+
+    for i in range(0, max_iter):
+
+        # expectation step
+        for k in range(0, K):
+
+            likelihood = likelihood_multivariate_normal(X, mean_0[:, k], cov_0[:, :, k])
+            r_kn[k, :] = likelihood * alpha_0[k]
+
+        # calculate sum
+        r_kn_sum = np.sum(r_kn, axis=0)
+
+        r_kn = np.einsum('mn, n->mn', r_kn, np.reciprocal(r_kn_sum))
+
+        # maximization step
+        for k in range(0, K):
+
+            N_k = np.sum(r_kn, axis=1)
+
+            # update mean_0
+            mean_0[:, k] = np.average(X, axis=0, weights=r_kn[k, :])
+            #mean_0[:, k] = (1 / N_k) * (np.sum(r_kn, axis=1) * np.sum(X[i, :], axis=1))
+
+            # update alpha_0
+            #alpha_0[k] = N_k / max_iter
+
+            alpha_0[k] = np.sum(r_kn[k, :]) / N
+
+            # update cov_0
+            # cov_0[:, :, k] = (1 / N_k) * (np.sum(r_kn, axis=1) * np.sum(X[i, :] - mean_0[:, k], axis=1)
+            #                               * np.sum((X[i, :] - mean_0[:, k]), axis=0))
+
+            cov_0[:, :, k] = np.cov(X, rowvar=False, ddof=0, aweights=r_kn[k, :])
+
+        # likelihood calculation
+        L = sum(np.log(r_kn_sum))
+
+        L_array[i] = L
+        if (np.abs(L_old - L) < tol):
+            plt.plot(L_array[:i])
+            plt.show()
+            if (classify == True):
+                y = np.argmax(r_kn, axis=0)
+                plt.scatter(X[:, 0], X[:, 1], c=y, s=0.1)
+                plt.title('Classification of EM')
+                plt.xlabel('x')
+                plt.ylabel(('y'))
+                plt.show()
+            return alpha_0, mean_0, cov_0, L, labels
+        L_old = L
+
+
+
+
+                    # if diag == True:
+                    #     Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
+
+        #           rsum1 = np.sum(r, axis=1)
+            #mean_0[:, k] = np.average(X, axis=0, weights=r_kn[:, k])
+        #
+        #         alpha[m] = sum(r[m, :]) / N
+        #
+        #         Sigma[m, :, :] = np.cov(X, rowvar=False, ddof=0, aweights=r[m, :])
+        #         if diag == True:
+        #             Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
+
+        # likelihood calculation
+        # L = sum(np.log(r_kn_sum))
+        # L_array[i] = L
+        # print("L", L)
+        # if (np.abs(L_old - L) < 10 ** -12):
+        #     plt.plot(L_array[:i])
+        #     plt.show()
+        #     if (classify == True):
+        #         y = np.argmax(r_kn, axis=0)
+        #         plt.scatter(X[:, 0], X[:, 1], c=y, s=0.1)
+        #         plt.title('Classification of EM')
+        #         plt.xlabel('x')
+        #         plt.ylabel(('y'))
+        #         plt.show()
+        #     return alpha_0, mean_0, cov_0, L
+        # L_old = L
+
+    plt.plot(L_array)
+    plt.show()
+    if (classify == True):
+        y = np.argmax(r_kn, axis=0)
+        plt.scatter(X[:, 0], X[:, 1], c=y, s=0.1)
+        plt.title('Classification of EM')
+        plt.xlabel('x')
+        plt.ylabel(('y'))
+        plt.show()
+
+    return alpha_0, mean_0, cov_0, L, labels
+
+
+        #for m in range(0, M):
+    # rsum1 = np.sum(r, axis=1)
+    #         mu[m, :] = np.average(X, axis=0, weights=r[m, :])
+    #
+    #         alpha[m] = sum(r[m, :]) / N
+    #
+    #         Sigma[m, :, :] = np.cov(X, rowvar=False, ddof=0, aweights=r[m, :])
+    #         if diag == True:
+    #             Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
+
+
+
+
 
     # print("started EM algorithm")
     # N = len(X)  # X.size/2
