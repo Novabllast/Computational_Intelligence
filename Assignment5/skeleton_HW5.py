@@ -9,6 +9,8 @@ import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 
+from scipy.spatial.distance import cdist
+
 from scipy.stats import multivariate_normal
 import pdb
 
@@ -45,8 +47,8 @@ def main():
     # nr_components = ... #n number of components
 
     # TODO: implement
-    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    # alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    # alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
     # initial_centers = init_k_means(dimension = dim, nr_clusters=nr_components, scenario=scenario)
     # ... = k_means(x_2dim, nr_components, initial_centers, max_iter, tol)
 
@@ -59,9 +61,9 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    tol = 0.001  # tolerance
-    max_iter = 100  # maximum iterations for GN
-    nr_components = 2  # n number of components
+    tol = 4  # tolerance
+    max_iter = 20  # maximum iterations for GN
+    nr_components = 4  # n number of components
 
     # TODO: implement
     # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
@@ -69,6 +71,10 @@ def main():
 
     centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
     centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
+
+    print("mu:", centers)
+    print("D:", D)
+    print("label: ", labels)
 
     # TODO: visualize your results by looking at the same slice as in 1)
 
@@ -364,11 +370,9 @@ def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
     # TODO choose suitable initial values for each scenario
 
     # Step 1
-    initial_centers = np.zeros((nr_clusters, dimension))
-    for m in range(0, dimension):
-        index = random.randint(0, len(dataset) - 1)
-        center = dataset[index]
-        initial_centers[:, m] = center
+    initial_centers = np.empty((nr_clusters, 2))
+    for m in range(0, nr_clusters):
+        initial_centers[m, :] = random.choice(dataset)
 
     return initial_centers
 
@@ -385,23 +389,41 @@ def k_means(X, K, centers_0, max_iter, tol):
         cumulative_distance... cumulative distance over all iterations, nr_iterations x 1
         labels... class labels after performing hard classification, nr_samples x 1"""
     D = X.shape[1]
-    D_center = centers_0.shape[0]
-    assert D == D_center
+    # assert D == centers_0.shape[0]
+    assert D == centers_0.shape[1]
     # TODO: iteratively update the cluster centers
 
-    is_stable = False
-    distance = np.zeros((K, len(X)))
-
-    # for iteration in range(0, max_iter):
+    centers = {0: np.zeros(X.shape), 1: np.zeros(X.shape), 2: np.zeros(X.shape)}
+    centers_backup = np.zeros(centers_0.shape)
+    for iteration in range(0, max_iter):
         # Step 2
-        # for cluster in range(0, K):
-            # dist = np.linalg.norm(a - b)
-            # distance[cluster, :]
+        distance = cdist(X, centers_0, metric="euclidean")
 
-        # if is_stable:
+        for index, point in enumerate(X):
+            min_index = np.argmin(distance[index])
+            centers[min_index][index] = point
+
+        centers_backup[:] = centers_0
+        for cluster in range(0, K):
+            mean = np.mean(centers[cluster], axis=0)
+            centers_0[cluster, :] = mean
+
+        if (centers_backup == centers_0).all():
+            break
 
     # TODO: classify all samples after convergence
-    pass
+
+    colors = ['r', 'g', 'b', 'y', 'c', 'm']
+
+    for i in range(K):
+        points = centers[i]
+        plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
+    plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
+
+    plt.show()
+
+    labels = ['k-means']
+    return centers_0, D, labels
 
 
 # --------------------------------------------------------------------------------
