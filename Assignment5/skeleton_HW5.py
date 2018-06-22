@@ -61,9 +61,9 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    tol = 4  # tolerance
+    tol = 50  # tolerance
     max_iter = 20  # maximum iterations for GN
-    nr_components = 4  # n number of components
+    nr_components = 2  # n number of components
 
     # TODO: implement
     # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
@@ -162,7 +162,7 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
     N = len(X)
     r_kn = np.zeros((K, N))
-    #r_kn = np.zeros((N, K))
+    # r_kn = np.zeros((N, K))
 
     labels = np.zeros(K)
 
@@ -174,7 +174,6 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
         # expectation step
         for k in range(0, K):
-
             likelihood = likelihood_multivariate_normal(X, mean_0[:, k], cov_0[:, :, k])
             r_kn[k, :] = likelihood * alpha_0[k]
 
@@ -185,15 +184,14 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
         # maximization step
         for k in range(0, K):
-
             N_k = np.sum(r_kn, axis=1)
 
             # update mean_0
             mean_0[:, k] = np.average(X, axis=0, weights=r_kn[k, :])
-            #mean_0[:, k] = (1 / N_k) * (np.sum(r_kn, axis=1) * np.sum(X[i, :], axis=1))
+            # mean_0[:, k] = (1 / N_k) * (np.sum(r_kn, axis=1) * np.sum(X[i, :], axis=1))
 
             # update alpha_0
-            #alpha_0[k] = N_k / max_iter
+            # alpha_0[k] = N_k / max_iter
 
             alpha_0[k] = np.sum(r_kn[k, :]) / N
 
@@ -220,14 +218,11 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
             return alpha_0, mean_0, cov_0, L, labels
         L_old = L
 
-
-
-
-                    # if diag == True:
-                    #     Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
+        # if diag == True:
+        #     Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
 
         #           rsum1 = np.sum(r, axis=1)
-            #mean_0[:, k] = np.average(X, axis=0, weights=r_kn[:, k])
+        # mean_0[:, k] = np.average(X, axis=0, weights=r_kn[:, k])
         #
         #         alpha[m] = sum(r[m, :]) / N
         #
@@ -264,8 +259,7 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
     return alpha_0, mean_0, cov_0, L, labels
 
-
-        #for m in range(0, M):
+    # for m in range(0, M):
     # rsum1 = np.sum(r, axis=1)
     #         mu[m, :] = np.average(X, axis=0, weights=r[m, :])
     #
@@ -274,10 +268,6 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     #         Sigma[m, :, :] = np.cov(X, rowvar=False, ddof=0, aweights=r[m, :])
     #         if diag == True:
     #             Sigma[m, :, :] = np.diag(np.diag(Sigma[m, :, :]))
-
-
-
-
 
     # print("started EM algorithm")
     # N = len(X)  # X.size/2
@@ -351,6 +341,7 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     #     plt.xlabel('x')
     #     plt.ylabel(('y'))
     #     plt.show()
+
     # return alpha, mu, Sigma, L
 
     # TODO: classify all samples after convergence
@@ -369,7 +360,6 @@ def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
         :param dataset: """
     # TODO choose suitable initial values for each scenario
 
-    # Step 1
     initial_centers = np.empty((nr_clusters, 2))
     for m in range(0, nr_clusters):
         initial_centers[m, :] = random.choice(dataset)
@@ -389,31 +379,49 @@ def k_means(X, K, centers_0, max_iter, tol):
         cumulative_distance... cumulative distance over all iterations, nr_iterations x 1
         labels... class labels after performing hard classification, nr_samples x 1"""
     D = X.shape[1]
-    # assert D == centers_0.shape[0]
+    # assert D == centers_0.shape[0] # WTH What's the purpose of that
     assert D == centers_0.shape[1]
     # TODO: iteratively update the cluster centers
 
+    j_prev = 0
+
     centers = {0: np.zeros(X.shape), 1: np.zeros(X.shape), 2: np.zeros(X.shape)}
     centers_backup = np.zeros(centers_0.shape)
+    distances = np.zeros([X.shape[0], K])
+    cumulative_distance = 0
+    j = 0
     for iteration in range(0, max_iter):
-        # Step 2
-        distance = cdist(X, centers_0, metric="euclidean")
+        # Step 1: Klassifikation der Samples zu den Komponenten (→ modifizierter E-step)
+        for cluster in range(0, K):
+            distance = pow((X - centers_0[cluster]), 2).sum(axis=1)
+            distances[:, cluster] = distance
 
-        for index, point in enumerate(X):
-            min_index = np.argmin(distance[index])
-            centers[min_index][index] = point
+        y = np.argmin(distances, axis=1)
+
+        distance = cdist(X, centers_0, metric="euclidean")
+        g = np.argmin(distance, axis=1)
+
+        # Step 2: Neuberechnung der Mittelwertvektoren (entspricht Schwerpunkt der Cluster) aufgrund der Zuweisung in Yk
+        for cluster in range(0, K):
+            sum_x = np.sum(X[np.where(y == cluster), :], axis=1)
+            y_k = X[np.where(y == cluster), :].shape[1]
+            centers_0[cluster, :] = sum_x / y_k
+
+        # 4. Evaluieren der kumulativen Distanz
+        for k in range(K):
+            j += np.sum(np.linalg.norm(X[y == k] - centers_backup[k]))
 
         centers_backup[:] = centers_0
-        for cluster in range(0, K):
-            mean = np.mean(centers[cluster], axis=0)
-            centers_0[cluster, :] = mean
+        cumulative_distance += j
 
-        if (centers_backup == centers_0).all():
+        if abs(j - j_prev) < tol:
             break
+
+        j_prev = j
 
     # TODO: classify all samples after convergence
 
-    colors = ['r', 'g', 'b', 'y', 'c', 'm']
+    colors = ['r', 'g', 'b', 'y', 'c', 'cluster']
 
     for i in range(K):
         points = centers[i]
@@ -422,8 +430,7 @@ def k_means(X, K, centers_0, max_iter, tol):
 
     plt.show()
 
-    labels = ['k-means']
-    return centers_0, D, labels
+    return centers_0, cumulative_distance, j
 
 
 # --------------------------------------------------------------------------------
