@@ -484,8 +484,28 @@ def PCA(data, nr_dimensions=None, whitening=False):
 
     # TODO: Estimate the principal components and transform the data
     # using the first nr_dimensions principal_components
+    # https://plot.ly/ipython-notebooks/principal-component-analysis/
+
+    cov_mat = np.cov(data.T)
+    eig_vals, eig_vecs = np.linalg.eig(cov_mat)
+
+    print('NumPy covariance matrix: \n', cov_mat)
+    print('Eigenvectors \n', eig_vecs)
+    print('Eigenvalues \n', eig_vals)
 
     # TODO: Have a look at the associated eigenvalues and compute the amount of varianced explained
+
+    # λ_1 = u^T_1 Su_1 = σ^2
+    variance_explained = [(i / sum(eig_vals)) * 100 for i in sorted(eig_vals, reverse=True)]
+
+    # y_n = U^T x_n
+    transformed = eig_vals.T, data
+
+    # yn =L ^{− 1/ 2} U^T (xn − mx)
+    if whitening:
+        pass
+
+    return transformed, variance_explained
 
 
 # --------------------------------------------------------------------------------
