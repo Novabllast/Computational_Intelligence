@@ -48,14 +48,15 @@ def main():
 
     # TODO: implement
     alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
-                                                                    max_iter, tol)
+    alpha_final, mean_final, cov_final, log_likelihood, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
+                                                                       max_iter, tol)
     centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
-    centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
+    centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
     # TODO visualize your results
     # labels = reassign_class_labels(labels)
-    plot_iris_data(data, labels)
+    plot_iris_data(data, labels_em)
+    plot_iris_data(data, labels_k_mean)
 
     colors = ['r', 'g', 'b', 'y', 'c']
 
@@ -83,22 +84,30 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    tol = 50  # tolerance
-    max_iter = 20  # maximum iterations for GN
-    nr_components = 2  # n number of components
+    tol = 0.0000000000001  # tolerance
+    max_iter = 200  # maximum iterations for GN
+    nr_components = 3  # n number of components
 
     # TODO: implement
-    # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
-    # alpha, mu, cov, LL, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
-    #
-    # centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
-    # centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
+    (alpha_0, mean_0, cov_0) = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha, mu, cov, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
-    # print("mu:", centers)
-    # print("D:", D)
-    # print("label: ", labels)
+    centers_0 = init_k_means(x_4dim, dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results by looking at the same slice as in 1)
+    plot_iris_data(data, labels_em)
+    plot_iris_data(data, labels_k_mean)
+
+    xmin = np.min(x_4dim[:, 0])
+    xmax = np.max(x_4dim[:, 0])
+    ymin = np.min(x_4dim[:, 1])
+    ymax = np.max(x_4dim[:, 1])
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
+        plot_gauss_contour(mean_final[:, k], cov_final[:, k], xmin, xmax, ymin, ymax, len(data), 'plot_gauss_contour')
+
+    plt.show()
 
     # ------------------------
     # 3) Perform PCA to reduce the dimension to 2 while preserving most of the variance.
@@ -106,19 +115,32 @@ def main():
     scenario = 3
     dim = 2
     nr_components = 3
-
     # TODO set parameters
     tol = 0.00000000001  # tolerance
     max_iter = 300  # maximum iterations for GN
-    nr_components = 3  #n number of components
+    nr_components = 3  # n number of components
 
     # TODO: implement
-    # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
-    # ... = EM(x_2dim_pca, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
-    # initial_centers = init_k_means(dimension = dim, nr_cluster=nr_components, scenario=scenario)
-    # ... = k_means(x_2dim_pca, nr_components, initial_centers, max_iter, tol)
+    (alpha_0, mean_0, cov_0) = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha, mu, cov, LL, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+
+    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results
+    plot_iris_data(data, labels_em)
+    plot_iris_data(data, labels_k_mean)
+
+    xmin = np.min(x_2dim[:, 0])
+    xmax = np.max(x_2dim[:, 0])
+    ymin = np.min(x_2dim[:, 1])
+    ymax = np.max(x_2dim[:, 1])
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
+        plot_gauss_contour(mean_final[:, k], cov_final[:, k], xmin, xmax, ymin, ymax, len(data), 'plot_gauss_contour')
+
+    plt.show()
+
     # TODO: compare PCA as pre-processing (3.) to PCA as post-processing (after 2.)
 
     pdb.set_trace()
