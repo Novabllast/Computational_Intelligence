@@ -499,7 +499,7 @@ def PCA(data, nr_dimensions=None, whitening=False):
     variance_explained = [(i / sum(eig_vals)) * 100 for i in sorted(eig_vals, reverse=True)]
 
     # y_n = U^T x_n
-    transformed = eig_vals.T, data
+    transformed = eig_vals.T, data  # not sure
 
     # yn =L ^{− 1/ 2} U^T (xn − mx)
     if whitening:
