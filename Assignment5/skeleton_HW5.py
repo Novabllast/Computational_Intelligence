@@ -178,8 +178,6 @@ def init_EM(data, dimension=2, nr_components=3, scenario=None):
 
     return alpha_0, mean_0, cov_0
 
-    pass
-
 
 # --------------------------------------------------------------------------------
 def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
