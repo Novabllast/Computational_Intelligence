@@ -73,7 +73,7 @@ def main():
     ymax = np.max(data[:, 1])
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, k], xmin, xmax, ymin, ymax, len(data), 'plot_gauss_contour')
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
 
     plt.show()
 
@@ -105,7 +105,7 @@ def main():
     ymax = np.max(x_4dim[:, 1])
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, k], xmin, xmax, ymin, ymax, len(data), 'plot_gauss_contour')
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
 
     plt.show()
 
@@ -137,7 +137,7 @@ def main():
     ymax = np.max(x_2dim[:, 1])
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, k], xmin, xmax, ymin, ymax, len(data), 'plot_gauss_contour')
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
 
     plt.show()
 
