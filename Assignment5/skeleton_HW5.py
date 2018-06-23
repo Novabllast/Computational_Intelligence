@@ -42,17 +42,39 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    tol = 0.00001  # tolerance
-    max_iter = 150  # maximum iterations for GN (maybe this is the number of N = 150)
+    tol = 0.00000000001  # tolerance
+    max_iter = 300  # maximum iterations for GN (maybe this is the number of N = 150)
     # nr_components = ... #n number of components
 
     # TODO: implement
-    # alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    # alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
-    # initial_centers = init_k_means(dimension = dim, nr_clusters=nr_components, scenario=scenario)
-    # ... = k_means(x_2dim, nr_components, initial_centers, max_iter, tol)
+    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
+                                                                    max_iter, tol)
+    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
+    centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
     # TODO visualize your results
+    # labels = reassign_class_labels(labels)
+    plot_iris_data(data, labels)
+
+    colors = ['r', 'g', 'b', 'y', 'c']
+
+    # for i in range(0, nr_components):
+    #     points = centers[i]
+    #     plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
+    # plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
+    #
+    # plt.show()
+
+    xmin = np.min(data[:, 0])
+    xmax = np.max(data[:, 0])
+    ymin = np.min(data[:, 1])
+    ymax = np.max(data[:, 1])
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
+        plot_gauss_contour(mean_final[:, k], cov_final[:, k], xmin, xmax, ymin, ymax, len(data), 'plot_gauss_contour')
+
+    plt.show()
 
     # ------------------------
     # 2) Consider 4-dimensional data and evaluate the EM- and the KMeans- Algorithm 
@@ -68,13 +90,13 @@ def main():
     # TODO: implement
     # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
     # alpha, mu, cov, LL, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    #
+    # centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
+    # centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
-    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
-    centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
-
-    print("mu:", centers)
-    print("D:", D)
-    print("label: ", labels)
+    # print("mu:", centers)
+    # print("D:", D)
+    # print("label: ", labels)
 
     # TODO: visualize your results by looking at the same slice as in 1)
 
@@ -86,9 +108,9 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    # tol = ...  # tolerance
-    # max_iter = ...  # maximum iterations for GN
-    # nr_components = ... #n number of components
+    tol = 0.00000000001  # tolerance
+    max_iter = 300  # maximum iterations for GN
+    nr_components = 3  #n number of components
 
     # TODO: implement
     # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
@@ -420,15 +442,6 @@ def k_means(X, K, centers_0, max_iter, tol):
         j_prev = j
 
     # TODO: classify all samples after convergence
-
-    colors = ['r', 'g', 'b', 'y', 'c', 'cluster']
-
-    for i in range(K):
-        points = centers[i]
-        plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
-    plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
-
-    plt.show()
 
     return centers_0, cumulative_distance, j
 
