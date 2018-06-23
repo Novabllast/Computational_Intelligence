@@ -503,7 +503,16 @@ def PCA(data, nr_dimensions=None, whitening=False):
 
     # yn =L ^{− 1/ 2} U^T (xn − mx)
     if whitening:
-        pass
+        # https://stackoverflow.com/questions/6574782/how-to-whiten-matrix-in-pca
+        # a fudge factor can be used so that eigenvectors associated with
+        # small eigenvalues do not get overamplified.
+        D = np.diag(1. / np.sqrt(eigen_values + 1E-18))
+
+        # whitening matrix
+        W = np.dot(np.dot(eigen_vectors, D), eigen_vectors.T)
+
+        # multiply by the whitening matrix
+        X_white = np.dot(data, W)
 
     return transformed, variance_explained
 
