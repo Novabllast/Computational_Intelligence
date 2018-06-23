@@ -499,7 +499,7 @@ def PCA(data, nr_dimensions=None, whitening=False):
     variance_explained = [(i / sum(eigen_values)) * 100 for i in sorted(eigen_values, reverse=True)]
 
     # y_n = U^T x_n
-    transformed = eigen_vectors.T, data  # not sure
+    transformed = np.dot(eigen_vectors[:dim], data.T)
 
     # yn =L ^{− 1/ 2} U^T (xn − mx)
     if whitening:
