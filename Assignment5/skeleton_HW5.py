@@ -121,11 +121,11 @@ def main():
     nr_components = 3  # n number of components
 
     # TODO: implement
-    (alpha_0, mean_0, cov_0) = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha, mu, cov, LL, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    (alpha_0, mean_0, cov_0) = init_EM(x_2dim_pca, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha, mu, cov, LL, labels_em = EM(x_2dim_pca, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
-    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
-    centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
+    centers_0 = init_k_means(x_2dim_pca, dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_2dim_pca, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results
     plot_iris_data(data, labels_em)
@@ -487,19 +487,19 @@ def PCA(data, nr_dimensions=None, whitening=False):
     # https://plot.ly/ipython-notebooks/principal-component-analysis/
 
     cov_mat = np.cov(data.T)
-    eig_vals, eig_vecs = np.linalg.eig(cov_mat)
+    eigen_values, eigen_vectors = np.linalg.eig(cov_mat)
 
     print('NumPy covariance matrix: \n', cov_mat)
-    print('Eigenvectors \n', eig_vecs)
-    print('Eigenvalues \n', eig_vals)
+    print('Eigenvectors \n', eigen_vectors)
+    print('Eigenvalues \n', eigen_values)
 
     # TODO: Have a look at the associated eigenvalues and compute the amount of varianced explained
 
     # λ_1 = u^T_1 Su_1 = σ^2
-    variance_explained = [(i / sum(eig_vals)) * 100 for i in sorted(eig_vals, reverse=True)]
+    variance_explained = [(i / sum(eigen_values)) * 100 for i in sorted(eigen_values, reverse=True)]
 
     # y_n = U^T x_n
-    transformed = eig_vals.T, data  # not sure
+    transformed = eigen_vectors.T, data  # not sure
 
     # yn =L ^{− 1/ 2} U^T (xn − mx)
     if whitening:
