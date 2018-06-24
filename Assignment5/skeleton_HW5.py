@@ -406,6 +406,9 @@ def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
     for m in range(0, nr_clusters):
         initial_centers[m, :] = random.choice(dataset)
 
+    initial_centers[0, :] = [6., 4.25]
+    initial_centers[1, :] = [6.2, 4.8]
+    initial_centers[2, :] = [5.6, 3.85]
     return initial_centers
 
 
@@ -424,24 +427,15 @@ def k_means(X, K, centers_0, max_iter, tol):
     # assert D == centers_0.shape[0] # WTH What's the purpose of that
     assert D == centers_0.shape[1]
     # TODO: iteratively update the cluster centers
+    # TODO: classify all samples after convergence
 
     j_prev = 0
-
-    centers = {0: np.zeros(X.shape), 1: np.zeros(X.shape), 2: np.zeros(X.shape)}
+    cumulative_distance = []
     centers_backup = np.zeros(centers_0.shape)
-    distances = np.zeros([X.shape[0], K])
-    cumulative_distance = 0
-    j = 0
     for iteration in range(0, max_iter):
         # Step 1: Klassifikation der Samples zu den Komponenten (→ modifizierter E-step)
-        for cluster in range(0, K):
-            distance = pow((X - centers_0[cluster]), 2).sum(axis=1)
-            distances[:, cluster] = distance
-
-        y = np.argmin(distances, axis=1)
-
         distance = cdist(X, centers_0, metric="euclidean")
-        g = np.argmin(distance, axis=1)
+        y = np.argmin(distance, axis=1)
 
         # Step 2: Neuberechnung der Mittelwertvektoren (entspricht Schwerpunkt der Cluster) aufgrund der Zuweisung in Yk
         for cluster in range(0, K):
@@ -450,18 +444,20 @@ def k_means(X, K, centers_0, max_iter, tol):
             centers_0[cluster, :] = sum_x / y_k
 
         # 4. Evaluieren der kumulativen Distanz
-        for k in range(K):
-            j += np.sum(np.linalg.norm(X[y == k] - centers_backup[k]))
+        j = 0
+        for cluster in range(K):
+            j += pow((X[np.where(y == cluster), :] - centers_0[cluster, :]), 2).sum()
 
         centers_backup[:] = centers_0
-        cumulative_distance += j
+        cumulative_distance.append(j)
 
         if abs(j - j_prev) < tol:
             break
 
         j_prev = j
 
-    # TODO: classify all samples after convergence
+    plt.plot(cumulative_distance)
+    plt.show()
 
     return centers_0, cumulative_distance, j
 
