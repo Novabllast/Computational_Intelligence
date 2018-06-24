@@ -55,8 +55,8 @@ def main():
 
     # TODO visualize your results
     # labels = reassign_class_labels(labels)
-    plot_iris_data(data, labels_em)
-    plot_iris_data(data, labels_k_mean)
+    # plot_iris_data(data, labels_em)
+    # plot_iris_data(data, labels_k_mean)
 
     colors = ['r', 'g', 'b', 'y', 'c']
 
@@ -96,8 +96,8 @@ def main():
     centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results by looking at the same slice as in 1)
-    plot_iris_data(data, labels_em)
-    plot_iris_data(data, labels_k_mean)
+    # plot_iris_data(data, labels_em)
+    # plot_iris_data(data, labels_k_mean)
 
     xmin = np.min(x_4dim[:, 0])
     xmax = np.max(x_4dim[:, 0])
@@ -128,8 +128,8 @@ def main():
     centers, D, labels_k_mean = k_means(x_2dim_pca, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results
-    plot_iris_data(data, labels_em)
-    plot_iris_data(data, labels_k_mean)
+    # plot_iris_data(data, labels_em)
+    # plot_iris_data(data, labels_k_mean)
 
     xmin = np.min(x_2dim[:, 0])
     xmax = np.max(x_2dim[:, 0])
@@ -402,13 +402,14 @@ def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
         :param dataset: """
     # TODO choose suitable initial values for each scenario
 
-    initial_centers = np.empty((nr_clusters, 2))
+    initial_centers = np.empty((nr_clusters, dimension))
     for m in range(0, nr_clusters):
         initial_centers[m, :] = random.choice(dataset)
 
-    initial_centers[0, :] = [6., 4.25]
-    initial_centers[1, :] = [6.2, 4.8]
-    initial_centers[2, :] = [5.6, 3.85]
+    # test data
+    # initial_centers[0, :] = [6., 4.25]
+    # initial_centers[1, :] = [6.2, 4.8]
+    # initial_centers[2, :] = [5.6, 3.85]
     return initial_centers
 
 
