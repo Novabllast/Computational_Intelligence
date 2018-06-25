@@ -51,8 +51,35 @@ def main():
     alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
     # initial_centers = init_k_means(dimension = dim, nr_clusters=nr_components, scenario=scenario)
     # ... = k_means(x_2dim, nr_components, initial_centers, max_iter, tol)
+    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha_final, mean_final, cov_final, log_likelihood, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
+                                                                       max_iter, tol)
+    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
     # TODO visualize your results
+    # labels = reassign_class_labels(labels)
+    # plot_iris_data(data, labels_em)
+    # plot_iris_data(data, labels_k_mean)
+
+    colors = ['r', 'g', 'b', 'y', 'c']
+
+    # for i in range(0, nr_components):
+    #     points = centers[i]
+    #     plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
+    # plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
+    #
+    # plt.show()
+
+    xmin = np.min(data[:, 0])
+    xmax = np.max(data[:, 0])
+    ymin = np.min(data[:, 1])
+    ymax = np.max(data[:, 1])
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
+
+    plt.show()
 
     plot_iris_data(x_2dim, labels)
     for k in range(nr_components):
@@ -68,22 +95,30 @@ def main():
     nr_components = 3
 
     # TODO set parameters
-    tol = 4  # tolerance
-    max_iter = 20  # maximum iterations for GN
-    nr_components = 4  # n number of components
+    tol = 0.0000000000001  # tolerance
+    max_iter = 200  # maximum iterations for GN
+    nr_components = 3  # n number of components
 
     # TODO: implement
-    # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
-    # alpha, mu, cov, LL, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    (alpha_0, mean_0, cov_0) = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha, mu, cov, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
-    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
-    centers, D, labels = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
-
-    print("mu:", centers)
-    print("D:", D)
-    print("label: ", labels)
+    centers_0 = init_k_means(x_4dim, dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results by looking at the same slice as in 1)
+    # plot_iris_data(data, labels_em)
+    # plot_iris_data(data, labels_k_mean)
+
+    xmin = np.min(x_4dim[:, 0])
+    xmax = np.max(x_4dim[:, 0])
+    ymin = np.min(x_4dim[:, 1])
+    ymax = np.max(x_4dim[:, 1])
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
+
+    plt.show()
 
     # ------------------------
     # 3) Perform PCA to reduce the dimension to 2 while preserving most of the variance.
@@ -91,19 +126,32 @@ def main():
     scenario = 3
     dim = 2
     nr_components = 3
-
     # TODO set parameters
-    # tol = ...  # tolerance
-    # max_iter = ...  # maximum iterations for GN
-    # nr_components = ... #n number of components
+    tol = 0.00000000001  # tolerance
+    max_iter = 300  # maximum iterations for GN
+    nr_components = 3  # n number of components
 
     # TODO: implement
-    # (alpha_0, mean_0, cov_0) = init_EM(dimension = dim, nr_components= nr_components, scenario=scenario)
-    # ... = EM(x_2dim_pca, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
-    # initial_centers = init_k_means(dimension = dim, nr_cluster=nr_components, scenario=scenario)
-    # ... = k_means(x_2dim_pca, nr_components, initial_centers, max_iter, tol)
+    (alpha_0, mean_0, cov_0) = init_EM(x_2dim_pca, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha, mu, cov, LL, labels_em = EM(x_2dim_pca, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+
+    centers_0 = init_k_means(x_2dim_pca, dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_2dim_pca, nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results
+    # plot_iris_data(data, labels_em)
+    # plot_iris_data(data, labels_k_mean)
+
+    xmin = np.min(x_2dim[:, 0])
+    xmax = np.max(x_2dim[:, 0])
+    ymin = np.min(x_2dim[:, 1])
+    ymax = np.max(x_2dim[:, 1])
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
+
+    plt.show()
+
     # TODO: compare PCA as pre-processing (3.) to PCA as post-processing (after 2.)
 
     pdb.set_trace()
@@ -141,8 +189,6 @@ def init_EM(data, dimension=2, nr_components=3, scenario=None):
 
     return alpha_0, mean_0, cov_0
 
-    pass
-
 
 # --------------------------------------------------------------------------------
 def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
@@ -168,6 +214,7 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
     N = len(X)
     r_kn = np.zeros((K, N))
+    # r_kn = np.zeros((N, K))
 
     labels = np.zeros(N)
 
@@ -243,11 +290,14 @@ def init_k_means(dataset, dimension=None, nr_clusters=None, scenario=None):
         :param dataset: """
     # TODO choose suitable initial values for each scenario
 
-    # Step 1
-    initial_centers = np.empty((nr_clusters, 2))
+    initial_centers = np.empty((nr_clusters, dimension))
     for m in range(0, nr_clusters):
         initial_centers[m, :] = random.choice(dataset)
 
+    # test data
+    # initial_centers[0, :] = [6., 4.25]
+    # initial_centers[1, :] = [6.2, 4.8]
+    # initial_centers[2, :] = [5.6, 3.85]
     return initial_centers
 
 
@@ -263,41 +313,42 @@ def k_means(X, K, centers_0, max_iter, tol):
         cumulative_distance... cumulative distance over all iterations, nr_iterations x 1
         labels... class labels after performing hard classification, nr_samples x 1"""
     D = X.shape[1]
-    # assert D == centers_0.shape[0]
+    # assert D == centers_0.shape[0] # WTH What's the purpose of that
     assert D == centers_0.shape[1]
     # TODO: iteratively update the cluster centers
-
-    centers = {0: np.zeros(X.shape), 1: np.zeros(X.shape), 2: np.zeros(X.shape)}
-    centers_backup = np.zeros(centers_0.shape)
-    for iteration in range(0, max_iter):
-        # Step 2
-        distance = cdist(X, centers_0, metric="euclidean")
-
-        for index, point in enumerate(X):
-            min_index = np.argmin(distance[index])
-            centers[min_index][index] = point
-
-        centers_backup[:] = centers_0
-        for cluster in range(0, K):
-            mean = np.mean(centers[cluster], axis=0)
-            centers_0[cluster, :] = mean
-
-        if (centers_backup == centers_0).all():
-            break
-
     # TODO: classify all samples after convergence
 
-    colors = ['r', 'g', 'b', 'y', 'c', 'm']
+    j_prev = 0
+    cumulative_distance = []
+    centers_backup = np.zeros(centers_0.shape)
+    for iteration in range(0, max_iter):
+        # Step 1: Klassifikation der Samples zu den Komponenten (→ modifizierter E-step)
+        distance = cdist(X, centers_0, metric="euclidean")
+        y = np.argmin(distance, axis=1)
 
-    for i in range(K):
-        points = centers[i]
-        plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
-    plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
+        # Step 2: Neuberechnung der Mittelwertvektoren (entspricht Schwerpunkt der Cluster) aufgrund der Zuweisung in Yk
+        for cluster in range(0, K):
+            sum_x = np.sum(X[np.where(y == cluster), :], axis=1)
+            y_k = X[np.where(y == cluster), :].shape[1]
+            centers_0[cluster, :] = sum_x / y_k
 
+        # 4. Evaluieren der kumulativen Distanz
+        j = 0
+        for cluster in range(K):
+            j += pow((X[np.where(y == cluster), :] - centers_0[cluster, :]), 2).sum()
+
+        centers_backup[:] = centers_0
+        cumulative_distance.append(j)
+
+        if abs(j - j_prev) < tol:
+            break
+
+        j_prev = j
+
+    plt.plot(cumulative_distance)
     plt.show()
 
-    labels = ['k-means']
-    return centers_0, D, labels
+    return centers_0, cumulative_distance, j
 
 
 # --------------------------------------------------------------------------------
@@ -318,8 +369,37 @@ def PCA(data, nr_dimensions=None, whitening=False):
 
     # TODO: Estimate the principal components and transform the data
     # using the first nr_dimensions principal_components
+    # https://plot.ly/ipython-notebooks/principal-component-analysis/
+
+    cov_mat = np.cov(data.T)
+    eigen_values, eigen_vectors = np.linalg.eig(cov_mat)
+
+    print('NumPy covariance matrix: \n', cov_mat)
+    print('Eigenvectors \n', eigen_vectors)
+    print('Eigenvalues \n', eigen_values)
 
     # TODO: Have a look at the associated eigenvalues and compute the amount of varianced explained
+
+    # λ_1 = u^T_1 Su_1 = σ^2
+    variance_explained = [(i / sum(eigen_values)) * 100 for i in sorted(eigen_values, reverse=True)]
+
+    # y_n = U^T x_n
+    transformed = np.dot(eigen_vectors[:dim], data.T)
+
+    # yn =L ^{− 1/ 2} U^T (xn − mx)
+    if whitening:
+        # https://stackoverflow.com/questions/6574782/how-to-whiten-matrix-in-pca
+        # a fudge factor can be used so that eigenvectors associated with
+        # small eigenvalues do not get overamplified.
+        D = np.diag(1. / np.sqrt(eigen_values + 1E-18))
+
+        # whitening matrix
+        W = np.dot(np.dot(eigen_vectors, D), eigen_vectors.T)
+
+        # multiply by the whitening matrix
+        X_white = np.dot(data, W)
+
+    return transformed, variance_explained
 
 
 # --------------------------------------------------------------------------------
