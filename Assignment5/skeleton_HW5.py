@@ -58,19 +58,15 @@ def main():
     #plot_iris_data(data, labels_em)
     #plot_iris_data(data, labels_k_mean)
 
+    plot_iris_data(x_2dim, labels_em)
+    #plot_iris_data(x_2dim, labels_k_mean)
+
     colors = ['r', 'g', 'b', 'y', 'c']
 
-    # for i in range(0, nr_components):
-    #     points = centers[i]
-    #     plt.scatter(points[:, 0], points[:, 1], s=7, c=colors[i])
-    # plt.scatter(centers_0[:, 0], centers_0[:, 1], marker='*', s=200, c='#050505')
-    #
-    # plt.show()
-
-    xmin = np.min(data[:, 0])
-    xmax = np.max(data[:, 0])
-    ymin = np.min(data[:, 1])
-    ymax = np.max(data[:, 1])
+    xmin = np.min(x_2dim[:, 0])
+    xmax = np.max(x_2dim[:, 0])
+    ymin = np.min(x_2dim[:, 1])
+    ymax = np.max(x_2dim[:, 1])
 
     # visualize results
     for k in range(0, nr_components):
@@ -101,11 +97,13 @@ def main():
     # plot_iris_data(data, labels_em)
     # plot_iris_data(data, labels_k_mean)
 
+    plot_iris_data(x_4dim, labels_em)
+
     xmin = np.min(x_4dim[:, 0])
     xmax = np.max(x_4dim[:, 0])
     ymin = np.min(x_4dim[:, 1])
     ymax = np.max(x_4dim[:, 1])
-    plot_iris_data(x_2dim, labels)
+
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
         plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 4-dimension')
@@ -131,13 +129,16 @@ def main():
     centers, D, labels_k_mean = k_means(x_2dim_pca[0], nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results
-    # plot_iris_data(data, labels_em)
-    # plot_iris_data(data, labels_k_mean)
+    #plot_iris_data(data, labels_em)
+    #plot_iris_data(data, labels_k_mean)
 
-    xmin = np.min(x_2dim[:, 0])
-    xmax = np.max(x_2dim[:, 0])
-    ymin = np.min(x_2dim[:, 1])
-    ymax = np.max(x_2dim[:, 1])
+    plot_iris_data(x_2dim_pca[0], labels_em)
+    #plot_iris_data(x_2dim_pca[0], labels_k_mean)
+
+    xmin = np.min(x_2dim_pca[0][:, 0])
+    xmax = np.max(x_2dim_pca[0][:, 0])
+    ymin = np.min(x_2dim_pca[0][:, 1])
+    ymax = np.max(x_2dim_pca[0][:, 1])
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
         plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 2-dimension (PCA)')
@@ -206,12 +207,10 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
     N = len(X)
     r_kn = np.zeros((K, N))
-    # r_kn = np.zeros((N, K))
 
     labels = np.zeros(N)
 
     LL_prev = 0.0
-    #LL_array = np.zeros((max_iter))
     LL_array = list()
 
     for i in range(0, max_iter):
@@ -227,8 +226,6 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
         for k in range(0, K):
             likelihood = likelihood_multivariate_normal(X, mean_0[:, k], cov_0[:, :, k])
             r_kn[k, :] = likelihood * alpha_0[k] / r_sum
-
-        #log_sum = 0
 
         # maximization step
         for k in range(0, K):
@@ -262,13 +259,10 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     # TODO: classify all samples after convergence
 
     for i, label in enumerate(np.argmax(r_kn, axis=0)):
-        #labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
         labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
 
 
     return alpha_0, mean_0, cov_0, LL_array, labels
-
-    pass
 
 
 # --------------------------------------------------------------------------------
