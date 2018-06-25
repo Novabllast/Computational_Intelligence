@@ -33,7 +33,7 @@ def main():
     x_2dim_pca = PCA(data, nr_dimensions=2, whitening=False)
 
     # (c) visually inspect the data with the provided function (see example below)
-    plot_iris_data(x_2dim, labels)
+    # plot_iris_data(x_2dim, labels)
 
     # ------------------------
     # 1) Consider a 2-dim slice of the data and evaluate the EM- and the KMeans- Algorithm   
@@ -48,19 +48,15 @@ def main():
 
     # TODO: implement
     alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, log_likelihood, labels = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
-    # initial_centers = init_k_means(dimension = dim, nr_clusters=nr_components, scenario=scenario)
-    # ... = k_means(x_2dim, nr_components, initial_centers, max_iter, tol)
-    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
     alpha_final, mean_final, cov_final, log_likelihood, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
                                                                        max_iter, tol)
     centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
     centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
     # TODO visualize your results
-    # labels = reassign_class_labels(labels)
-    # plot_iris_data(data, labels_em)
-    # plot_iris_data(data, labels_k_mean)
+    #labels = reassign_class_labels(labels)
+    #plot_iris_data(data, labels_em)
+    #plot_iris_data(data, labels_k_mean)
 
     colors = ['r', 'g', 'b', 'y', 'c']
 
@@ -75,17 +71,12 @@ def main():
     xmax = np.max(data[:, 0])
     ymin = np.min(data[:, 1])
     ymax = np.max(data[:, 1])
+
+    # visualize results
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 2-dimension')
 
-    plt.show()
-
-    plot_iris_data(x_2dim, labels)
-    for k in range(nr_components):
-        plot_gauss_contour(mean_final[:,k], cov_final[:,:,k], 0,8, 0,8, max_iter, 'lol')
-
-    plt.title('Gaussian Mixture Model')
     plt.show()
 
     # ------------------------
@@ -100,8 +91,8 @@ def main():
     nr_components = 3  # n number of components
 
     # TODO: implement
-    (alpha_0, mean_0, cov_0) = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha, mu, cov, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    alpha_0, mean_0, cov_0 = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha_final, mean_final, cov_final, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
     centers_0 = init_k_means(x_4dim, dim, nr_components, scenario)
     centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
@@ -114,9 +105,10 @@ def main():
     xmax = np.max(x_4dim[:, 0])
     ymin = np.min(x_4dim[:, 1])
     ymax = np.max(x_4dim[:, 1])
+    plot_iris_data(x_2dim, labels)
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 4-dimension')
 
     plt.show()
 
@@ -132,11 +124,11 @@ def main():
     nr_components = 3  # n number of components
 
     # TODO: implement
-    (alpha_0, mean_0, cov_0) = init_EM(x_2dim_pca, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha, mu, cov, LL, labels_em = EM(x_2dim_pca, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+    alpha_0, mean_0, cov_0 = init_EM(x_2dim_pca[0], dimension=dim, nr_components=nr_components, scenario=scenario)
+    alpha_final, mean_final, cov_final, LL, labels_em = EM(x_2dim_pca[0], nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
-    centers_0 = init_k_means(x_2dim_pca, dim, nr_components, scenario)
-    centers, D, labels_k_mean = k_means(x_2dim_pca, nr_components, centers_0, max_iter, tol)
+    centers_0 = init_k_means(x_2dim_pca[0], dim, nr_components, scenario)
+    centers, D, labels_k_mean = k_means(x_2dim_pca[0], nr_components, centers_0, max_iter, tol)
 
     # TODO: visualize your results
     # plot_iris_data(data, labels_em)
@@ -148,7 +140,7 @@ def main():
     ymax = np.max(x_2dim[:, 1])
     for k in range(0, nr_components):
         plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour')
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 2-dimension (PCA)')
 
     plt.show()
 
@@ -183,9 +175,9 @@ def init_EM(data, dimension=2, nr_components=3, scenario=None):
     # initializing cov_0 dimension
     cov_0 = np.zeros((dimension, dimension, nr_components))
 
-    for i in range(0, nr_components):
-        mean_0[:, i] = data[random.randint(0, len(data) - 1)]
-        cov_0[:, :, i] = np.cov(data, rowvar=False)
+    for k in range(0, nr_components):
+        mean_0[:, k] = data[random.randint(0, len(data) - 1)]
+        cov_0[:, :, k] = np.cov(data, rowvar=False)
 
     return alpha_0, mean_0, cov_0
 
@@ -219,7 +211,8 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     labels = np.zeros(N)
 
     LL_prev = 0.0
-    LL_array = np.zeros((max_iter))
+    #LL_array = np.zeros((max_iter))
+    LL_array = list()
 
     for i in range(0, max_iter):
 
@@ -235,7 +228,7 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
             likelihood = likelihood_multivariate_normal(X, mean_0[:, k], cov_0[:, :, k])
             r_kn[k, :] = likelihood * alpha_0[k] / r_sum
 
-        log_sum = 0
+        #log_sum = 0
 
         # maximization step
         for k in range(0, K):
@@ -251,25 +244,25 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
             # update cov_0
             cov_0[:, :, k] = np.cov(X, rowvar=False, ddof=0, aweights=r_kn[k, :])
 
-            # likelihood calculation
-            log_sum += likelihood_multivariate_normal(X, mean_0[:, k], cov_0[:, :, k], True) * alpha_0[k] #sum(np.log(r_sum))
 
+        tmp_likelihood = sum(np.log(r_sum))
+        LL_array.append(tmp_likelihood)
 
-        #LL_array[i] = sum(log_sum)
-        LL_array[i] = sum(np.log(r_sum))
-        if (np.abs(LL_prev - LL_array[i]) < tol):
-            print(i)
+        # Check wether the likelihood has already converged or not
+        if (np.abs(LL_prev - tmp_likelihood) < tol):
             break
-        LL_prev = LL_array[i]
+
+        LL_prev = tmp_likelihood
 
     plt.show()
     plt.plot(LL_array)
-    plt.title("asdas")
+    plt.title("log likelihood curve (EM algorithm) over iterations")
     plt.show()
 
     # TODO: classify all samples after convergence
 
     for i, label in enumerate(np.argmax(r_kn, axis=0)):
+        #labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
         labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
 
 
@@ -378,13 +371,32 @@ def PCA(data, nr_dimensions=None, whitening=False):
     print('Eigenvectors \n', eigen_vectors)
     print('Eigenvalues \n', eigen_values)
 
+    ###############################################################################################
+
+    # Make a list of (eigenvalue, eigenvector) tuples
+    eig_pairs = [(np.abs(eigen_values[i]), eigen_vectors[:, i]) for i in range(len(eigen_values))]
+
+    # Sort the (eigenvalue, eigenvector) tuples from high to low
+    eig_pairs.sort()
+    eig_pairs.reverse()
+
+    print('Eigenvalues in descending order\n', eigen_values)
+
+    matrix_w = np.hstack((eig_pairs[0][1].reshape(4, 1),
+                          eig_pairs[1][1].reshape(4, 1)))
+
+    print('Matrix W:\n', matrix_w)
+
+    ###############################################################################################
+
     # TODO: Have a look at the associated eigenvalues and compute the amount of varianced explained
 
     # λ_1 = u^T_1 Su_1 = σ^2
     variance_explained = [(i / sum(eigen_values)) * 100 for i in sorted(eigen_values, reverse=True)]
 
     # y_n = U^T x_n
-    transformed = np.dot(eigen_vectors[:dim], data.T)
+    #transformed = np.dot(eigen_vectors[:dim], data.T)
+    transformed = data.dot(matrix_w)
 
     # yn =L ^{− 1/ 2} U^T (xn − mx)
     if whitening:
