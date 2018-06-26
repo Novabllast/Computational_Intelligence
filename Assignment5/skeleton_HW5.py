@@ -46,20 +46,24 @@ def main():
     max_iter = 150  # maximum iterations for GN (maybe this is the number of N = 150)
     # nr_components = ... #n number of components
 
-    # TODO: implement
+    # plot dataset before using EM and km_mean
+    plot_iris_data(x_2dim, labels)
+    plt.title('Sepal.Length / Petal.Length')
+    plt.show()
+
+    # algorithms
     alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
     alpha_final, mean_final, cov_final, log_likelihood, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
                                                                        max_iter, tol)
     centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
     centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
-    # TODO visualize your results
-    #labels = reassign_class_labels(labels)
-    #plot_iris_data(data, labels_em)
-    #plot_iris_data(data, labels_k_mean)
 
-    plot_iris_data(x_2dim, labels_em)
-    #plot_iris_data(x_2dim, labels_k_mean)
+    #############################
+    #                           #
+    #   VISULAIZATION IN 2-DIM  #
+    #                           #
+    #############################
 
     colors = ['r', 'g', 'b', 'y', 'c']
 
@@ -68,11 +72,17 @@ def main():
     ymin = np.min(x_2dim[:, 1])
     ymax = np.max(x_2dim[:, 1])
 
-    # visualize results
+    # visualize k_mean results in 2-dim
+    plot_iris_data(x_2dim, labels_k_mean)
     for k in range(0, nr_components):
-        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 2-dimension')
+        plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
+    plt.title('K_means Hard Classification (2dim)')
+    plt.show()
 
+    # visualize em results in 2-dim
+    plot_iris_data(x_2dim, labels_em)
+    for k in range(0, nr_components):
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'EM Soft Classification (2dim)')
     plt.show()
 
     # ------------------------
@@ -86,28 +96,41 @@ def main():
     max_iter = 200  # maximum iterations for GN
     nr_components = 3  # n number of components
 
-    # TODO: implement
+    # plot dataset before using EM and km_mean
+    plot_iris_data(x_4dim, labels)
+    plt.title('Sepal.Length / Sepal.Width')
+    plt.show()
+
+    # algorithms
     alpha_0, mean_0, cov_0 = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
     alpha_final, mean_final, cov_final, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
     centers_0 = init_k_means(x_4dim, dim, nr_components, scenario)
     centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
 
-    # TODO: visualize your results by looking at the same slice as in 1)
-    # plot_iris_data(data, labels_em)
-    # plot_iris_data(data, labels_k_mean)
-
-    plot_iris_data(x_4dim, labels_em)
+    #############################
+    #                           #
+    #   VISULAIZATION IN 4-DIM  #
+    #                           #
+    #############################
 
     xmin = np.min(x_4dim[:, 0])
     xmax = np.max(x_4dim[:, 0])
     ymin = np.min(x_4dim[:, 1])
     ymax = np.max(x_4dim[:, 1])
 
+    # visualize k_mean results in 4-dim
+    plot_iris_data(x_4dim, labels_k_mean)
     for k in range(0, nr_components):
-        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 4-dimension')
+        plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
+    plt.title('K_means Hard Classification (4dim)')
+    plt.show()
 
+    # visualize em results in 4-dim
+    plot_iris_data(x_4dim, labels_em)
+    for k in range(0, nr_components):
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
+                           'EM Soft Classification (4dim)')
     plt.show()
 
     # ------------------------
@@ -121,34 +144,44 @@ def main():
     max_iter = 300  # maximum iterations for GN
     nr_components = 3  # n number of components
 
-    # TODO: implement
+    # plot dataset before using EM and km_mean
+    plot_iris_data(x_2dim_pca[0], labels)
+    plt.title('Data set PCA')
+    plt.show()
+
+    # algorithms
     alpha_0, mean_0, cov_0 = init_EM(x_2dim_pca[0], dimension=dim, nr_components=nr_components, scenario=scenario)
     alpha_final, mean_final, cov_final, LL, labels_em = EM(x_2dim_pca[0], nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
     centers_0 = init_k_means(x_2dim_pca[0], dim, nr_components, scenario)
     centers, D, labels_k_mean = k_means(x_2dim_pca[0], nr_components, centers_0, max_iter, tol)
 
-    # TODO: visualize your results
-    #plot_iris_data(data, labels_em)
-    #plot_iris_data(data, labels_k_mean)
-
-    plot_iris_data(x_2dim_pca[0], labels_em)
-    #plot_iris_data(x_2dim_pca[0], labels_k_mean)
+    #############################
+    #                           #
+    #   VISULAIZATION OF PCA    #
+    #                           #
+    #############################
 
     xmin = np.min(x_2dim_pca[0][:, 0])
     xmax = np.max(x_2dim_pca[0][:, 0])
     ymin = np.min(x_2dim_pca[0][:, 1])
     ymax = np.max(x_2dim_pca[0][:, 1])
-    for k in range(0, nr_components):
-        plt.scatter(centers[k, 0], centers[k, 1], s=7, c=colors[k], marker="*")
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'gauss_contour 2-dimension (PCA)')
 
+    # visualize k_mean results in 2-dim
+    plot_iris_data(x_2dim_pca[0], labels_k_mean)
+    for k in range(0, nr_components):
+        plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
+    plt.title('K_means Hard Classification (PCA)')
+    plt.show()
+
+    # visualize em results in 2-dim
+    plot_iris_data(x_2dim_pca[0], labels_em)
+    for k in range(0, nr_components):
+        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
+                           'EM Soft Classification (PCA)')
     plt.show()
 
     # TODO: compare PCA as pre-processing (3.) to PCA as post-processing (after 2.)
-
-    #pdb.set_trace()
-    pass
 
 
 # --------------------------------------------------------------------------------
@@ -203,8 +236,6 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     D = X.shape[1]
     assert D == mean_0.shape[0]
 
-    # TODO: iteratively compute the posterior and update the parameters
-
     N = len(X)
     r_kn = np.zeros((K, N))
 
@@ -256,11 +287,9 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     plt.title("log likelihood curve (EM algorithm) over iterations")
     plt.show()
 
-    # TODO: classify all samples after convergence
-
+    # get updated labels
     for i, label in enumerate(np.argmax(r_kn, axis=0)):
         labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
-
 
     return alpha_0, mean_0, cov_0, LL_array, labels
 
@@ -302,13 +331,15 @@ def k_means(X, K, centers_0, max_iter, tol):
     D = X.shape[1]
     # assert D == centers_0.shape[0] # WTH What's the purpose of that
     assert D == centers_0.shape[1]
-    # TODO: iteratively update the cluster centers
-    # TODO: classify all samples after convergence
 
     j_prev = 0
     cumulative_distance = []
     centers_backup = np.zeros(centers_0.shape)
+
+    y = np.zeros(X[:, 1].size)
+
     for iteration in range(0, max_iter):
+
         # Step 1: Klassifikation der Samples zu den Komponenten (→ modifizierter E-step)
         distance = cdist(X, centers_0, metric="euclidean")
         y = np.argmin(distance, axis=1)
@@ -333,9 +364,10 @@ def k_means(X, K, centers_0, max_iter, tol):
         j_prev = j
 
     plt.plot(cumulative_distance)
+    plt.title('K_mean output')
     plt.show()
 
-    return centers_0, cumulative_distance, j
+    return centers_0, cumulative_distance, y
 
 
 # --------------------------------------------------------------------------------
@@ -349,21 +381,36 @@ def PCA(data, nr_dimensions=None, whitening=False):
     Returns:
         transformed data... nr_samples x nr_dimensions
         variance_explained... amount of variance explained by the the first nr_dimensions principal components, scalar"""
+
+    dim = 0
     if nr_dimensions is not None:
         dim = nr_dimensions
     else:
         dim = 2
 
+    # using sklearn pca (just for comparison)
+    #sklearn_pca = sklearnPCA(n_components=dim)
+    #transformed_by_sklearn = sklearn_pca.fit_transform(data)
+
+    #print('Transformed SKLEAR: \n', transformed_by_sklearn)
+
     # TODO: Estimate the principal components and transform the data
     # using the first nr_dimensions principal_components
     # https://plot.ly/ipython-notebooks/principal-component-analysis/
 
-    cov_mat = np.cov(data.T)
-    eigen_values, eigen_vectors = np.linalg.eig(cov_mat)
+    # another thought on cov_mat (different results!!!)
+    mean_vec = np.mean(data, axis=0)
+    cov_mat1 = (data - mean_vec).T.dot((data - mean_vec)) / (data.shape[0] - 1)
 
-    print('NumPy covariance matrix: \n', cov_mat)
-    print('Eigenvectors \n', eigen_vectors)
-    print('Eigenvalues \n', eigen_values)
+    cov_mat = np.cov(data.T)
+
+
+    eigen_values, eigen_vectors = np.linalg.eig(cov_mat1)
+
+    #print('NumPy covariance matrix 1: \n', cov_mat1)
+    #print('NumPy covariance matrix 2: \n', cov_mat2)
+    #print('Eigenvectors \n', eigen_vectors)
+    #print('Eigenvalues \n', eigen_values)
 
     ###############################################################################################
 
@@ -374,12 +421,15 @@ def PCA(data, nr_dimensions=None, whitening=False):
     eig_pairs.sort()
     eig_pairs.reverse()
 
-    print('Eigenvalues in descending order\n', eigen_values)
+    #print('Eigenvalues in descending order\n', eigen_values)
 
     matrix_w = np.hstack((eig_pairs[0][1].reshape(4, 1),
                           eig_pairs[1][1].reshape(4, 1)))
 
-    print('Matrix W:\n', matrix_w)
+    #print('Matrix W:\n', matrix_w)
+
+    # for ev in eigen_vectors:
+    #     np.testing.assert_array_almost_equal(1.0, np.linalg.norm(ev))
 
     ###############################################################################################
 
@@ -405,6 +455,9 @@ def PCA(data, nr_dimensions=None, whitening=False):
         # multiply by the whitening matrix
         X_white = np.dot(data, W)
 
+    #print('Transformed: \n', transformed)
+
+    #return transformed_by_sklearn, variance_explained
     return transformed, variance_explained
 
 
@@ -540,6 +593,7 @@ def sanity_checks():
     print(P)
 
     plot_gauss_contour(mu, cov, -2, 2, -2, 2, 100, 'Gaussian')
+    plt.show()
 
     # sample_discrete_pmf
     PM = np.array([0.2, 0.5, 0.2, 0.1])
