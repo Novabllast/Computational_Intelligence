@@ -37,149 +37,180 @@ def main():
 
     # ------------------------
     # 1) Consider a 2-dim slice of the data and evaluate the EM- and the KMeans- Algorithm   
+
+    # set parameters (only here)
+
     scenario = 1
-    dim = 2
+
+    max_iter = 150
     nr_components = 3
+    tol = 0.000000000001
 
-    # TODO set parameters
-    tol = 0.000000000001  # tolerance
-    max_iter = 150  # maximum iterations for GN (maybe this is the number of N = 150)
-    # nr_components = ... #n number of components
+    if scenario == 1:
 
-    # plot dataset before using EM and km_mean
-    plot_iris_data(x_2dim, labels)
-    plt.title('Sepal.Length / Petal.Length')
-    plt.show()
+        dim = 2
 
-    # algorithms
-    alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, log_likelihood, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
-                                                                       max_iter, tol)
-    centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
-    centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
+        # plot dataset before using EM and km_mean
+        plot_iris_data(x_2dim, labels)
+        plt.title('Sepal.Length / Petal.Length')
+        plt.show()
+
+        # algorithms
+        alpha_0, mean_0, cov_0 = init_EM(x_2dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+        alpha_final, mean_final, cov_final, log_likelihood, labels_em = EM(x_2dim, nr_components, alpha_0, mean_0, cov_0,
+                                                                           max_iter, tol)
+        centers_0 = init_k_means(x_2dim, dim, nr_components, scenario)
+        centers, D, labels_k_mean = k_means(x_2dim, nr_components, centers_0, max_iter, tol)
 
 
-    #############################
-    #                           #
-    #   VISULAIZATION IN 2-DIM  #
-    #                           #
-    #############################
+        #############################
+        #                           #
+        #   VISULAIZATION IN 2-DIM  #
+        #                           #
+        #############################
 
-    colors = ['r', 'g', 'b', 'y', 'c']
+        colors = ['r', 'g', 'b', 'y', 'c']
 
-    xmin = np.min(x_2dim[:, 0])
-    xmax = np.max(x_2dim[:, 0])
-    ymin = np.min(x_2dim[:, 1])
-    ymax = np.max(x_2dim[:, 1])
+        xmin = np.min(x_2dim[:, 0])
+        xmax = np.max(x_2dim[:, 0])
+        ymin = np.min(x_2dim[:, 1])
+        ymax = np.max(x_2dim[:, 1])
 
-    # visualize k_mean results in 2-dim
-    plot_iris_data(x_2dim, labels_k_mean)
-    for k in range(0, nr_components):
-        plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
-    plt.title('K_means Hard Classification (2dim)')
-    plt.show()
+        # visualize k_mean results in 2-dim
+        plot_iris_data(x_2dim, labels_k_mean)
+        for k in range(0, nr_components):
+            plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
+        plt.title('K_means Hard Classification (2dim)')
+        plt.show()
 
-    # visualize em results in 2-dim
-    plot_iris_data(x_2dim, labels_em)
-    for k in range(0, nr_components):
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'EM Soft Classification (2dim)')
-    plt.show()
+        # visualize em results in 2-dim
+        plot_iris_data(x_2dim, labels_em)
+        for k in range(0, nr_components):
+            plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'EM Soft Classification (2dim)')
+        plt.show()
+
+        # plot standard dataset with em_labels
+        plot_iris_data(x_2dim, labels_em)
+        plt.title('Scatter plot soft classification (2-dim)')
+        plt.show()
+
+        # plot standard dataset with labels_k_mean
+        plot_iris_data(x_2dim, labels_k_mean)
+        plt.title('Scatter plot hard classification (2-dim)')
+        plt.show()
 
     # ------------------------
-    # 2) Consider 4-dimensional data and evaluate the EM- and the KMeans- Algorithm 
-    scenario = 2
-    dim = 4
-    nr_components = 3
+    # 2) Consider 4-dimensional data and evaluate the EM- and the KMeans- Algorithm
+    elif scenario == 2:
 
-    # TODO set parameters
-    tol = 0.0000000000001  # tolerance
-    max_iter = 200  # maximum iterations for GN
-    nr_components = 3  # n number of components
+        dim = 4
 
-    # plot dataset before using EM and km_mean
-    plot_iris_data(x_4dim, labels)
-    plt.title('Sepal.Length / Sepal.Width')
-    plt.show()
+        # TODO set parameters
+        tol = 0.0000000000001  # tolerance
+        max_iter = 200  # maximum iterations for GN
+        nr_components = 3  # n number of components
 
-    # algorithms
-    alpha_0, mean_0, cov_0 = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+        # plot dataset before using EM and km_mean
+        plot_iris_data(x_4dim, labels)
+        plt.title('Sepal.Length / Sepal.Width')
+        plt.show()
 
-    centers_0 = init_k_means(x_4dim, dim, nr_components, scenario)
-    centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
+        # algorithms
+        alpha_0, mean_0, cov_0 = init_EM(x_4dim, dimension=dim, nr_components=nr_components, scenario=scenario)
+        alpha_final, mean_final, cov_final, LL, labels_em = EM(x_4dim, nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
-    #############################
-    #                           #
-    #   VISULAIZATION IN 4-DIM  #
-    #                           #
-    #############################
+        centers_0 = init_k_means(x_4dim, dim, nr_components, scenario)
+        centers, D, labels_k_mean = k_means(x_4dim, nr_components, centers_0, max_iter, tol)
 
-    xmin = np.min(x_4dim[:, 0])
-    xmax = np.max(x_4dim[:, 0])
-    ymin = np.min(x_4dim[:, 1])
-    ymax = np.max(x_4dim[:, 1])
+        #############################
+        #                           #
+        #   VISULAIZATION IN 4-DIM  #
+        #                           #
+        #############################
 
-    # visualize k_mean results in 4-dim
-    plot_iris_data(x_4dim, labels_k_mean)
-    for k in range(0, nr_components):
-        plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
-    plt.title('K_means Hard Classification (4dim)')
-    plt.show()
+        xmin = np.min(x_4dim[:, 0])
+        xmax = np.max(x_4dim[:, 0])
+        ymin = np.min(x_4dim[:, 2])
+        ymax = np.max(x_4dim[:, 2])
 
-    # visualize em results in 4-dim
-    plot_iris_data(x_4dim, labels_em)
-    for k in range(0, nr_components):
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
-                           'EM Soft Classification (4dim)')
-    plt.show()
+        # visualize k_mean results in 4-dim
+        plot_iris_data(x_4dim[:, [0, 2]], labels_k_mean)
+        for k in range(0, nr_components):
+            plt.scatter(centers[k, 0], centers[k, 2], s=1000, c='black', marker='+')
+        plt.title('K_means Hard Classification (4dim)')
+        plt.show()
+
+        # visualize em results in 4-dim
+        plot_iris_data(x_4dim[:, [0, 2]], labels_em)
+        for k in range(0, nr_components):
+            plot_gauss_contour(mean_final[[0, 2], k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
+                               'EM Soft Classification (4dim)')
+        plt.show()
+
+        # plot standard dataset with em_labels
+        plot_iris_data(x_4dim[:, [0, 2]], labels_em)
+        plt.title('Scatter plot soft classification (4-dim)')
+        plt.show()
+
+        # plot standard dataset with labels_k_mean
+        plot_iris_data(x_4dim[:, [0, 2]], labels_k_mean)
+        plt.title('Scatter plot hard classification (4-dim)')
+        plt.show()
 
     # ------------------------
     # 3) Perform PCA to reduce the dimension to 2 while preserving most of the variance.
     # Then, evaluate the EM- and the KMeans- Algorithm  on the transformed data
-    scenario = 3
-    dim = 2
-    nr_components = 3
-    # TODO set parameters
-    tol = 0.00000000001  # tolerance
-    max_iter = 300  # maximum iterations for GN
-    nr_components = 3  # n number of components
 
-    # plot dataset before using EM and km_mean
-    plot_iris_data(x_2dim_pca[0], labels)
-    plt.title('Data set PCA')
-    plt.show()
+    elif scenario == 3:
 
-    # algorithms
-    alpha_0, mean_0, cov_0 = init_EM(x_2dim_pca[0], dimension=dim, nr_components=nr_components, scenario=scenario)
-    alpha_final, mean_final, cov_final, LL, labels_em = EM(x_2dim_pca[0], nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
+        dim = 2
 
-    centers_0 = init_k_means(x_2dim_pca[0], dim, nr_components, scenario)
-    centers, D, labels_k_mean = k_means(x_2dim_pca[0], nr_components, centers_0, max_iter, tol)
+        # plot dataset before using EM and km_mean
+        plot_iris_data(x_2dim_pca[0], labels)
+        plt.title('Data set PCA')
+        plt.show()
 
-    #############################
-    #                           #
-    #   VISULAIZATION OF PCA    #
-    #                           #
-    #############################
+        # algorithms
+        alpha_0, mean_0, cov_0 = init_EM(x_2dim_pca[0], dimension=dim, nr_components=nr_components, scenario=scenario)
+        alpha_final, mean_final, cov_final, LL, labels_em = EM(x_2dim_pca[0], nr_components, alpha_0, mean_0, cov_0, max_iter, tol)
 
-    xmin = np.min(x_2dim_pca[0][:, 0])
-    xmax = np.max(x_2dim_pca[0][:, 0])
-    ymin = np.min(x_2dim_pca[0][:, 1])
-    ymax = np.max(x_2dim_pca[0][:, 1])
+        centers_0 = init_k_means(x_2dim_pca[0], dim, nr_components, scenario)
+        centers, D, labels_k_mean = k_means(x_2dim_pca[0], nr_components, centers_0, max_iter, tol)
 
-    # visualize k_mean results in 2-dim
-    plot_iris_data(x_2dim_pca[0], labels_k_mean)
-    for k in range(0, nr_components):
-        plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
-    plt.title('K_means Hard Classification (PCA)')
-    plt.show()
+        #############################
+        #                           #
+        #   VISULAIZATION OF PCA    #
+        #                           #
+        #############################
 
-    # visualize em results in 2-dim
-    plot_iris_data(x_2dim_pca[0], labels_em)
-    for k in range(0, nr_components):
-        plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
-                           'EM Soft Classification (PCA)')
-    plt.show()
+        xmin = np.min(x_2dim_pca[0][:, 0])
+        xmax = np.max(x_2dim_pca[0][:, 0])
+        ymin = np.min(x_2dim_pca[0][:, 1])
+        ymax = np.max(x_2dim_pca[0][:, 1])
+
+        # visualize k_mean results in 2-dim
+        plot_iris_data(x_2dim_pca[0], labels_k_mean)
+        for k in range(0, nr_components):
+            plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
+        plt.title('K_means Hard Classification (PCA)')
+        plt.show()
+
+        # visualize em results in 2-dim
+        plot_iris_data(x_2dim_pca[0], labels_em)
+        for k in range(0, nr_components):
+            plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
+                               'EM Soft Classification (PCA)')
+        plt.show()
+
+        # plot standard dataset with em_labels
+        plot_iris_data(x_2dim_pca[0], labels_em)
+        plt.title('Scatter plot soft classification (PCA)')
+        plt.show()
+
+        # plot standard dataset with labels_k_mean
+        plot_iris_data(x_2dim_pca[0], labels_k_mean)
+        plt.title('Scatter plot hard classification (PCA)')
+        plt.show()
 
     # TODO: compare PCA as pre-processing (3.) to PCA as post-processing (after 2.)
 
@@ -364,7 +395,7 @@ def k_means(X, K, centers_0, max_iter, tol):
         j_prev = j
 
     plt.plot(cumulative_distance)
-    plt.title('K_mean output')
+    plt.title('Cumulative distance')
     plt.show()
 
     return centers_0, cumulative_distance, y
