@@ -39,7 +39,7 @@ def main():
 
     # set parameters (only here)
 
-    scenario = 1
+    scenario = 2
 
     max_iter = 150
     nr_components = 3
@@ -132,6 +132,7 @@ def main():
         ymax = np.max(x_4dim[:, 2])
 
         # visualize k_mean results in 4-dim
+        np.diag(np.diag(x_4dim))
         plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_k_mean))
         #plot_iris_data(x_4dim[:, [0, 2]], labels)
         for k in range(0, nr_components):
@@ -278,6 +279,9 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
 
     labels = np.zeros(N)
 
+    for k in range( K ):
+        cov_0[:, :, k] = np.diag(np.diag( cov_0[:, :, k]))
+
     LL_prev = 0.0
     LL_array = list()
 
@@ -307,7 +311,8 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
             alpha_0[k] = N_k / N
 
             # update cov_0
-            cov_0[:, :, k] = np.cov(X, rowvar=False, ddof=0, aweights=r_kn[k, :])
+
+            cov_0[:, :, k] = np.diag(np.diag(np.cov(X, rowvar=False, ddof=0, aweights=r_kn[k, :])))
 
 
         tmp_likelihood = sum(np.log(r_sum))
