@@ -39,7 +39,7 @@ def main():
 
     # set parameters (only here)
 
-    scenario = 2
+    scenario = 3
 
     max_iter = 150
     nr_components = 3
@@ -141,8 +141,8 @@ def main():
         plt.show()
 
         # visualize em results in 4-dim
-        plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_em))
-        #plot_iris_data(x_4dim[:, [0, 2]], labels)
+        #plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_em))
+        plot_iris_data(x_4dim[:, [0, 2]], labels)
         for k in range(0, nr_components):
             plot_gauss_contour(mean_final[[0, 2], k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
                                'EM Soft Classification (4dim)')
