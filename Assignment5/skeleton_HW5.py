@@ -77,25 +77,25 @@ def main():
         ymax = np.max(x_2dim[:, 1])
 
         # visualize k_mean results in 2-dim
-        plot_iris_data(x_2dim, labels_k_mean)
+        plot_iris_data(x_2dim, reassign_labels(labels_k_mean))
         for k in range(0, nr_components):
             plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
         plt.title('K_means Hard Classification (2dim)')
         plt.show()
 
         # visualize em results in 2-dim
-        plot_iris_data(x_2dim, labels_em)
+        plot_iris_data(x_2dim, reassign_labels(labels_em))
         for k in range(0, nr_components):
             plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'EM Soft Classification (2dim)')
         plt.show()
 
         # plot standard dataset with em_labels
-        plot_iris_data(x_2dim, labels_em)
+        plot_iris_data(x_2dim, reassign_labels(labels_em))
         plt.title('Scatter plot soft classification (2-dim)')
         plt.show()
 
         # plot standard dataset with labels_k_mean
-        plot_iris_data(x_2dim, labels_k_mean)
+        plot_iris_data(x_2dim, reassign_labels(labels_k_mean))
         plt.title('Scatter plot hard classification (2-dim)')
         plt.show()
 
@@ -134,26 +134,26 @@ def main():
         ymax = np.max(x_4dim[:, 2])
 
         # visualize k_mean results in 4-dim
-        plot_iris_data(x_4dim[:, [0, 2]], labels_k_mean)
+        plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_k_mean))
         for k in range(0, nr_components):
             plt.scatter(centers[k, 0], centers[k, 2], s=1000, c='black', marker='+')
         plt.title('K_means Hard Classification (4dim)')
         plt.show()
 
         # visualize em results in 4-dim
-        plot_iris_data(x_4dim[:, [0, 2]], labels_em)
+        plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_em))
         for k in range(0, nr_components):
             plot_gauss_contour(mean_final[[0, 2], k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
                                'EM Soft Classification (4dim)')
         plt.show()
 
         # plot standard dataset with em_labels
-        plot_iris_data(x_4dim[:, [0, 2]], labels_em)
+        plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_em))
         plt.title('Scatter plot soft classification (4-dim)')
         plt.show()
 
         # plot standard dataset with labels_k_mean
-        plot_iris_data(x_4dim[:, [0, 2]], labels_k_mean)
+        plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_k_mean))
         plt.title('Scatter plot hard classification (4-dim)')
         plt.show()
 
@@ -653,6 +653,13 @@ def sanity_checks():
 
 
 # --------------------------------------------------------------------------------
+def reassign_labels(class_labels_unordererd):
+    new_labels = reassign_class_labels(class_labels_unordererd)
+    reshuffled_labels = np.zeros_like(class_labels_unordererd)
+    reshuffled_labels[class_labels_unordererd == 0] = new_labels[0]
+    reshuffled_labels[class_labels_unordererd == 1] = new_labels[1]
+    reshuffled_labels[class_labels_unordererd == 2] = new_labels[2]
+    return reshuffled_labels
 # --------------------------------------------------------------------------------
 if __name__ == '__main__':
     sanity_checks()
