@@ -29,7 +29,6 @@ def main():
     # (b) construct the datasets
     x_2dim = data[:, [0, 2]]
     x_4dim = data
-    # TODO: implement PCA
     x_2dim_pca = PCA(data, nr_dimensions=2, whitening=False)
 
     # (c) visually inspect the data with the provided function (see example below)
@@ -78,6 +77,7 @@ def main():
 
         # visualize k_mean results in 2-dim
         plot_iris_data(x_2dim, reassign_labels(labels_k_mean))
+        #plot_iris_data(x_2dim, labels)
         for k in range(0, nr_components):
             plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
         plt.title('K_means Hard Classification (2dim)')
@@ -85,17 +85,20 @@ def main():
 
         # visualize em results in 2-dim
         plot_iris_data(x_2dim, reassign_labels(labels_em))
+        #plot_iris_data(x_2dim, labels)
         for k in range(0, nr_components):
             plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data), 'EM Soft Classification (2dim)')
         plt.show()
 
         # plot standard dataset with em_labels
         plot_iris_data(x_2dim, reassign_labels(labels_em))
+        #plot_iris_data(x_2dim, labels)
         plt.title('Scatter plot soft classification (2-dim)')
         plt.show()
 
         # plot standard dataset with labels_k_mean
         plot_iris_data(x_2dim, reassign_labels(labels_k_mean))
+        #plot_iris_data(x_2dim, labels)
         plt.title('Scatter plot hard classification (2-dim)')
         plt.show()
 
@@ -105,13 +108,8 @@ def main():
 
         dim = 4
 
-        # TODO set parameters
-        tol = 0.0000000000001  # tolerance
-        max_iter = 200  # maximum iterations for GN
-        nr_components = 3  # n number of components
-
         # plot dataset before using EM and km_mean
-        plot_iris_data(x_4dim, labels)
+        plot_iris_data(x_4dim[:, [0, 2]], labels)
         plt.title('Sepal.Length / Sepal.Width')
         plt.show()
 
@@ -135,6 +133,7 @@ def main():
 
         # visualize k_mean results in 4-dim
         plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_k_mean))
+        #plot_iris_data(x_4dim[:, [0, 2]], labels)
         for k in range(0, nr_components):
             plt.scatter(centers[k, 0], centers[k, 2], s=1000, c='black', marker='+')
         plt.title('K_means Hard Classification (4dim)')
@@ -142,6 +141,7 @@ def main():
 
         # visualize em results in 4-dim
         plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_em))
+        #plot_iris_data(x_4dim[:, [0, 2]], labels)
         for k in range(0, nr_components):
             plot_gauss_contour(mean_final[[0, 2], k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
                                'EM Soft Classification (4dim)')
@@ -149,11 +149,13 @@ def main():
 
         # plot standard dataset with em_labels
         plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_em))
+        #plot_iris_data(x_4dim[:, [0, 2]], labels)
         plt.title('Scatter plot soft classification (4-dim)')
         plt.show()
 
         # plot standard dataset with labels_k_mean
         plot_iris_data(x_4dim[:, [0, 2]], reassign_labels(labels_k_mean))
+        #plot_iris_data(x_4dim[:, [0, 2]], labels)
         plt.title('Scatter plot hard classification (4-dim)')
         plt.show()
 
@@ -189,26 +191,30 @@ def main():
         ymax = np.max(x_2dim_pca[0][:, 1])
 
         # visualize k_mean results in 2-dim
-        plot_iris_data(x_2dim_pca[0], labels_k_mean)
+        plot_iris_data(x_2dim_pca[0], reassign_labels(labels_k_mean))
+        #plot_iris_data(x_2dim_pca[0], labels)
         for k in range(0, nr_components):
             plt.scatter(centers[k, 0], centers[k, 1], s=1000, c='black', marker='+')
         plt.title('K_means Hard Classification (PCA)')
         plt.show()
 
         # visualize em results in 2-dim
-        plot_iris_data(x_2dim_pca[0], labels_em)
+        plot_iris_data(x_2dim_pca[0], reassign_labels(labels_em))
+        #plot_iris_data(x_2dim_pca[0], labels)
         for k in range(0, nr_components):
             plot_gauss_contour(mean_final[:, k], cov_final[:, :, k], xmin, xmax, ymin, ymax, len(data),
                                'EM Soft Classification (PCA)')
         plt.show()
 
         # plot standard dataset with em_labels
-        plot_iris_data(x_2dim_pca[0], labels_em)
+        plot_iris_data(x_2dim_pca[0], reassign_labels(labels_em))
+        #plot_iris_data(x_2dim_pca[0], labels)
         plt.title('Scatter plot soft classification (PCA)')
         plt.show()
 
         # plot standard dataset with labels_k_mean
-        plot_iris_data(x_2dim_pca[0], labels_k_mean)
+        plot_iris_data(x_2dim_pca[0], reassign_labels(labels_k_mean))
+        #plot_iris_data(x_2dim_pca[0], labels)
         plt.title('Scatter plot hard classification (PCA)')
         plt.show()
 
@@ -319,8 +325,8 @@ def EM(X, K, alpha_0, mean_0, cov_0, max_iter, tol):
     plt.show()
 
     # get updated labels
-    for i, label in enumerate(np.argmax(r_kn, axis=0)):
-        labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
+    # for i, label in enumerate(np.argmax(r_kn, axis=0)):
+    #     labels[i] = reassign_class_labels(np.argmax(r_kn, axis=0))[label]
 
     return alpha_0, mean_0, cov_0, LL_array, labels
 
@@ -623,8 +629,8 @@ def sanity_checks():
     P = likelihood_multivariate_normal(x, mu, cov)
     print(P)
 
-    plot_gauss_contour(mu, cov, -2, 2, -2, 2, 100, 'Gaussian')
-    plt.show()
+    #plot_gauss_contour(mu, cov, -2, 2, -2, 2, 100, 'Gaussian')
+    #plt.show()
 
     # sample_discrete_pmf
     PM = np.array([0.2, 0.5, 0.2, 0.1])
